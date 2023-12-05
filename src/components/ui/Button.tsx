@@ -9,6 +9,7 @@ export default function Button({
   variant,
   size = 'normal',
   children,
+  className,
   ...props
 }: ButtonProps) {
   const colorVariants = {
@@ -26,7 +27,7 @@ export default function Button({
 
   return (
     <button
-      className={`btn ${colorVariants[variant]} ${sizeVariants[size]} no-animation  `}
+      className={`btn ${colorVariants[variant]} ${sizeVariants[size]} no-animation ${className}`}
       {...props}
     >
       {children}
