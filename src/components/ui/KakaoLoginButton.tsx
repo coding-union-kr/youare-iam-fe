@@ -1,4 +1,4 @@
-import { type ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import Button from './Button';
 import KakaoIcon from '@/components/icons/KakaoIcon';
 
