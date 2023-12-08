@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 export default function BottomNavigation() {
   const router = useRouter();
   return (
-    <nav className="btm-nav btm-nav-lg">
+    <nav className="btm-nav btm-nav-lg max-w-[512px] mx-auto">
       {NAV_ITEMS.map(({ href, Icon, label }) => (
         <Link key={href} href={href}>
           <Icon color={router.pathname === href ? 'selected' : 'default'} />
