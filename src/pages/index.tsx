@@ -1,6 +1,5 @@
 import React from 'react';
-import OpenQuestionBar from '@/components/ui/QuestionBar/OpenQuestionBar';
-import ClosedQuestionBar from '@/components/ui/QuestionBar/ClosedQuestionBar';
+import QuestionBar from '@/components/ui/QuestionBar';
 
 export default function Home() {
   const dummyQuestions = [
@@ -60,12 +59,7 @@ export default function Home() {
   return (
     <>
       {dummyQuestions.map((questionItem: QuestionItemType, index: number) => {
-        if (questionItem.answerCount === 2) {
-          return <OpenQuestionBar key={index} questionItem={questionItem} />;
-        }
-        return (
-          <ClosedQuestionBar key={index} question={questionItem.question} />
-        );
+        return <QuestionBar key={index} questionItem={questionItem} />;
       })}
     </>
   );
