@@ -9,7 +9,7 @@ type QuestionItemType = {
   answerCount: number;
   isMyAnswer?: boolean;
   isRegisterQuestion: boolean;
-  answers?: {
+  answer?: {
     memberId: number;
     memberName: string;
     answer: string;
@@ -17,7 +17,11 @@ type QuestionItemType = {
   }[];
 };
 
-const QuestionBar = ({ questionItem }: QuestionItemType) => {
+type QuestionItemProps = {
+  questionItem: QuestionItemType;
+};
+
+const QuestionBar = ({ questionItem }: QuestionItemProps) => {
   if (questionItem.answerCount === 0) {
     return (
       <div className=" m-2 p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
