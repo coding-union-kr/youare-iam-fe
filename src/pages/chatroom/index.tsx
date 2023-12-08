@@ -13,7 +13,8 @@ const dummyQuestions = [
   {
     isRegisterQuestion: false,
     selectQuestionId: 2,
-    question: '같이 해보고 싶은 버킷리스트가 있나요?',
+    question:
+      '같이 해보고 싶은 버킷리스트가 있나요? 레이아웃체크를위한더미텍스트 레이아웃체크를위한더미텍스트',
     createdAt: 231225,
     answerCount: 1,
     isMyAnswer: true,
@@ -21,10 +22,11 @@ const dummyQuestions = [
   {
     isRegisterQuestion: false,
     selectQuestionId: 3,
-    question: '다툼이 생겼을 때 절대 안 했으면 하는 것이 있다면 무엇인가요?',
+    question:
+      '다툼이 생겼을 때 절대 안 했으면 하는 것이 있다면 무엇인가요? 레이아웃체크를위한더미텍스트 레이아웃체크를위한더미텍스트',
     createdAt: 231226,
     answerCount: 2,
-    answers: [
+    answer: [
       {
         memberId: 1,
         memberName: '이몽룡',
@@ -42,7 +44,8 @@ const dummyQuestions = [
   {
     isRegisterQuestion: true,
     selectQuestionId: 4,
-    question: '저를 만나는 이유가 뭔가요?',
+    question:
+      '저를 만나는 이유가 뭔가요? 레이아웃체크를위한더미텍스트 레이아웃체크를위한더미텍스트',
     createdAt: 231227,
     answerCount: 0,
   },
