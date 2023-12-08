@@ -1,4 +1,6 @@
 import ChatBubble from './ChatBubble';
+import OpenIcon from '../icons/OpenIcon';
+import LockIcon from '../icons/LockIcon';
 
 type QuestionItemType = {
   selectQuestionId: number;
@@ -19,7 +21,9 @@ const QuestionBar = ({ questionItem }: QuestionItemType) => {
   if (questionItem.answerCount === 0) {
     return (
       <div className=" m-2 p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
-        <div className="pl-1  pr-2">🔒</div>
+        <div className="pl-1  pr-2">
+          <LockIcon />
+        </div>
         <div>{questionItem.question}</div>
       </div>
     );
@@ -29,7 +33,9 @@ const QuestionBar = ({ questionItem }: QuestionItemType) => {
     return (
       <div className="m-2">
         <div className="p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
-          <div className="pl-1 pr-2">🔒</div>
+          <div className="pl-1 pr-2">
+            <LockIcon />
+          </div>
           <div>{questionItem.question}</div>
         </div>
         {questionItem.isMyAnswer ? (
@@ -59,7 +65,9 @@ const QuestionBar = ({ questionItem }: QuestionItemType) => {
     return (
       <div className="m-2">
         <div className="p-2 font-neo h-full  rounded-md border-solid border-2 border-[#FF6666]  bg-[#FFE8E8] flex items-center">
-          <div className="pl-1  pr-2">🔑</div>
+          <div className="pl-1  pr-2">
+            <OpenIcon />
+          </div>
           <div>{questionItem.question}</div>
         </div>
         <ChatBubble answer={questionItem.answer} />
