@@ -1,4 +1,5 @@
-import BottomNavigation from '@/components/layout/BottomNavigation';
+import type { NextPageWithLayout } from '@/types/page';
+import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 
 const dummyQuestionList = [
@@ -12,18 +13,23 @@ const dummyQuestionList = [
   },
 ];
 
-export default function Page() {
+const Page: NextPageWithLayout = () => {
   return (
     <div>
       {dummyQuestionList.map((question) => (
         <div
           key={question.questionId}
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col items-center justify-center"
         >
           <ListItem question={question.question} />
         </div>
       ))}
-      <BottomNavigation />
     </div>
   );
-}
+};
+
+Page.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Page;
