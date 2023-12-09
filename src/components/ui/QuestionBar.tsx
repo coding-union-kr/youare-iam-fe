@@ -19,12 +19,16 @@ type QuestionItemType = {
 
 type QuestionItemProps = {
   questionItem: QuestionItemType;
+  onClick: () => void;
 };
 
-const QuestionBar = ({ questionItem }: QuestionItemProps) => {
+const QuestionBar = ({ onClick, questionItem }: QuestionItemProps) => {
   if (questionItem.answerCount === 0) {
     return (
-      <div className=" m-2 p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
+      <div
+        onClick={onClick}
+        className=" m-2 p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
+      >
         <div className="pl-1  pr-2">
           <LockIcon />
         </div>
@@ -35,7 +39,7 @@ const QuestionBar = ({ questionItem }: QuestionItemProps) => {
 
   if (questionItem.answerCount === 1) {
     return (
-      <div className="m-2">
+      <div onClick={onClick} className="m-2">
         <div className="p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
           <div className="pl-1 pr-2">
             <LockIcon />
@@ -67,7 +71,7 @@ const QuestionBar = ({ questionItem }: QuestionItemProps) => {
 
   if (questionItem.answerCount === 2) {
     return (
-      <div className="m-2">
+      <div onClick={onClick} className="m-2">
         <div className="p-2 font-neo h-full  rounded-md border-solid border-2 border-[#FF6666]  bg-[#FFE8E8] flex items-center">
           <div className="pl-1  pr-2">
             <OpenIcon />
