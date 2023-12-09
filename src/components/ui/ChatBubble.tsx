@@ -1,5 +1,4 @@
 const ChatBubble = ({ answer }) => {
-  console.log({ answer });
   return (
     <>
       <div className="chat chat-start">
