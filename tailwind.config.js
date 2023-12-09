@@ -7,6 +7,10 @@ module.exports = {
       secondary: '#F7CBC5',
       accent: '#FF6162',
       yellow: '#F6F7C1',
+      white: '#FFFFFF',
+      'gray-dark': '#656565',
+      gray: '#9F9F9F',
+      'gray-light': '#BDBDBD',
     },
     fontFamily: {
       sans: ['Pretendard', 'Arial', 'sans-serif'],
