@@ -13,9 +13,9 @@ export default function Board({ color = 'default', ...props }: NavIconProps) {
     >
       <path
         stroke={svgColor}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="3"
         d="M38.75 11H45a5 5 0 0 1 5 5v32.5a5 5 0 0 1-5 5H15a5 5 0 0 1-5-5V16a5 5 0 0 1 5-5h6.25"
       />
       <path
@@ -27,8 +27,8 @@ export default function Board({ color = 'default', ...props }: NavIconProps) {
       />
       <path
         stroke={svgColor}
-        strokeLinecap="round"
-        strokeWidth="3"
+        stroke-linecap="round"
+        stroke-width="3"
         d="M22.5 31h15m-15 10h15"
       />
     </svg>
