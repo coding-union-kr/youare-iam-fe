@@ -1,4 +1,5 @@
-import BottomNavigation from '@/components/layout/BottomNavigation';
+import type { NextPageWithLayout } from '@/types/page';
+import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useState, useEffect } from 'react';
@@ -72,7 +73,7 @@ type ModalInfo = {
   handleAction: () => void;
 };
 
-export default function Page() {
+const Page: NextPageWithLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -144,7 +145,12 @@ export default function Page() {
           />
         );
       })}
-      <BottomNavigation />
     </>
   );
-}
+};
+
+Page.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Page;
