@@ -1,10 +1,12 @@
-import BottomNavigation from '@/components/layout/BottomNavigation';
+import type { NextPageWithLayout } from '@/types/page';
+import MainLayout from '@/components/layout/MainLayout';
 
-export default function Page() {
-  return (
-    <div>
-      status
-      <BottomNavigation />
-    </div>
-  );
-}
+const Page: NextPageWithLayout = () => {
+  return <section>status</section>;
+};
+
+Page.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Page;
