@@ -4,6 +4,6 @@ type BasicLayoutProps = {
   children: ReactNode;
 };
 
-export default function SubpageLayout({ children }: BasicLayoutProps) {
+export default function BasicLayout({ children }: BasicLayoutProps) {
   return <main className="p-6">{children}</main>;
 }
