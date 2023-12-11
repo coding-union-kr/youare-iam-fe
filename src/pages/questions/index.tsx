@@ -1,4 +1,5 @@
-import BottomNavigation from '@/components/layout/BottomNavigation';
+import type { NextPageWithLayout } from '@/types/page';
+import MainLayout from '@/components/layout/MainLayout';
 
 import ListItem from '@/components/ui/ListItem';
 
@@ -21,7 +22,7 @@ const dummyQuestionList = [
   },
 ];
 
-export default function Page() {
+const Page: NextPageWithLayout = () => {
   return (
     <div className="py-20">
       {dummyQuestionList.map((question) => (
@@ -32,7 +33,12 @@ export default function Page() {
           <ListItem question={question.question} />
         </div>
       ))}
-      <BottomNavigation />
     </div>
   );
-}
+};
+
+Page.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Page;
