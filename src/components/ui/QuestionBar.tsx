@@ -47,23 +47,33 @@ const QuestionBar = ({ onClick, questionItem }: QuestionItemProps) => {
           <div>{questionItem.question}</div>
         </div>
         {questionItem.isMyAnswer ? (
-          <div className="chat chat-end">
-            <div className="chat-bubble bg-[#FEB2B2]">
-              답변을 두 사람 모두 등록해야 확인할 수 있어요.
+          <>
+            <div className="relative">
+              <div className="absolute top-4 left-[25%] w-full h-full z-10 text-gray-dark">
+                답변을 두 사람 모두 등록해야 확인할 수 있어요
+              </div>
             </div>
-            <div className="chat-footer opacity-50">
-              {questionItem.createdAt}
+            <div className="chat chat-end bg-blend-multiply">
+              <div className="chat-bubble bg-[#FEB2B2] px-24"></div>
+              <div className="chat-footer opacity-50">
+                {questionItem.createdAt}
+              </div>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="chat chat-start">
-            <div className="chat-bubble bg-[#ffffff]">
-              답변을 두 사람 모두 등록해야 확인할 수 있어요.
+          <>
+            <div className="relative">
+              <div className="absolute top-4 left-[25%] w-full h-full z-10 text-gray-dark">
+                답변을 두 사람 모두 등록해야 확인할 수 있어요
+              </div>
+              <div className="chat chat-start">
+                <div className="chat-bubble bg-[#ffffff] px-24"></div>
+                <div className="chat-footer opacity-50">
+                  {questionItem.createdAt}
+                </div>
+              </div>
             </div>
-            <div className="chat-footer opacity-50">
-              {questionItem.createdAt}
-            </div>
-          </div>
+          </>
         )}
       </div>
     );
