@@ -1,4 +1,13 @@
-const ChatBubble = ({ answer }) => {
+type ChatBubbleProps = {
+  answer: {
+    memberId: number;
+    memberName: string;
+    answer: string;
+    createdAt: number;
+  }[];
+};
+
+const ChatBubble = ({ answer }: ChatBubbleProps) => {
   return (
     <>
       <div className="chat chat-start">

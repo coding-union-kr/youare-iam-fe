@@ -78,7 +78,7 @@ const QuestionBar = ({ onClick, questionItem }: QuestionItemProps) => {
           </div>
           <div>{questionItem.question}</div>
         </div>
-        <ChatBubble answer={questionItem.answer} />
+        <ChatBubble answer={questionItem.answer || []} />
       </div>
     );
   }
