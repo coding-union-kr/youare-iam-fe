@@ -17,7 +17,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-const question = '같이 해보고 싶은 버킷리스트가 있나요?';
+const question = '상대방의 사랑스러운 점을 한가지 말해 주세요.';
 
 Page.getLayout = function getLayout(page) {
   return (
