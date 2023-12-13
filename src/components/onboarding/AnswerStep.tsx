@@ -1,5 +1,5 @@
 import Button from '../ui/Button';
-import type { OnboardingStepPros } from './ServiceStep';
+import type { OnboardingStepPros } from './Intro';
 
 export default function AnswerStep({ onNext }: OnboardingStepPros) {
   return (

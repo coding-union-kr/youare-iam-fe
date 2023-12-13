@@ -1,7 +1,7 @@
 import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
 import { useRouter } from 'next/router';
-import ServiceStep from '@/components/onboarding/ServiceStep';
+import Intro from '@/components/onboarding/Intro';
 import QuestionSelectStep from '@/components/onboarding/QuestionSelectStep';
 import AnswerStep from '@/components/onboarding/AnswerStep';
 import InviteStep from '@/components/onboarding/InviteStep';
@@ -24,7 +24,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <>
-      {step === undefined && <ServiceStep onNext={handleNext} />}
+      {step === undefined && <Intro onNext={handleNext} />}
       {step === 'questions' && <QuestionSelectStep onNext={handleNext} />}
       {step === 'answer' && <AnswerStep onNext={handleNext} />}
       {step === 'invite' && <InviteStep onNext={handleNext} />}

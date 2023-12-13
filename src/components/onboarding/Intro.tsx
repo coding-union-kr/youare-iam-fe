@@ -4,7 +4,7 @@ export type OnboardingStepPros = {
   onNext: () => void;
 };
 
-export default function ServiceStep({ onNext }: OnboardingStepPros) {
+export default function Intro({ onNext }: OnboardingStepPros) {
   return (
     <>
       {/* Todo: framer motion  */}
