@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
+import { useRouter } from 'next/router';
 
 const mockServerURL =
   'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
@@ -18,6 +19,8 @@ type Question = {
 };
 
 const Page: NextPageWithLayout<Questions> = ({ questions }) => {
+  const router = useRouter();
+
   const handleItemClick = async (questionId: Question['questionId']) => {
     console.log(questionId);
     // apiEndpoint에 POST 요청으로 questionId를 보내기
@@ -37,6 +40,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
     }
 
     // selectedQuestionId가 있는 위치로 이동하기
+    router.push('/chatroom');
   };
 
   return (
