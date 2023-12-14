@@ -23,9 +23,12 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
 
   const handleItemClick = async (questionId: Question['questionId']) => {
     console.log(questionId);
+<<<<<<< Updated upstream
     // apiEndpoint에 POST 요청으로 questionId를 보내기
     // 그리고 응답으로 받은 selectedQuestionId를 가져오기
     // selectedQuestionId가 있는 위치로 이동하기
+=======
+>>>>>>> Stashed changes
     try {
       // POST 요청으로 questionId를 보내기
       const postResponse = await axios.post(apiEndpoint, {
@@ -35,12 +38,26 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
       // 응답으로 받은 selectedQuestionId를 가져오기
       const selectedQuestionId = postResponse.data.selectedQuestionId;
       console.log(selectedQuestionId);
+<<<<<<< Updated upstream
     } catch (error) {
       console.error('Error fetching data:', (error as Error).message);
     }
 
     // selectedQuestionId가 있는 위치로 이동하기
     router.push('/chatroom');
+=======
+
+      const targetPath = '/chatroom';
+      // selectedQuestionId가 있는 위치로 이동하기
+      // 위치 만들기
+      router.push({
+        pathname: targetPath,
+        hash: '24', // 원래 selectedQuestionId가 들어가야 함. 임시로 큰 값을 넣어봄
+      });
+    } catch (error) {
+      console.error('Error fetching data:', (error as Error).message);
+    }
+>>>>>>> Stashed changes
   };
 
   return (
