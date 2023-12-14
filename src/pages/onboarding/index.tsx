@@ -22,12 +22,21 @@ const Page: NextPageWithLayout = () => {
     router.push(`/onboarding?step=${nextStep}`);
   };
 
+  const handlePrev = () => {
+    if (currentStepIndex === 0) {
+      return;
+    }
+
+    const prevStep = onboardingSteps[currentStepIndex - 1];
+    router.push(`/onboarding?step=${prevStep}`);
+  };
+
   return (
     <>
-      {step === undefined && <Intro onNext={handleNext} />}
+      {currentStepIndex === -1 && <Intro onNext={handleNext} />}
       {step === 'questions' && <QuestionSelectStep onNext={handleNext} />}
       {step === 'answer' && <AnswerStep onNext={handleNext} />}
-      {step === 'invite' && <InviteStep onNext={handleNext} />}
+      {step === 'invite' && <InviteStep />}
     </>
   );
 };
