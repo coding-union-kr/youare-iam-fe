@@ -1,31 +1,26 @@
+import axios from 'axios';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
-
 import ListItem from '@/components/ui/ListItem';
 
-const dummyQuestionList = [
-  {
-    questionId: 1,
-    question: '같이 해보고 싶은 버킷리스트가 있나요?',
-  },
-  {
-    questionId: 2,
-    question: '다툼이 생겼을 때 절대 안 했으면 하는 것이 있다면 무엇인가요?',
-  },
-  {
-    questionId: 3,
-    question: '서로를 마음껏 자랑해보아요! 무엇이든 좋아요',
-  },
-  {
-    questionId: 4,
-    question: '산타를 몇살까지 믿었나요?',
-  },
-];
+const mockServerURL =
+  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
+const path = '/api/v1/questions';
+const apiEndpoint = `${mockServerURL}${path}`;
 
-const Page: NextPageWithLayout = () => {
+type Questions = {
+  questions: Question[];
+};
+
+type Question = {
+  questionId: number;
+  question: string;
+};
+
+const Page: NextPageWithLayout<Questions> = ({ questions }) => {
   return (
     <div className="py-20">
-      {dummyQuestionList.map((question) => (
+      {questions.map((question) => (
         <div
           key={question.questionId}
           className="flex flex-col justify-center items-center"
@@ -39,6 +34,18 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
+};
+
+export const getStaticProps = async () => {
+  try {
+    const response = await axios.get(apiEndpoint);
+    const questions = response.data;
+
+    return { props: { questions } };
+  } catch (error) {
+    console.error('Error fetching data:', (error as Error).message);
+    return { props: { questions: [] } };
+  }
 };
 
 export default Page;
