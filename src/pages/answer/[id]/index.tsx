@@ -2,17 +2,31 @@ import type { NextPageWithLayout } from '@/types/page';
 
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import ListItem from '@/components/ui/ListItem';
-import TextArea from '@/components/ui/TextArea';
-import Button from '@/components/ui/Button';
+import AnswerForm from '@/components/answer/AnswerForm';
+import useInput from '@/hooks/common/useInput';
 
 const Page: NextPageWithLayout = () => {
+  const [answer, onChange, errorMessage] = useInput('', (value) =>
+    value.trim() ? '' : '답변을 입력해주세요'
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!answer) {
+      return;
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-between h-full gap-5">
       <ListItem question={question} />
-      <TextArea value="" onChange={() => {}} />
-      <Button variant="primary" size="wide">
-        등록하기
-      </Button>
+      <AnswerForm
+        answer={answer}
+        onChange={onChange}
+        errorMessage={errorMessage}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
 };
@@ -28,5 +42,3 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
-
-// mutate -> queryKey

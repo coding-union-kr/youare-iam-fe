@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import type { OnboardingStepPros } from './Intro';
 import ListItem from '../ui/ListItem';
-import TextArea from '../ui/TextArea';
 import useInput from '@/hooks/common/useInput';
-import Button from '../ui/Button';
+import AnswerForm from '../answer/AnswerForm';
 
 export default function AnswerStep({ onNext }: OnboardingStepPros) {
   const [answer, onChange, errorMessage] = useInput('', (value) =>
@@ -20,6 +18,7 @@ export default function AnswerStep({ onNext }: OnboardingStepPros) {
     //Todo: 답변 등록하기 기능 구현
     console.log(answer);
 
+    // main action : onboarding 데이터로 저장하기
     onNext();
   };
 
@@ -27,22 +26,12 @@ export default function AnswerStep({ onNext }: OnboardingStepPros) {
     <>
       <ListItem question="선택된 질문" />
       <p>내가 먼저 답변을 작성해볼까요?</p>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col justify-between w-full h-[70%]"
-      >
-        <div className="relative">
-          <TextArea value={answer} onChange={onChange} />
-          {errorMessage && (
-            <p className="absolute text-xs bottom-[-20px] right-10 text-accent">
-              {errorMessage}
-            </p>
-          )}
-        </div>
-        <Button variant="primary" size="wide">
-          답변 등록하기
-        </Button>
-      </form>
+      <AnswerForm
+        answer={answer}
+        onChange={onChange}
+        errorMessage={errorMessage}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }
