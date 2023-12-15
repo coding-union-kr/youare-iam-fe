@@ -34,8 +34,11 @@ export default function Modal({
   return (
     <>
       <dialog ref={modalRef} className="modal">
-        <div className="modal-box">
-          <p className="py-4">{modalInfo.bodyText}</p>
+        <div className="modal-box w-80">
+          <p
+            className="py-4 text-center"
+            dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
+          ></p>
           <div className="flex flex-row justify-between">
             <button className="btn w-28 btn-secondary" onClick={handleClose}>
               {modalInfo.cancelText}

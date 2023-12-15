@@ -3,7 +3,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const dummyQuestions = [
   {
@@ -272,7 +272,11 @@ const dummyQuestions = [
   },
 ];
 
-type QuestionItemType = {
+type Letters = {
+  letters: LetterType[];
+};
+
+type LetterType = {
   selectQuestionId: number;
   question: string;
   createdAt: number;
@@ -294,7 +298,12 @@ type ModalInfo = {
   handleAction: () => void;
 };
 
-const Page: NextPageWithLayout = () => {
+const mockServerURL =
+  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
+const path = '/api/v1/letters?size=10';
+const apiEndpoint = `${mockServerURL}${path}`;
+
+const Page: NextPageWithLayout<Letters> = ({ letters }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -303,43 +312,38 @@ const Page: NextPageWithLayout = () => {
     handleAction: () => {},
   });
 
-  const router = useRouter();
-
-  const handleQuestionBarClick = ({
-    questionItem,
-  }: {
-    questionItem: QuestionItemType;
-  }) => {
-    if (questionItem.answerCount === 0) {
+  const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
+    if (letter.answerCount === 0) {
       setModalInfo({
         actionText: '답변 작성하러 가기',
         cancelText: '되돌아가기',
-        bodyText: '둘의 답변을 기다리고 있어요. 먼저 답변을 작성해볼까요?',
+        bodyText: '둘의 답변을 기다리고 있어요.<br>먼저 답변을 작성해볼까요?',
         handleAction: () => {
           console.log('답변 작성하러 가기 action');
         },
       });
       setIsModalOpen(true);
-    } else if (questionItem.answerCount === 2) {
+    } else if (letter.answerCount === 2) {
       setIsModalOpen(false);
-    } else if (questionItem.answerCount === 1) {
-      if (questionItem.isMyAnswer) {
-        setModalInfo({
-          actionText: '답변 작성하러 가기',
-          cancelText: '되돌아가기',
-          bodyText: '아직 답변을 등록하지 않았어요. 답변을 등록하러 가볼까요?',
-          handleAction: () => {
-            console.log('답변 작성하러 가기 action');
-          },
-        });
-      } else {
+    } else if (letter.answerCount === 1) {
+      if (letter.isMyAnswer) {
         setModalInfo({
           actionText: '되돌아가기',
           cancelText: '수정하기',
           bodyText:
-            '상대가 답변을 등록하지 않았어요. 기존 답변을 수정하시겠어요?',
+            '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
           handleAction: () => {
             console.log('수정하기 action');
+          },
+        });
+      } else {
+        setModalInfo({
+          actionText: '답변 작성하러 가기',
+          cancelText: '되돌아가기',
+          bodyText:
+            '내가 아직 답변을 등록하지 않았어요.<br>답변을 등록하러 가볼까요?',
+          handleAction: () => {
+            console.log('답변 작성하러 가기 action');
           },
         });
       }
@@ -350,6 +354,7 @@ const Page: NextPageWithLayout = () => {
   useEffect(() => {
     console.log('isModalOpen', isModalOpen);
   }, [isModalOpen]);
+
   return (
     <>
       {isModalOpen && (
@@ -359,12 +364,13 @@ const Page: NextPageWithLayout = () => {
           isModalOpen={isModalOpen}
         />
       )}
-      {dummyQuestions.map((questionItem: QuestionItemType, index: number) => {
+      {/* 추후에 아래의 dummyQuestions를 letters로 바꿔야 함(api 연동 후) */}
+      {dummyQuestions.map((letter: LetterType, index: number) => {
         return (
           <QuestionBar
             key={index}
-            questionItem={questionItem}
-            onClick={() => handleQuestionBarClick({ questionItem })}
+            letter={letter}
+            onClick={() => handleQuestionBarClick({ letter })}
           />
         );
       })}
@@ -374,6 +380,18 @@ const Page: NextPageWithLayout = () => {
 
 Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
+};
+
+export const getStaticProps = async () => {
+  try {
+    const response = await axios.get(apiEndpoint);
+    const letters = response.data;
+    console.log('letters: ', letters);
+    return { props: { letters } };
+  } catch (error) {
+    console.error('Error fetching data:', (error as Error).message);
+    return { props: { letters: [] } };
+  }
 };
 
 export default Page;
