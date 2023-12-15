@@ -4,6 +4,7 @@ import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const dummyQuestions = [
   {
@@ -243,8 +244,15 @@ const dummyQuestions = [
     isMyAnswer: true,
   },
   {
-    isRegisterQuestion: false,
+    isRegisterQuestion: true,
     selectQuestionId: 23,
+    question: '상대방의 어떤 점이 사랑스러운가요? ',
+    createdAt: 231227,
+    answerCount: 0,
+  },
+  {
+    isRegisterQuestion: false,
+    selectQuestionId: 24,
     question: '다툼이 생겼을 때 절대 안 했으면 하는 것이 있다면 무엇인가요? ',
     createdAt: 231226,
     answerCount: 2,
@@ -262,13 +270,6 @@ const dummyQuestions = [
         createdAt: 231226,
       },
     ],
-  },
-  {
-    isRegisterQuestion: true,
-    selectQuestionId: 24,
-    question: '상대방의 어떤 점이 사랑스러운가요? ',
-    createdAt: 231227,
-    answerCount: 0,
   },
 ];
 
@@ -312,6 +313,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
     handleAction: () => {},
   });
 
+  const router = useRouter();
+
   const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
     if (letter.answerCount === 0) {
       setModalInfo({
@@ -319,7 +322,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
         cancelText: '되돌아가기',
         bodyText: '둘의 답변을 기다리고 있어요.<br>먼저 답변을 작성해볼까요?',
         handleAction: () => {
-          console.log('답변 작성하러 가기 action');
+          router.push('/answer');
         },
       });
       setIsModalOpen(true);
@@ -328,8 +331,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
     } else if (letter.answerCount === 1) {
       if (letter.isMyAnswer) {
         setModalInfo({
-          actionText: '되돌아가기',
-          cancelText: '수정하기',
+          actionText: '수정하기',
+          cancelText: '되돌아가기',
           bodyText:
             '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
           handleAction: () => {
@@ -343,7 +346,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           bodyText:
             '내가 아직 답변을 등록하지 않았어요.<br>답변을 등록하러 가볼까요?',
           handleAction: () => {
-            console.log('답변 작성하러 가기 action');
+            router.push('/answer');
           },
         });
       }
@@ -356,7 +359,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
   }, [isModalOpen]);
 
   return (
-    <>
+    <div className="pb-[5rem]">
       {isModalOpen && (
         <Modal
           modalInfo={modalInfo}
@@ -374,7 +377,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           />
         );
       })}
-    </>
+    </div>
   );
 };
 

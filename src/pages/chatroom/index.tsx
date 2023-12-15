@@ -331,8 +331,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
     } else if (letter.answerCount === 1) {
       if (letter.isMyAnswer) {
         setModalInfo({
-          actionText: '되돌아가기',
-          cancelText: '수정하기',
+          actionText: '수정하기',
+          cancelText: '되돌아가기',
           bodyText:
             '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
           handleAction: () => {
