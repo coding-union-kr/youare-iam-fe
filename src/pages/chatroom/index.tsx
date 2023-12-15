@@ -244,8 +244,15 @@ const dummyQuestions = [
     isMyAnswer: true,
   },
   {
-    isRegisterQuestion: false,
+    isRegisterQuestion: true,
     selectQuestionId: 23,
+    question: '상대방의 어떤 점이 사랑스러운가요? ',
+    createdAt: 231227,
+    answerCount: 0,
+  },
+  {
+    isRegisterQuestion: false,
+    selectQuestionId: 24,
     question: '다툼이 생겼을 때 절대 안 했으면 하는 것이 있다면 무엇인가요? ',
     createdAt: 231226,
     answerCount: 2,
@@ -263,13 +270,6 @@ const dummyQuestions = [
         createdAt: 231226,
       },
     ],
-  },
-  {
-    isRegisterQuestion: true,
-    selectQuestionId: 24,
-    question: '상대방의 어떤 점이 사랑스러운가요? ',
-    createdAt: 231227,
-    answerCount: 0,
   },
 ];
 
@@ -359,7 +359,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
   }, [isModalOpen]);
 
   return (
-    <>
+    <div className="pb-[5rem]">
       {isModalOpen && (
         <Modal
           modalInfo={modalInfo}
@@ -377,7 +377,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           />
         );
       })}
-    </>
+    </div>
   );
 };
 
