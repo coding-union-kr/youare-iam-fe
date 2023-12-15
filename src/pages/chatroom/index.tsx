@@ -4,6 +4,7 @@ import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const dummyQuestions = [
   {
@@ -312,6 +313,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
     handleAction: () => {},
   });
 
+  const router = useRouter();
+
   const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
     if (letter.answerCount === 0) {
       setModalInfo({
@@ -319,7 +322,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
         cancelText: '되돌아가기',
         bodyText: '둘의 답변을 기다리고 있어요.<br>먼저 답변을 작성해볼까요?',
         handleAction: () => {
-          console.log('답변 작성하러 가기 action');
+          router.push('/answer');
         },
       });
       setIsModalOpen(true);
@@ -343,7 +346,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           bodyText:
             '내가 아직 답변을 등록하지 않았어요.<br>답변을 등록하러 가볼까요?',
           handleAction: () => {
-            console.log('답변 작성하러 가기 action');
+            router.push('/answer');
           },
         });
       }
