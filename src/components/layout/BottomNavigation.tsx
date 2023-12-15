@@ -38,7 +38,7 @@ NavItem.displayName = 'NavItem';
 
 export default function BottomNavigation() {
   return (
-    <nav className="btm-nav btm-nav-lg max-w-[512px] mx-auto">
+    <nav className="btm-nav btm-nav-lg max-w-[512px] mx-auto z-20">
       {NAV_ITEMS.map((navItem) => (
         <NavItem key={navItem.href} {...navItem} />
       ))}
