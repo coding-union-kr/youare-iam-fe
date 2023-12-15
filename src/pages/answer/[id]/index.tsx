@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button';
 
 const Page: NextPageWithLayout = () => {
   return (
-    <div className="flex flex-col gap-5 justify-center items-center">
+    <div className="flex flex-col items-center justify-center gap-5">
       <ListItem question={question} />
       <TextArea value="" onChange={() => {}} />
       <Button variant="primary" size="wide">
@@ -28,3 +28,5 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
+
+// mutate -> queryKey
