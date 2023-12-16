@@ -6,7 +6,7 @@ type Answer = {
   answer: string;
 };
 
-export const useAnswerPost = (
+export const usePostAnswer = (
   options?: UseMutationOptions<void, unknown, Answer>
 ) => {
   return useMutation<void, unknown, Answer>({
@@ -15,4 +15,4 @@ export const useAnswerPost = (
   });
 };
 
-export default useAnswerPost;
+export default usePostAnswer;

@@ -1,15 +1,15 @@
-import type { NextPageWithLayout } from '@/types/page';
-
-import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
-import ListItem from '@/components/ui/ListItem';
-import AnswerForm from '@/components/answer/AnswerForm';
-import useInput from '@/hooks/common/useInput';
+import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+import type { NextPageWithLayout } from '@/types/page';
+import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
+import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
+import useInput from '@/hooks/common/useInput';
+import usePostAnswer from '@/hooks/feature/usePostAnswer';
 
-const Page: NextPageWithLayout = () => {
+const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
   const router = useRouter();
-  const { id } = router.query;
+  const { mutate: postAnswer } = usePostAnswer();
 
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
@@ -21,6 +21,23 @@ const Page: NextPageWithLayout = () => {
     if (!answer) {
       return;
     }
+
+    postAnswer(
+      { selectQuestionId: Number(selectQuestionId), answer },
+      {
+        onSuccess: () => {
+          //Todo: invalidateQueries
+          router.push({
+            pathname: '/chatroom',
+            hash: selectQuestionId,
+          });
+        },
+        onError: (error) => {
+          //Todo: 에러 처리
+          console.log(error);
+        },
+      }
+    );
   };
 
   return (
@@ -43,5 +60,23 @@ Page.getLayout = function getLayout(page) {
     </>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { id } = context.query;
+
+  const isValidId = (id: any) => {
+    return !isNaN(Number(id));
+  };
+
+  if (!isValidId(id)) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { id },
+  };
+}
 
 export default Page;
