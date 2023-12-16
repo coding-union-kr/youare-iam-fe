@@ -2,6 +2,7 @@ import type { OnboardingStepPros } from './Intro';
 import ListItem from '../ui/ListItem';
 import useInput from '@/hooks/common/useInput';
 import AnswerForm from '../answer/AnswerForm';
+import QuestionTitle from '../answer/QuestionTitle';
 
 export default function AnswerStep({ onNext }: OnboardingStepPros) {
   const [answer, onChange, errorMessage] = useInput('', (value) =>
@@ -24,7 +25,7 @@ export default function AnswerStep({ onNext }: OnboardingStepPros) {
 
   return (
     <>
-      <ListItem question="선택된 질문" />
+      <QuestionTitle question="당신이 좋아하는 계절은 언제인가요?" />
       <p>내가 먼저 답변을 작성해볼까요?</p>
       <AnswerForm
         answer={answer}

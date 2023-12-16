@@ -4,8 +4,13 @@ import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import ListItem from '@/components/ui/ListItem';
 import AnswerForm from '@/components/answer/AnswerForm';
 import useInput from '@/hooks/common/useInput';
+import { useRouter } from 'next/router';
+import QuestionTitle from '@/components/answer/QuestionTitle';
 
 const Page: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
   );
@@ -19,19 +24,17 @@ const Page: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-full gap-5">
-      <ListItem question={question} />
+    <section className="flex flex-col justify-between h-full">
+      <QuestionTitle question="당신이 좋아하는 계절은 언제인가요?" />
       <AnswerForm
         answer={answer}
         onChange={onChange}
         errorMessage={errorMessage}
         handleSubmit={handleSubmit}
       />
-    </div>
+    </section>
   );
 };
-
-const question = '상대방의 사랑스러운 점을 한가지 말해 주세요.';
 
 Page.getLayout = function getLayout(page) {
   return (
