@@ -2,6 +2,7 @@ import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -39,7 +40,46 @@ const mockServerURL =
 const path = '/api/v1/letters';
 const apiEndpoint = `${mockServerURL}${path}`;
 
-const Page: NextPageWithLayout<Letters> = ({ letters }) => {
+// const fetchProjects = async ({ pageParam = 0 }) => {
+//   const res = await fetch('/api/projects?cursor=' + pageParam)
+//   return res.json()
+// }
+
+type PageParam = {
+  pageParam: number;
+};
+
+const getLetters = async ({ pageParam }: PageParam) => {
+  // const getLetters = async ({ pageParam = 0 }) => {
+  console.log('pageParam: ', pageParam);
+  const url = pageParam
+    ? `${apiEndpoint}?next-cursor=${pageParam}`
+    : apiEndpoint;
+  const response = await axios.get(url);
+  const letters = response.data; // 처음에 response.data.letters로 했었음.
+  return letters;
+};
+
+const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    data: letters, // 이부분 첨에 없었음
+  } = useInfiniteQuery({
+    queryKey: ['projects'],
+    queryFn: getLetters,
+    // getNextPageParam이 리턴하는 값이 다음 페이지의 pageParam이 됨.
+    getNextPageParam: (lastPage) => {
+      console.log('last page', lastPage);
+      return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
+    },
+    initialPageParam: 0,
+
+    // 데이터 가공 - letters만 가져오기 위해
+    select: (data) => (data.pages ?? []).flatMap((page) => page.letters), // 이부분 첨에 없었음
+  });
+
   console.log('letters', letters);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
@@ -101,8 +141,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           isModalOpen={isModalOpen}
         />
       )}
-      {/* 추후에 아래의 dummyQuestions를 letters로 바꿔야 함(api 연동 후) */}
-      {letters.map((letter: LetterType, index: number) => {
+      {(letters ?? ssrLetters).map((letter: LetterType, index: number) => {
         return (
           <QuestionBar
             key={index}
@@ -111,6 +150,16 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           />
         );
       })}
+      <button
+        onClick={() => fetchNextPage()}
+        disabled={!hasNextPage || isFetchingNextPage}
+      >
+        {isFetchingNextPage
+          ? 'Loading more...'
+          : hasNextPage
+            ? 'Load More'
+            : 'Nothing more to load'}
+      </button>
     </div>
   );
 };
@@ -123,7 +172,6 @@ export const getStaticProps = async () => {
   try {
     const response = await axios.get(apiEndpoint);
     const letters = response.data.letters;
-    console.log('letters: ', letters);
     return { props: { letters } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
