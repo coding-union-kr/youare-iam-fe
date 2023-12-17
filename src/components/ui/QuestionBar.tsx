@@ -2,27 +2,29 @@ import ChatBubble from './ChatBubble';
 import OpenIcon from '../icons/OpenIcon';
 import LockIcon from '../icons/LockIcon';
 
-type letterType = {
+type LetterType = {
   selectQuestionId: number;
   question: string;
   createdAt: number;
   answerCount: number;
-  isMyAnswer?: boolean;
-  isRegisterQuestion: boolean;
-  answer?: {
-    memberId: number;
-    memberName: string;
-    answer: string;
-    createdAt: number;
-  }[];
+  myAnswer?: boolean;
+  answer:
+    | {
+        memberId: number;
+        memberName: string;
+        answer: string;
+        createdAt: number;
+      }[]
+    | null;
 };
 
 type letterProps = {
-  letter: letterType;
+  letter: LetterType;
   onClick: () => void;
 };
 
 const QuestionBar = ({ onClick, letter }: letterProps) => {
+  // console.log('questionBar letter', letter);
   if (letter.answerCount === 0) {
     return (
       <div
@@ -51,7 +53,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
           </div>
           <div>{letter.question}</div>
         </div>
-        {letter.isMyAnswer ? (
+        {letter.myAnswer ? (
           <>
             <div className="relative">
               <div className="absolute top-4 left-[25%] w-full h-full z-10 text-gray-dark">
