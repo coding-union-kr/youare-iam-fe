@@ -1,9 +1,7 @@
 import axios, { type AxiosResponse } from 'axios';
 
-const MOCK_API = 'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
-
 const instance = axios.create({
-  baseURL: MOCK_API,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   timeout: 15000,
 });
 
