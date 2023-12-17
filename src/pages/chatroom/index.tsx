@@ -3,10 +3,9 @@ import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-
 type Letters = {
   letters: LetterType[];
   nextCursor: number;
@@ -61,6 +60,7 @@ const getLetters = async ({ pageParam }: PageParam) => {
 };
 
 const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
+  const bottom = useRef(null);
   const {
     fetchNextPage,
     hasNextPage,
@@ -132,6 +132,36 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
 
   console.log('letters', letters);
 
+  const useObserver = ({
+    target,
+    root = null,
+    rootMargin = '0px',
+    threshold = 1.0,
+    onIntersect,
+  }) => {
+    useEffect(() => {
+      let observer;
+
+      if (target && target.current) {
+        observer = new IntersectionObserver(onIntersect, {
+          root,
+          rootMargin,
+          threshold,
+        });
+
+        observer.observe(target.current);
+      }
+      return () => observer && observer.disconnect();
+    }, [target, rootMargin, threshold]);
+  };
+
+  const onIntersect = ([entry]) => entry.isIntersecting && fetchNextPage();
+
+  useObserver({
+    target: bottom,
+    onIntersect,
+  });
+
   return (
     <div className="pb-[5rem]">
       {isModalOpen && (
@@ -150,7 +180,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
           />
         );
       })}
-      <button
+      {/* <button
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
       >
@@ -159,7 +189,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
           : hasNextPage
             ? 'Load More'
             : 'Nothing more to load'}
-      </button>
+      </button> */}
+      <div ref={bottom} />
     </div>
   );
 };
