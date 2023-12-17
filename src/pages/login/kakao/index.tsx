@@ -1,9 +1,10 @@
-import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
 export default function Login() {
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { code } = router.query;
 
@@ -24,8 +25,7 @@ export default function Login() {
         router.push(prevUrl || '/onboarding');
         localStorage.removeItem(LOCAL_STORAGE_KEYS.PREV_URL);
       } catch (err) {
-        console.error(err);
-        alert('An error occurred while logging in. Please try again.');
+        setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     };
 
@@ -34,5 +34,5 @@ export default function Login() {
     }
   }, [code, router]);
 
-  return <div></div>;
+  return <div>{error && <p>{error}</p>}</div>;
 }
