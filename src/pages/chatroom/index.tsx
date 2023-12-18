@@ -122,16 +122,13 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
 
     // 데이터 가공 - letters만 가져오기 위해
 
-    select: (data) => (data.pages ?? []).flatMap((page) => page.letters),
-    // select: (data) => ({
-    //   pages: (data.pages ?? []).flatMap((page) => page.letters),
-    //   pageParams: [...data.pageParams].reverse(),
-    // }),
+    select: (data) =>
+      ([...data.pages] ?? []).reverse().flatMap((page) => page.letters), // 데박.... 리액트 라이브러리 내부에서 아예 바꿔버림....꼬임(앞뒤로 붙은)
   });
   const { containerRef, handleScroll } = useInvertedInfiniteScroll(
     fetchNextPage,
     hasNextPage,
-    letters?.length ?? 0
+    letters?.length ?? 0 // 동작 안햇음 바꿨을 때
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
@@ -198,7 +195,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
         ref={containerRef}
         onScroll={handleScroll}
       >
-        {(letters ?? ssrLetters).map((letter: LetterType, index: number) => {
+        {letters?.map((letter: LetterType, index: number) => {
           return (
             <QuestionBar
               key={index}
