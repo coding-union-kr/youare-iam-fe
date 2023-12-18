@@ -1,10 +1,13 @@
+import { useRouter } from 'next/router';
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
-import { useRouter } from 'next/router';
 import Intro from '@/components/onboarding/Intro';
 import QuestionSelectStep from '@/components/onboarding/QuestionSelectStep';
 import AnswerStep from '@/components/onboarding/AnswerStep';
 import InviteStep from '@/components/onboarding/InviteStep';
+import { mockGet } from '@/libs/api';
+import type { Question } from '@/types/api';
 
 const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
@@ -12,6 +15,13 @@ const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const { step } = router.query;
   const currentStepIndex = onboardingSteps.findIndex((s) => s === step);
+
+  const fallbackQuestionList: Question[] = [];
+
+  const { data: questionList = fallbackQuestionList } = useQuery<Question[]>({
+    queryKey: ['question-list'],
+    queryFn: getQuestionList,
+  });
 
   const handleNext = () => {
     if (currentStepIndex === onboardingSteps.length - 1) {
@@ -34,7 +44,9 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       {currentStepIndex === -1 && <Intro onNext={handleNext} />}
-      {step === 'questions' && <QuestionSelectStep onNext={handleNext} />}
+      {step === 'questions' && (
+        <QuestionSelectStep onNext={handleNext} questionList={questionList} />
+      )}
       {step === 'answer' && <AnswerStep onNext={handleNext} />}
       {step === 'invite' && <InviteStep />}
     </>
@@ -48,3 +60,23 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
+
+export const getQuestionList = async () => {
+  const res = await mockGet<Question[]>('/api/v1/questions');
+  return res.data;
+};
+
+export const getStaticProps = async () => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['question-list'],
+    queryFn: getQuestionList,
+  });
+
+  return {
+    props: {
+      initialState: dehydrate(queryClient),
+    },
+  };
+};

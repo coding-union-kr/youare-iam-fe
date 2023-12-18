@@ -1,9 +1,9 @@
 import { useRecoilState } from 'recoil';
+import { onboardingState } from '@/store/onboardingState';
 import type { OnboardingStepPros } from './Intro';
 import useInput from '@/hooks/common/useInput';
-import { onboardingState } from '@/store/onboardingState';
-import AnswerForm from '../answer/AnswerForm';
-import QuestionTitle from '../answer/QuestionTitle';
+import AnswerForm from '@/components/answer/AnswerForm';
+import QuestionTitle from '@/components/answer/QuestionTitle';
 
 export default function AnswerStep({ onNext }: OnboardingStepPros) {
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
@@ -33,8 +33,7 @@ export default function AnswerStep({ onNext }: OnboardingStepPros) {
 
   return (
     <>
-      {/* Todo: question 업데이트하기 */}
-      <QuestionTitle question="당신이 좋아하는 계절은 언제인가요?" />
+      <QuestionTitle question={onboardingData.selectedQuestion.question} />
       <p>내가 먼저 답변을 작성해볼까요?</p>
       <AnswerForm
         answer={answer}

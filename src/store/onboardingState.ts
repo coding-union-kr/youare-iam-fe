@@ -1,7 +1,10 @@
 import { atom } from 'recoil';
 
 export const initialOnboardingState = {
-  quetionId: 0,
+  selectedQuestion: {
+    questionId: 0,
+    question: '',
+  },
   answer: '',
 };
 
