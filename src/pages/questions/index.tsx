@@ -4,8 +4,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
 
-const mockServerURL =
-  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
+const mockServerURL = 'http://218.239.180.88:8080';
 const path = '/api/v1/questions';
 const apiEndpoint = `${mockServerURL}${path}`;
 
@@ -40,7 +39,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
         pathname: targetPath,
         // 답변 수정, 답변 등록 페이지에는 selectQuestionId가 들어가야 함.
         // 질문 선택 페이지에는 마지막 selectQuestionsId가 들어가야 함.
-        hash: '10',
+        // hash: '0',
       });
     } catch (error) {
       console.error('Error fetching data:', (error as Error).message);
@@ -72,7 +71,7 @@ export const getStaticProps = async () => {
   try {
     const response = await axios.get(apiEndpoint);
     const questions = response.data;
-
+    console.log('questions', questions);
     return { props: { questions } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
