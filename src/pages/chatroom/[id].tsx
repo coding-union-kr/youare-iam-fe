@@ -3,9 +3,10 @@ import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useState, useEffect, useRef, MouseEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+
 type Letters = {
   letters: LetterType[];
   nextCursor: number;
@@ -47,11 +48,13 @@ const getLetters = async ({ pageParam }: PageParam) => {
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
   const response = await axios.get(url);
-  const letters = response.data; // 처음에 response.data.letters로 했었음.
+  // response.data.letters로 하면 nextCursor를 못받아와서 안됨
+  const letters = response.data;
   return letters;
 };
 
-function useInvertedInfiniteScroll(
+// useReversedInfiniteScroll라는 커스텀 훅
+function useReversedInfiniteScroll(
   fetchNextPage: () => Promise<unknown>,
   hasNextPage: boolean = false,
   dataLength: number = 0
@@ -59,11 +62,13 @@ function useInvertedInfiniteScroll(
   const containerRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState(0);
 
+  // 맨 처음에, prevScrollHeight가 바뀔 때, dataLength가 바뀔 때 실행된다.
   useEffect(
+    // (3) scrollToPrevScrollHeight를 호출하는 곳이 없는데 어떻게 실행되는지??
     function scrollToPrevScrollHeight() {
-      // 만약 prevScrollHeight가 0이라면 === 첫 페이지라면
+      // prevScrollHeight === 0: 첫 페이지라면
       if (prevScrollHeight === 0) {
-        // 맨 아래로 스크롤을 내립니다.
+        // 맨 처음에는 스크롤 맨 아래로 내리기
         containerRef.current?.scrollTo({
           top: containerRef.current.scrollHeight,
         });
@@ -99,37 +104,53 @@ function useInvertedInfiniteScroll(
     }
   }
 
+  // containerRef과 handleScroll을 뽑아내기 위한 훅임
   return {
     containerRef,
     handleScroll,
   };
 }
 
-const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
+const Page: NextPageWithLayout<Letters> = () => {
+  // (1) getStaticProps에서 가져온 letters를 가져오려면 아래처럼 파라미터를 넘겨줘야 하지 않는지??
+  // 왜 넘기면 오류가 나는지? 응답으로 가져온 이 letters를 써야하지 않나??
+  // const Page: NextPageWithLayout<Letters> = ({ letters }) => {
+
+  // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
   const {
     fetchNextPage,
     hasNextPage,
-    data: letters, // 이부분 첨에 없었음
+    // 'data: letters'가 없으면 안됨
+    // (2) 아래의 letters는 어디에서 가져온 것인지??
+    data: letters,
   } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
-    // getNextPageParam이 리턴하는 값이 다음 페이지의 pageParam이 됨.
+    initialPageParam: 0,
+
+    // getNextPageParam이 리턴하는 값이 다음 페이지의 pageParam이 됨
+    // ㄴ 리턴값이 undefined라면 더 이상 가져올 페이지가 없다는 뜻
+    // 백엔드에서 넘겨주는 nextCursor: 더 이상 가져올 페이지가 없을 때 -1임
     getNextPageParam: (lastPage) => {
       return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
     },
-    initialPageParam: 0,
-    // 문제: 지금 새로 만들어진 페이지가 위가 아니라 아래로 붙는다.
 
-    // 데이터 가공 - letters만 가져오기 위해
-
+    // select: 데이터를 가공하기 위한 부분
+    // [[5, 6], [3, 4], [1, 2]] -> [[1, 2], [3, 4], [5, 6]] -> [1, 2, 3, 4, 5, 6]
+    // data.pages.reverse()를 하면 앞뒤로 새 페이지가 붙는 버그가 생긴다.
+    // ㄴ reverse()는 배열 자체를 바꿔버리기 때문. 대신 [...data.pages].reverse()를 해줘야 한다.
     select: (data) =>
-      ([...data.pages] ?? []).reverse().flatMap((page) => page.letters), // 데박.... 리액트 라이브러리 내부에서 아예 바꿔버림....꼬임(앞뒤로 붙은)
+      ([...data.pages] ?? []).reverse().flatMap((page) => page.letters),
   });
-  const { containerRef, handleScroll } = useInvertedInfiniteScroll(
+
+  // useReversedInfiniteScroll라는 커스텀 훅에서 containerRef와 handleScroll을 가져온다.
+  // useInfiniteQuery에서 가져온 fetchNextPage와 hasNextPage를 커스텀 훅에 넘겨준다.
+  const { containerRef, handleScroll } = useReversedInfiniteScroll(
     fetchNextPage,
     hasNextPage,
-    letters?.length ?? 0 // 동작 안햇음 바꿨을 때
+    letters?.length ?? 0 // 훅에서 dataLength가 됨
   );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -178,11 +199,13 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
       setIsModalOpen(true);
     }
   };
-  console.log('letters: ', letters);
 
+  console.log('letters: ', letters);
   console.log('hasNextPage: ', hasNextPage);
+
   return (
     <div className="pb-[5rem]">
+      {/* 모달이 열리면 보일 부분 */}
       {isModalOpen && (
         <Modal
           modalInfo={modalInfo}
@@ -191,8 +214,13 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
         />
       )}
       <div
-        className="max-h-[calc(100vh-5rem-0.75rem)] overflow-y-auto"
+        // max-h-[calc(100vh-5rem-0.75rem)]: 스크롤이 있을 높이를 지정한다.
+        // ㄴ 5rem은 BottomNavigation 높이, 0.5rem은 QuestionBar의 패딩 높이, 0.5rem은 여백
+        // overflow-y-auto: y축이 더 길 때(세로) 스크롤이 생기도록 설정, 내용이 넘칠 때만 스크롤바 표시
+        className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto"
+        // letters를 감싸고 있는 container. ref를 지정했다.
         ref={containerRef}
+        // 스크롤이 되면 실행되는 이벤트 핸들러
         onScroll={handleScroll}
       >
         {letters?.map((letter: LetterType, index: number) => {
@@ -213,9 +241,11 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
+// letters: 빌드시에 가져온 데이터. prop으로 넘겨줘서 사용 가능하게 한다.
 export const getStaticProps = async () => {
   try {
     const response = await axios.get(apiEndpoint);
+    // response.data에는 letters와 nextCursor가 있음. 그 중 letters만 가져온다.
     const letters = response.data.letters;
     return { props: { letters } };
   } catch (error) {
