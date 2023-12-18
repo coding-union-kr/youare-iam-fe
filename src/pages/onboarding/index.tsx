@@ -6,8 +6,9 @@ import Intro from '@/components/onboarding/Intro';
 import QuestionSelectStep from '@/components/onboarding/QuestionSelectStep';
 import AnswerStep from '@/components/onboarding/AnswerStep';
 import InviteStep from '@/components/onboarding/InviteStep';
-import { mockGet } from '@/libs/api';
-import type { Question } from '@/types/api';
+import useQuestionList, {
+  getQuestionList,
+} from '@/hooks/feature/useQuestionList';
 
 const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
@@ -16,12 +17,7 @@ const Page: NextPageWithLayout = () => {
   const { step } = router.query;
   const currentStepIndex = onboardingSteps.findIndex((s) => s === step);
 
-  const fallbackQuestionList: Question[] = [];
-
-  const { data: questionList = fallbackQuestionList } = useQuery<Question[]>({
-    queryKey: ['question-list'],
-    queryFn: getQuestionList,
-  });
+  const { questionList } = useQuestionList();
 
   const handleNext = () => {
     if (currentStepIndex === onboardingSteps.length - 1) {
@@ -60,11 +56,6 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
-
-export const getQuestionList = async () => {
-  const res = await mockGet<Question[]>('/api/v1/questions');
-  return res.data;
-};
 
 export const getStaticProps = async () => {
   const queryClient = new QueryClient();
