@@ -3,7 +3,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect, useRef, MouseEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 type Letters = {
@@ -34,13 +34,6 @@ type ModalInfo = {
   handleAction: () => void;
 };
 
-type UseObserver = {
-  target: React.RefObject<HTMLElement>;
-  rootMargin?: string;
-  threshold?: number | number[];
-  onIntersect: IntersectionObserverCallback;
-};
-
 type PageParam = {
   pageParam: number;
 };
@@ -58,8 +51,61 @@ const getLetters = async ({ pageParam }: PageParam) => {
   return letters;
 };
 
+function useInvertedInfiniteScroll(
+  fetchNextPage: () => Promise<unknown>,
+  hasNextPage: boolean = false,
+  dataLength: number = 0
+) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [prevScrollHeight, setPrevScrollHeight] = useState(0);
+
+  useEffect(
+    function scrollToPrevScrollHeight() {
+      // 만약 prevScrollHeight가 0이라면 === 첫 페이지라면
+      if (prevScrollHeight === 0) {
+        // 맨 아래로 스크롤을 내립니다.
+        containerRef.current?.scrollTo({
+          top: containerRef.current.scrollHeight,
+        });
+        return;
+      }
+
+      // 아닐 경우, 스크롤의 높이를 변경합니다.
+      containerRef.current?.scrollTo({
+        top: containerRef.current.scrollHeight - prevScrollHeight,
+      });
+    },
+    [prevScrollHeight, dataLength]
+  );
+
+  // 스크롤 이벤트 핸들러
+  function handleScroll() {
+    // 만약 다음 페이지가 없다면
+    if (!hasNextPage) {
+      // 코드를 실행하지 않습니다.
+      return;
+    }
+
+    // 이전 스크롤 높이에서 현재 scrollTop를 뺸 높이를 기억하고
+    setPrevScrollHeight(
+      (containerRef.current?.scrollHeight ?? 0) -
+        (containerRef.current?.scrollTop ?? 0)
+    );
+
+    // 만약 스크롤이 450px 미만으로 줄어들었다면
+    if ((containerRef.current?.scrollTop ?? 0) < 450) {
+      // 다음 페이지를 가져옵니다.
+      fetchNextPage();
+    }
+  }
+
+  return {
+    containerRef,
+    handleScroll,
+  };
+}
+
 const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
-  const bottomRef = useRef<HTMLDivElement>(null);
   const {
     fetchNextPage,
     hasNextPage,
@@ -72,12 +118,21 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
       return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
     },
     initialPageParam: 0,
+    // 문제: 지금 새로 만들어진 페이지가 위가 아니라 아래로 붙는다.
 
     // 데이터 가공 - letters만 가져오기 위해
-    select: (data) => (data.pages ?? []).flatMap((page) => page.letters), // 이부분 첨에 없었음
+
+    select: (data) => (data.pages ?? []).flatMap((page) => page.letters),
+    // select: (data) => ({
+    //   pages: (data.pages ?? []).flatMap((page) => page.letters),
+    //   pageParams: [...data.pageParams].reverse(),
+    // }),
   });
-  console.log('hasNextPage', hasNextPage);
-  // console.log('letters', letters);
+  const { containerRef, handleScroll } = useInvertedInfiniteScroll(
+    fetchNextPage,
+    hasNextPage,
+    letters?.length ?? 0
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -126,37 +181,9 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
       setIsModalOpen(true);
     }
   };
+  console.log('letters: ', letters);
 
-  const useObserver = ({
-    target,
-    rootMargin = '0px',
-    threshold = 1.0,
-    onIntersect,
-  }: UseObserver) => {
-    useEffect(() => {
-      let observer: IntersectionObserver | undefined;
-
-      if (target && target.current) {
-        observer = new IntersectionObserver(onIntersect, {
-          root: null,
-          rootMargin,
-          threshold,
-        });
-
-        observer.observe(target.current);
-      }
-      return () => observer && observer.disconnect();
-    }, [target, rootMargin, threshold, onIntersect]);
-  };
-
-  const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
-    entry.isIntersecting && fetchNextPage();
-
-  useObserver({
-    target: bottomRef,
-    onIntersect,
-  });
-
+  console.log('hasNextPage: ', hasNextPage);
   return (
     <div className="pb-[5rem]">
       {isModalOpen && (
@@ -166,26 +193,21 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
           isModalOpen={isModalOpen}
         />
       )}
-      {(letters ?? ssrLetters).map((letter: LetterType, index: number) => {
-        return (
-          <QuestionBar
-            key={index}
-            letter={letter}
-            onClick={() => handleQuestionBarClick({ letter })}
-          />
-        );
-      })}
-      {/* <button
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage || isFetchingNextPage}
+      <div
+        className="max-h-[calc(100vh-5rem-0.75rem)] overflow-y-auto"
+        ref={containerRef}
+        onScroll={handleScroll}
       >
-        {isFetchingNextPage
-          ? 'Loading more...'
-          : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
-      </button> */}
-      <div ref={bottomRef} />
+        {(letters ?? ssrLetters).map((letter: LetterType, index: number) => {
+          return (
+            <QuestionBar
+              key={index}
+              letter={letter}
+              onClick={() => handleQuestionBarClick({ letter })}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
