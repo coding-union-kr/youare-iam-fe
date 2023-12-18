@@ -165,7 +165,7 @@ const Page: NextPageWithLayout<Letters> = () => {
         cancelText: '되돌아가기',
         bodyText: '둘의 답변을 기다리고 있어요.<br>먼저 답변을 작성해볼까요?',
         handleAction: () => {
-          router.push('/answer');
+          router.push(`/answer/${letter.selectQuestionId}`);
         },
       });
       setIsModalOpen(true);
@@ -189,7 +189,7 @@ const Page: NextPageWithLayout<Letters> = () => {
           bodyText:
             '내가 아직 답변을 등록하지 않았어요.<br>답변을 등록하러 가볼까요?',
           handleAction: () => {
-            router.push('/answer');
+            router.push(`/answer/${letter.selectQuestionId}`);
           },
         });
       }
