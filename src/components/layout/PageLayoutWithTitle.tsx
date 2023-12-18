@@ -11,7 +11,7 @@ export default function PageLayoutWithTitle({
   children,
 }: PageLayoutProps) {
   return (
-    <main className="px-3 pt-24 pb-6">
+    <main className="h-screen px-3 pt-24 pb-6">
       <PageTitle title={title} />
       {children}
     </main>
