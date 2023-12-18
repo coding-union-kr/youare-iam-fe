@@ -1,10 +1,10 @@
 import { useRecoilState } from 'recoil';
-import type { OnboardingStepPros } from './Intro';
+import type { OnboardingStepProps } from './Intro';
 import { onboardingState } from '@/store/onboardingState';
 import { Question } from '@/types/api';
 import Button from '@/components/ui/Button';
 
-type QuestionSelectStepProps = OnboardingStepPros & {
+type QuestionSelectStepProps = OnboardingStepProps & {
   questionList: Question[];
 };
 

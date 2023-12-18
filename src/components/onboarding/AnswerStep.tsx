@@ -1,11 +1,11 @@
 import { useRecoilState } from 'recoil';
 import { onboardingState } from '@/store/onboardingState';
-import type { OnboardingStepPros } from './Intro';
+import type { OnboardingStepProps } from './Intro';
 import useInput from '@/hooks/common/useInput';
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 
-export default function AnswerStep({ onNext }: OnboardingStepPros) {
+export default function AnswerStep({ onNext }: OnboardingStepProps) {
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
 
   const onChangeCallback = (newAnswer: string) => {
