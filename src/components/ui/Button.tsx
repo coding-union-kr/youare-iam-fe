@@ -22,7 +22,7 @@ export default function Button({
     xs: 'btn-xs',
     sm: 'btn-sm',
     normal: 'btn-normal',
-    wide: 'btn-wide block w-[90%] mx-auto',
+    wide: 'btn-wide block w-[90%] mx-auto text-base',
   };
 
   return (
