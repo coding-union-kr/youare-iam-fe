@@ -34,23 +34,22 @@ type ModalInfo = {
   handleAction: () => void;
 };
 
-const mockServerURL =
-  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
-const path = '/api/v1/letters';
-const apiEndpoint = `${mockServerURL}${path}`;
-
-// const fetchProjects = async ({ pageParam = 0 }) => {
-//   const res = await fetch('/api/projects?cursor=' + pageParam)
-//   return res.json()
-// }
+type UseObserver = {
+  target: React.RefObject<HTMLElement>;
+  rootMargin?: string;
+  threshold?: number | number[];
+  onIntersect: IntersectionObserverCallback;
+};
 
 type PageParam = {
   pageParam: number;
 };
 
+const mockServerURL = 'http://218.239.180.88:8080';
+const path = '/api/v1/letters';
+const apiEndpoint = `${mockServerURL}${path}`;
+
 const getLetters = async ({ pageParam }: PageParam) => {
-  // const getLetters = async ({ pageParam = 0 }) => {
-  console.log('pageParam: ', pageParam);
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
@@ -60,18 +59,16 @@ const getLetters = async ({ pageParam }: PageParam) => {
 };
 
 const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
-  const bottom = useRef(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const {
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     data: letters, // 이부분 첨에 없었음
   } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
     // getNextPageParam이 리턴하는 값이 다음 페이지의 pageParam이 됨.
     getNextPageParam: (lastPage) => {
-      console.log('last page', lastPage);
       return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
     },
     initialPageParam: 0,
@@ -79,8 +76,8 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
     // 데이터 가공 - letters만 가져오기 위해
     select: (data) => (data.pages ?? []).flatMap((page) => page.letters), // 이부분 첨에 없었음
   });
-
-  console.log('letters', letters);
+  console.log('hasNextPage', hasNextPage);
+  // console.log('letters', letters);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -130,21 +127,17 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
     }
   };
 
-  console.log('letters', letters);
-
   const useObserver = ({
     target,
-    root = null,
     rootMargin = '0px',
     threshold = 1.0,
     onIntersect,
-  }) => {
+  }: UseObserver) => {
     useEffect(() => {
-      let observer;
+      let observer: IntersectionObserver | undefined;
 
       if (target && target.current) {
         observer = new IntersectionObserver(onIntersect, {
-          root,
           rootMargin,
           threshold,
         });
@@ -152,13 +145,14 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
         observer.observe(target.current);
       }
       return () => observer && observer.disconnect();
-    }, [target, rootMargin, threshold]);
+    }, [target, rootMargin, threshold, onIntersect]);
   };
 
-  const onIntersect = ([entry]) => entry.isIntersecting && fetchNextPage();
+  const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
+    entry.isIntersecting && fetchNextPage();
 
   useObserver({
-    target: bottom,
+    target: bottomRef,
     onIntersect,
   });
 
@@ -190,7 +184,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
             ? 'Load More'
             : 'Nothing more to load'}
       </button> */}
-      <div ref={bottom} />
+      <div ref={bottomRef} />
     </div>
   );
 };

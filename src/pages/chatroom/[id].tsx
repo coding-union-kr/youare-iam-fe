@@ -2,10 +2,10 @@ import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
-import { useState, useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState, useEffect, useRef, use } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-
 type Letters = {
   letters: LetterType[];
   nextCursor: number;
@@ -34,13 +34,50 @@ type ModalInfo = {
   handleAction: () => void;
 };
 
-const mockServerURL =
-  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
+type UseObserver = {
+  target: React.RefObject<HTMLElement>;
+  rootMargin?: string;
+  threshold?: number | number[];
+  onIntersect: IntersectionObserverCallback;
+};
+
+type PageParam = {
+  pageParam: number;
+};
+
+const mockServerURL = 'http://218.239.180.88:8080';
 const path = '/api/v1/letters';
 const apiEndpoint = `${mockServerURL}${path}`;
 
-const Page: NextPageWithLayout<Letters> = ({ letters }) => {
-  console.log('letters', letters);
+const getLetters = async ({ pageParam }: PageParam) => {
+  const url = pageParam
+    ? `${apiEndpoint}?next-cursor=${pageParam}`
+    : apiEndpoint;
+  const response = await axios.get(url);
+  const letters = response.data; // 처음에 response.data.letters로 했었음.
+  return letters;
+};
+
+const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const {
+    fetchNextPage,
+    hasNextPage,
+    data: letters, // 이부분 첨에 없었음
+  } = useInfiniteQuery({
+    queryKey: ['projects'],
+    queryFn: getLetters,
+    // getNextPageParam이 리턴하는 값이 다음 페이지의 pageParam이 됨.
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
+    },
+    initialPageParam: 0,
+
+    // 데이터 가공 - letters만 가져오기 위해
+    select: (data) => (data.pages ?? []).flatMap((page) => page.letters), // 이부분 첨에 없었음
+  });
+  console.log('hasNextPage', hasNextPage);
+  // console.log('letters', letters);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
@@ -90,7 +127,34 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
     }
   };
 
-  console.log('letters', letters);
+  const useObserver = ({
+    target,
+    rootMargin = '0px',
+    threshold = 1.0,
+    onIntersect,
+  }: UseObserver) => {
+    useEffect(() => {
+      let observer: IntersectionObserver | undefined;
+
+      if (target && target.current) {
+        observer = new IntersectionObserver(onIntersect, {
+          rootMargin,
+          threshold,
+        });
+
+        observer.observe(target.current);
+      }
+      return () => observer && observer.disconnect();
+    }, [target, rootMargin, threshold, onIntersect]);
+  };
+
+  const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
+    entry.isIntersecting && fetchNextPage();
+
+  useObserver({
+    target: bottomRef,
+    onIntersect,
+  });
 
   return (
     <div className="pb-[5rem]">
@@ -101,8 +165,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           isModalOpen={isModalOpen}
         />
       )}
-      {/* 추후에 아래의 dummyQuestions를 letters로 바꿔야 함(api 연동 후) */}
-      {letters.map((letter: LetterType, index: number) => {
+      {(letters ?? ssrLetters).map((letter: LetterType, index: number) => {
         return (
           <QuestionBar
             key={index}
@@ -111,6 +174,17 @@ const Page: NextPageWithLayout<Letters> = ({ letters }) => {
           />
         );
       })}
+      {/* <button
+        onClick={() => fetchNextPage()}
+        disabled={!hasNextPage || isFetchingNextPage}
+      >
+        {isFetchingNextPage
+          ? 'Loading more...'
+          : hasNextPage
+            ? 'Load More'
+            : 'Nothing more to load'}
+      </button> */}
+      <div ref={bottomRef} />
     </div>
   );
 };
@@ -123,7 +197,6 @@ export const getStaticProps = async () => {
   try {
     const response = await axios.get(apiEndpoint);
     const letters = response.data.letters;
-    console.log('letters: ', letters);
     return { props: { letters } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
