@@ -138,6 +138,7 @@ const Page: NextPageWithLayout<Letters> = ({ letters: ssrLetters }) => {
 
       if (target && target.current) {
         observer = new IntersectionObserver(onIntersect, {
+          root: null,
           rootMargin,
           threshold,
         });
