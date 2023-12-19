@@ -5,39 +5,24 @@ import ListItem from '@/components/ui/ListItem';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
 import axios from 'axios';
-import { get } from 'http';
-import { useEffect } from 'react';
-import Link from 'next/link';
-import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
-import { useRouter } from 'next/router';
-import { GetStaticPropsContext } from 'next';
-import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
 const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
-const config = {
-  linkKey: process.env.NEXT_PUBLIC_LINK_KEY,
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const path = '/api/v1/members/invite/info';
+const apiEndpoint = `${baseURL}${path}`;
+
+type InviteInfo = {
+  selectedQuestionId: number;
+  invitedPersonName: string;
 };
 
-type Data = {
-  data: {
-    question: string;
-    invitedPersonName: string;
-  };
-};
-
-const Page: NextPageWithLayout<Data> = ({ data }) => {
-  const router = useRouter();
-  console.log(router.pathname);
-
-  useEffect(() => {
-    window.localStorage.setItem(LOCAL_STORAGE_KEYS.PREV_URL, router.asPath);
-  }, []);
-
+const Page: NextPageWithLayout<InviteInfo> = ({ inviteInfo }) => {
+  console.log('inviteInfo: ', inviteInfo);
   return (
     <>
-      <div className="mt-10 flex flex-col items-center">
-        <div>{data?.invitedPersonName} 님이</div>
+      <div className="mt-10">
+        <div>{inviteInfo?.invitedPersonName}이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
       <ListItem
@@ -71,26 +56,15 @@ Page.getLayout = function getLayout(page) {
   );
 };
 
-export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const path = '/api/v1/members/invite/info/';
-  const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
-  // const apiEndpoint = `${baseURL}${path}${params?.id}`;
-
-  console.log(params?.id);
+export const getStaticProps = async () => {
   try {
-    const response = await axios.get(apiEndpoint, {
-      params: {
-        linkKey: config.linkKey,
-        // linkKey: params?.id,
-      },
-    });
-
-    const data = response.data;
-    return { props: { data } };
+    const response = await axios.get(apiEndpoint);
+    const inviteInfo = response.data;
+    console.log('inviteInfo: ', inviteInfo);
+    return { props: { inviteInfo } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
-    return { props: { invitedName: [] } };
+    return { props: { inviteInfo: [] } };
   }
 };
 
