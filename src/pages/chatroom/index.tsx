@@ -54,6 +54,7 @@ const getLetters = async ({ pageParam }: PageParam) => {
 };
 
 // useReversedInfiniteScroll라는 커스텀 훅
+// containerRef과 handleScroll을 뽑아내기 위해 만들었다.
 function useReversedInfiniteScroll(
   fetchNextPage: () => Promise<unknown>,
   hasNextPage: boolean = false,
@@ -62,20 +63,25 @@ function useReversedInfiniteScroll(
   const containerRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState(0);
 
+  // useEffect(함수, 배열)
   // 맨 처음에, prevScrollHeight가 바뀔 때, dataLength가 바뀔 때 실행된다.
   useEffect(
-    // (3) scrollToPrevScrollHeight를 호출하는 곳이 없는데 어떻게 실행되는지??
+    // 스크롤 위치를 지정하는 함수(scrollTo로 이동)
     function scrollToPrevScrollHeight() {
-      // prevScrollHeight === 0: 첫 페이지라면
+      // scrollHeight: 스크롤 된 내용의 전체 높이
+      // 처음 접속했을 때 스크롤을 맨 아래로 내린다.
       if (prevScrollHeight === 0) {
-        // 맨 처음에는 스크롤 맨 아래로 내리기
         containerRef.current?.scrollTo({
           top: containerRef.current.scrollHeight,
         });
         return;
       }
 
-      // 아닐 경우, 스크롤의 높이를 변경합니다.
+      // **중요**: 아래 코드를 쓰기 위해 useReversedInfiniteScroll 훅이 존재한다.
+      // IntersectionObserver를 처음에 사용했었음. 근데 이 코드가 없어서 페이지 추가시에 스크롤이 맨 위로 올라가는 문제가 발생했다.
+      // 처음이 아니면 화면을 이동한 만큼만 스크롤 위치를 이동한다.
+      // ㄴ 아래 코드가 없으면 페이지가 바뀔 때 스크롤 위치가 유지되지 않음
+      // ㄴ 그래서 페이지가 생겼을 때 스크롤이 바로 최상단으로 이동하는 문제가 발생한다.
       containerRef.current?.scrollTo({
         top: containerRef.current.scrollHeight - prevScrollHeight,
       });
@@ -91,20 +97,21 @@ function useReversedInfiniteScroll(
       return;
     }
 
-    // 이전 스크롤 높이에서 현재 scrollTop를 뺸 높이를 기억하고
+    // scrollHeight은 동일
+    // scrollTop은 스크롤이 올라갈수록 줄어듦
+    // 즉 prevScrollHeight는 스크롤을 올릴 수록 커짐
     setPrevScrollHeight(
       (containerRef.current?.scrollHeight ?? 0) -
         (containerRef.current?.scrollTop ?? 0)
     );
 
-    // 만약 스크롤이 450px 미만으로 줄어들었다면
+    // 만약 스크롤이 450px 미만으로 줄어들었다면(맨 위까지 스크롤이 올라가기 전에) 다음 페이지 가져오기
     if ((containerRef.current?.scrollTop ?? 0) < 450) {
-      // 다음 페이지를 가져옵니다.
       fetchNextPage();
     }
   }
 
-  // containerRef과 handleScroll을 뽑아내기 위한 훅임
+  // 이 훅은 containerRef과 handleScroll을 리턴한다.
   return {
     containerRef,
     handleScroll,
@@ -112,18 +119,8 @@ function useReversedInfiniteScroll(
 }
 
 const Page: NextPageWithLayout<Letters> = () => {
-  // (1) getStaticProps에서 가져온 letters를 가져오려면 아래처럼 파라미터를 넘겨줘야 하지 않는지??
-  // 왜 넘기면 오류가 나는지? 응답으로 가져온 이 letters를 써야하지 않나??
-  // const Page: NextPageWithLayout<Letters> = ({ letters }) => {
-
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
-  const {
-    fetchNextPage,
-    hasNextPage,
-    // 'data: letters'가 없으면 안됨
-    // (2) 아래의 letters는 어디에서 가져온 것인지??
-    data: letters,
-  } = useInfiniteQuery({
+  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
     initialPageParam: 0,
@@ -135,7 +132,7 @@ const Page: NextPageWithLayout<Letters> = () => {
       return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
     },
 
-    // select: 데이터를 가공하기 위한 부분
+    // select: 데이터를 가공하기 위한 부분. queryFn에서 받아온 data를 가공한다.(데이터 원본))
     // [[5, 6], [3, 4], [1, 2]] -> [[1, 2], [3, 4], [5, 6]] -> [1, 2, 3, 4, 5, 6]
     // data.pages.reverse()를 하면 앞뒤로 새 페이지가 붙는 버그가 생긴다.
     // ㄴ reverse()는 배열 자체를 바꿔버리기 때문. 대신 [...data.pages].reverse()를 해줘야 한다.
@@ -148,7 +145,7 @@ const Page: NextPageWithLayout<Letters> = () => {
   const { containerRef, handleScroll } = useReversedInfiniteScroll(
     fetchNextPage,
     hasNextPage,
-    letters?.length ?? 0 // 훅에서 dataLength가 됨
+    data?.length ?? 0 // 훅에서 dataLength가 됨
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -200,8 +197,8 @@ const Page: NextPageWithLayout<Letters> = () => {
     }
   };
 
-  console.log('letters: ', letters);
-  console.log('hasNextPage: ', hasNextPage);
+  // 다음 페이지가 있는지(nextCursor가 -1인지 아닌지) 확인한다.
+  // console.log('hasNextPage: ', hasNextPage);
 
   return (
     <div className="pb-[5rem]">
@@ -220,10 +217,10 @@ const Page: NextPageWithLayout<Letters> = () => {
         className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto"
         // letters를 감싸고 있는 container. ref를 지정했다.
         ref={containerRef}
-        // 스크롤이 되면 실행되는 이벤트 핸들러
+        // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
         onScroll={handleScroll}
       >
-        {letters?.map((letter: LetterType, index: number) => {
+        {data?.map((letter: LetterType, index: number) => {
           return (
             <QuestionBar
               key={index}
@@ -239,19 +236,6 @@ const Page: NextPageWithLayout<Letters> = () => {
 
 Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
-};
-
-// letters: 빌드시에 가져온 데이터. prop으로 넘겨줘서 사용 가능하게 한다.
-export const getStaticProps = async () => {
-  try {
-    const response = await axios.get(apiEndpoint);
-    // response.data에는 letters와 nextCursor가 있음. 그 중 letters만 가져온다.
-    const letters = response.data.letters;
-    return { props: { letters } };
-  } catch (error) {
-    console.error('Error fetching data:', (error as Error).message);
-    return { props: { letters: [] } };
-  }
 };
 
 export default Page;
