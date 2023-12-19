@@ -6,9 +6,12 @@ type OnboardingData = {
   answer: string;
 };
 
+// Todo: mutationFn response 타입을 이렇게 적용하는게 맞는지 확인 필요!
 type OnboardingResponse = {
-  linkKey: string;
-  question: string;
+  data: {
+    linkKey: string;
+    question: string;
+  };
 };
 
 export const useCreateInviteKey = (
