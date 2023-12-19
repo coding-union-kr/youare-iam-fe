@@ -1,7 +1,7 @@
 type ListItemProps = {
   question: string;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const ListItem = ({ question, className, onClick }: ListItemProps) => {
