@@ -9,7 +9,6 @@ export default function Login() {
   const { code } = router.query;
 
   useEffect(() => {
-    console.log(router.asPath);
     const fetchToken = async () => {
       try {
         const res = await axios.get(
