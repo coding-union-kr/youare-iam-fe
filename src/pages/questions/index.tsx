@@ -4,9 +4,9 @@ import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
 
-const mockServerURL = 'http://218.239.180.88:8080';
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
 const path = '/api/v1/questions';
-const apiEndpoint = `${mockServerURL}${path}`;
+const apiEndpoint = `${baseURL}${path}`;
 
 type Questions = {
   questions: Question[];

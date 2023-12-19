@@ -39,9 +39,9 @@ type PageParam = {
   pageParam: number;
 };
 
-const mockServerURL = 'http://218.239.180.88:8080';
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
 const path = '/api/v1/letters';
-const apiEndpoint = `${mockServerURL}${path}`;
+const apiEndpoint = `${baseURL}${path}`;
 
 const getLetters = async ({ pageParam }: PageParam) => {
   const url = pageParam
