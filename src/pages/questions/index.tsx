@@ -4,10 +4,9 @@ import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
 
-const mockServerURL =
-  'https://cc7831bd-6881-44ff-9534-f344d05bc5ad.mock.pstmn.io';
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
 const path = '/api/v1/questions';
-const apiEndpoint = `${mockServerURL}${path}`;
+const apiEndpoint = `${baseURL}${path}`;
 
 type Questions = {
   questions: Question[];
@@ -22,7 +21,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
   const router = useRouter();
 
   const handleItemClick = async (questionId: Question['questionId']) => {
-    console.log(questionId);
+    // console.log(questionId);
     try {
       // POST 요청으로 questionId를 보내기
       const postResponse = await axios.post(apiEndpoint, {
@@ -31,14 +30,16 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
 
       // 응답으로 받은 selectedQuestionId를 가져오기
       const selectedQuestionId = postResponse.data.selectedQuestionId;
-      console.log(selectedQuestionId);
+      // console.log(selectedQuestionId);
 
       const targetPath = '/chatroom';
       // selectedQuestionId가 있는 위치로 이동하기
       // 위치 만들기
       router.push({
         pathname: targetPath,
-        hash: '10', // 원래 selectedQuestionId가 들어가야 함. 임시로 큰 값을 넣어봄
+        // 답변 수정, 답변 등록 페이지에는 selectQuestionId가 들어가야 함.
+        // 질문 선택 페이지에는 마지막 selectQuestionsId가 들어가야 함.
+        // hash: '0',
       });
     } catch (error) {
       console.error('Error fetching data:', (error as Error).message);
@@ -70,7 +71,7 @@ export const getStaticProps = async () => {
   try {
     const response = await axios.get(apiEndpoint);
     const questions = response.data;
-
+    console.log('questions', questions);
     return { props: { questions } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
