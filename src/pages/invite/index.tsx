@@ -18,27 +18,21 @@ const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const path = '/api/v1/members/invite/info/';
 const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
 
-// const getInviteInfo = async () => {
-//   const response = await axios.get(apiEndpoint, {
-//     params: {
-//       linkKey: config.linkKey,
-//     },
-//   });
-//   console.log(response.data.invitedPersonName);
-//   console.log(typeof response.data.invitedPersonName);
-//   return response.data.invitedPersonName;
+type InvitedName = {
+  invitedName: string;
+};
 
-// return response.data;
-// };
-
-const Page: NextPageWithLayout = ({ invitedName }) => {
+const Page: NextPageWithLayout<InvitedName> = ({ invitedName }) => {
   return (
     <>
-      <div className="mt-10">
-        <div>{invitedName}이</div>
+      <div className="mt-10 flex flex-col items-center">
+        <div>{invitedName} 님이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
-      {/* <ListItem question={question} className="mt-5 bg-white" /> */}
+      <ListItem
+        question={question}
+        className="mt-5 bg-white flex justify-center items-center text-lg"
+      />
       <Image
         src="/logo.png"
         priority
