@@ -9,16 +9,14 @@ import { get } from 'http';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
+import { useRouter } from 'next/router';
+import { GetStaticPropsContext } from 'next';
 
 const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
 const config = {
   linkKey: process.env.NEXT_PUBLIC_LINK_KEY,
 };
-
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const path = '/api/v1/members/invite/info/';
-const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
 
 type Data = {
   data: {
@@ -28,7 +26,8 @@ type Data = {
 };
 
 const Page: NextPageWithLayout<Data> = ({ data }) => {
-  console.log(data);
+  const router = useRouter();
+  console.log(router.pathname);
   return (
     <>
       <div className="mt-10 flex flex-col items-center">
@@ -66,11 +65,18 @@ Page.getLayout = function getLayout(page) {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const path = '/api/v1/members/invite/info/';
+  // const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
+  const apiEndpoint = `${baseURL}${path}${params?.id}`;
+
+  console.log(params?.id);
   try {
     const response = await axios.get(apiEndpoint, {
       params: {
-        linkKey: config.linkKey,
+        // linkKey: config.linkKey,
+        linkKey: params?.id,
       },
     });
 
