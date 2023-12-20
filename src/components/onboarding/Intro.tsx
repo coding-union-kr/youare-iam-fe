@@ -1,10 +1,10 @@
 import Button from '../ui/Button';
 
-export type OnboardingStepPros = {
+export type OnboardingStepProps = {
   onNext: () => void;
 };
 
-export default function Intro({ onNext }: OnboardingStepPros) {
+export default function Intro({ onNext }: OnboardingStepProps) {
   return (
     <>
       {/* Todo: framer motion  */}

@@ -8,7 +8,8 @@ type ReturnType = [
 
 const useInput = (
   initialValue = '',
-  validator = (value: string) => ''
+  validator = (value: string) => '',
+  onChangeCallback = (value: string) => {}
 ): ReturnType => {
   const [state, setState] = useState(initialValue);
   const [error, setError] = useState('');
@@ -21,8 +22,10 @@ const useInput = (
 
         const error = validator(value);
         setError(error);
+
+        onChangeCallback(value);
       },
-      [validator]
+      [validator, onChangeCallback]
     );
 
   return [state, onChange, error];
