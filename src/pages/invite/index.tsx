@@ -15,7 +15,7 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div>초대 링크를 보냈어요!</div>
       </div>
-      <ListItem question={question} className="bg-white mt-5" />
+      {/* <ListItem question={question} className="mt-5 bg-white" /> */}
       <Image
         src="/logo.png"
         priority
