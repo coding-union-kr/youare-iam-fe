@@ -5,24 +5,37 @@ import ListItem from '@/components/ui/ListItem';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
 import axios from 'axios';
+import { get } from 'http';
+import { useEffect } from 'react';
 
 const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const path = '/api/v1/members/invite/info';
-const apiEndpoint = `${baseURL}${path}`;
-
-const getInviteInfo = async () => {
-  const response = await axios.get(apiEndpoint);
-  return response?.data.invitedPersonName;
+const config = {
+  linkKey: process.env.NEXT_PUBLIC_LINK_KEY,
 };
 
-const Page: NextPageWithLayout = () => {
-  const invitedPerson = getInviteInfo();
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const path = '/api/v1/members/invite/info/';
+const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
+
+// const getInviteInfo = async () => {
+//   const response = await axios.get(apiEndpoint, {
+//     params: {
+//       linkKey: config.linkKey,
+//     },
+//   });
+//   console.log(response.data.invitedPersonName);
+//   console.log(typeof response.data.invitedPersonName);
+//   return response.data.invitedPersonName;
+
+// return response.data;
+// };
+
+const Page: NextPageWithLayout = ({ invitedName }) => {
   return (
     <>
       <div className="mt-10">
-        <div>{invitedPerson}이</div>
+        <div>{invitedName}이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
       <ListItem
@@ -54,6 +67,22 @@ Page.getLayout = function getLayout(page) {
   return (
     <BasicLayout className="bg-[#F7CBC3] justify-center">{page}</BasicLayout>
   );
+};
+
+export const getStaticProps = async () => {
+  try {
+    const response = await axios.get(apiEndpoint, {
+      params: {
+        linkKey: config.linkKey,
+      },
+    });
+
+    const invitedName = response.data.invitedPersonName;
+    return { props: { invitedName } };
+  } catch (error) {
+    console.error('Error fetching data:', (error as Error).message);
+    return { props: { invitedName: [] } };
+  }
 };
 
 export default Page;
