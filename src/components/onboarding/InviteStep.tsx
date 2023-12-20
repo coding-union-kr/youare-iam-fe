@@ -7,10 +7,7 @@ import {
 import { useCreateInviteKey } from '@/hooks/feature/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 
-const baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://youare-iam.vercel.app/';
+const TEMPLATE_ID = 102113;
 
 export default function InviteStep() {
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
@@ -24,11 +21,16 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
-          //Todo : 초대링크 전송 + toast 알림(초대링크가 전송되었습니다.)
-          console.log(`${baseURL}/invite/${data.linkKey}`);
+          window.Kakao.Share.sendCustom({
+            templateId: TEMPLATE_ID,
+            templateArgs: {
+              question: onboardingData.selectedQuestion.question,
+              invitedPersonName: '이슬',
+              linkKey: data.linkKey,
+            },
+          });
 
-          // Todo : onboardingState 초기화
-          //setOnboardingData(initialOnboardingState);
+          setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {
           throw error;
