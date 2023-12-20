@@ -7,6 +7,8 @@ import Button from '@/components/ui/Button';
 import axios from 'axios';
 import { get } from 'http';
 import { useEffect } from 'react';
+import Link from 'next/link';
+import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 
 const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
@@ -18,15 +20,19 @@ const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const path = '/api/v1/members/invite/info/';
 const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
 
-type InvitedName = {
-  invitedName: string;
+type Data = {
+  data: {
+    question: string;
+    invitedPersonName: string;
+  };
 };
 
-const Page: NextPageWithLayout<InvitedName> = ({ invitedName }) => {
+const Page: NextPageWithLayout<Data> = ({ data }) => {
+  console.log(data);
   return (
     <>
       <div className="mt-10 flex flex-col items-center">
-        <div>{invitedName} 님이</div>
+        <div>{data.invitedPersonName} 님이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
       <ListItem
@@ -68,8 +74,8 @@ export const getStaticProps = async () => {
       },
     });
 
-    const invitedName = response.data.invitedPersonName;
-    return { props: { invitedName } };
+    const data = response.data;
+    return { props: { data } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
     return { props: { invitedName: [] } };
