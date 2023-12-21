@@ -6,6 +6,7 @@ import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/feature/usePostAnswer';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
   const router = useRouter();
@@ -14,6 +15,8 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
   );
+
+  const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +30,7 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
       {
         onSuccess: () => {
           //Todo: invalidateQueries
+          queryClient.invalidateQueries({ queryKey: ['projects'] });
           router.push({
             pathname: '/chatroom',
             hash: selectQuestionId,
@@ -39,7 +43,6 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
       }
     );
   };
-
   return (
     <section className="flex flex-col justify-between h-full">
       <QuestionTitle question="당신이 좋아하는 계절은 언제인가요?" />
