@@ -2,7 +2,8 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import axios, { InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  // baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL,
   timeout: 15000,
 });
 
