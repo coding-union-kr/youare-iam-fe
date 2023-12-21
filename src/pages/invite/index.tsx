@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
 import { GetStaticPropsContext } from 'next';
+import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
 const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
@@ -28,14 +29,19 @@ type Data = {
 const Page: NextPageWithLayout<Data> = ({ data }) => {
   const router = useRouter();
   console.log(router.pathname);
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCAL_STORAGE_KEYS.PREV_URL, router.asPath);
+  }, []);
+
   return (
     <>
       <div className="mt-10 flex flex-col items-center">
-        <div>{data.invitedPersonName} 님이</div>
+        <div>{data?.invitedPersonName} 님이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
       <ListItem
-        question={data.question}
+        question={data?.question}
         className="mt-5 bg-white flex justify-center items-center text-lg"
       />
       <Image
@@ -68,15 +74,15 @@ Page.getLayout = function getLayout(page) {
 export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const path = '/api/v1/members/invite/info/';
-  // const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
-  const apiEndpoint = `${baseURL}${path}${params?.id}`;
+  const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
+  // const apiEndpoint = `${baseURL}${path}${params?.id}`;
 
   console.log(params?.id);
   try {
     const response = await axios.get(apiEndpoint, {
       params: {
-        // linkKey: config.linkKey,
-        linkKey: params?.id,
+        linkKey: config.linkKey,
+        // linkKey: params?.id,
       },
     });
 
