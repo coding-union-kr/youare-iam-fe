@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '../ui/Button';
-import { useEffect, useState } from 'react';
+import { Children, useEffect, useState } from 'react';
 import useStep from '@/hooks/common/useStep';
 
 export type OnboardingStepProps = {
@@ -23,30 +23,55 @@ export default function Intro({ onNext }: OnboardingStepProps) {
 
   return (
     <>
-      <section className="h-[2/3]">
+      <section className="h-[2/3] my-auto text-lg text-center leading-loose">
         <AnimatePresence>
           {currentStep === 0 && (
-            <motion.p
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              평소에 이야기 나누기 어려웠지만, 너무 궁금했던 질문들 있으시죠?
-            </motion.p>
+              <p>평소에 이야기 나누기 어려웠지만,</p>
+              <p>너무 궁금했던 질문들 있으시죠?</p>
+            </motion.div>
           )}
           {currentStep === 1 && (
-            <motion.p
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              질문을 통해서 서로를 더 잘 알아갈 수 있을거에요.
-            </motion.p>
+              <p>질문을 통해서 서로를 </p>
+              <p>더 잘 알아갈 수 있을거에요.</p>
+            </motion.div>
           )}
           {currentStep === 2 && (
-            <p>
-              사랑하는 사람과 함께 이야기해보고 싶은 질문을 선택하러 가볼까요?
-            </p>
+            <article>
+              <motion.p
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 1.5 }}
+              >
+                사랑하는 사람과
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 2.0 }}
+              >
+                함께 이야기해보고 싶은 질문을
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 2.5 }}
+              >
+                선택하러 가볼까요?
+              </motion.p>
+            </article>
           )}
         </AnimatePresence>
       </section>
