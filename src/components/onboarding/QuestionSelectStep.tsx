@@ -55,7 +55,12 @@ export default function QuestionSelectStep({
           </li>
         ))}
       </ul>
-      <Button variant="primary" size="wide" onClick={handleQuestionSubmit}>
+      <Button
+        variant="primary"
+        size="wide"
+        onClick={handleQuestionSubmit}
+        disabled={onboardingData.selectedQuestion.questionId === 0}
+      >
         이 질문으로 시작하기
       </Button>
     </>

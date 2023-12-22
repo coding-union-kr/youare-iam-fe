@@ -27,7 +27,7 @@ export default function AnswerForm({
           </p>
         )}
       </div>
-      <Button variant="primary" size="wide">
+      <Button variant="primary" size="wide" disabled={!!errorMessage}>
         답변 등록하기
       </Button>
     </form>
