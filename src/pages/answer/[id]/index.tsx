@@ -71,12 +71,20 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;
 
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
+  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const path = '/api/v1/answer';
   const apiEndpoint = `${baseURL}${path}?selected-question-id=${id}`;
 
-  const res = await axios.get(apiEndpoint);
-  const question = res.data.question;
+  const getQuestion = async () => {
+    try {
+      const res = await axios.get(apiEndpoint);
+      return res.data.question;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const question = await getQuestion();
 
   const isValidId = (id: any) => {
     return !isNaN(Number(id));

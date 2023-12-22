@@ -39,18 +39,20 @@ type PageParam = {
   pageParam: number;
 };
 
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
-const path = '/api/v1/letters1';
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const path = '/api/v1/letters';
 const apiEndpoint = `${baseURL}${path}`;
 
 const getLetters = async ({ pageParam }: PageParam) => {
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
-  const response = await axios.get(url);
-  // response.data.letters로 하면 nextCursor를 못받아와서 안됨
-  const letters = response.data;
-  return letters;
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // useReversedInfiniteScroll라는 커스텀 훅
