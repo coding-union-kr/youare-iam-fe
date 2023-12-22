@@ -39,7 +39,7 @@ type PageParam = {
   pageParam: number;
 };
 
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const path = '/api/v1/letters';
 const apiEndpoint = `${baseURL}${path}`;
 
@@ -47,10 +47,12 @@ const getLetters = async ({ pageParam }: PageParam) => {
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
-  const response = await axios.get(url);
-  // response.data.letters로 하면 nextCursor를 못받아와서 안됨
-  const letters = response.data;
-  return letters;
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // useReversedInfiniteScroll라는 커스텀 훅
@@ -120,7 +122,7 @@ function useReversedInfiniteScroll(
 
 const Page: NextPageWithLayout<Letters> = () => {
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
-  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
+  const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
     initialPageParam: 0,
@@ -155,6 +157,10 @@ const Page: NextPageWithLayout<Letters> = () => {
     bodyText: '',
     handleAction: () => {},
   });
+
+  if (error) {
+    throw error;
+  }
 
   const router = useRouter();
 

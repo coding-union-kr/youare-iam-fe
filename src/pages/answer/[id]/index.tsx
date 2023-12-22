@@ -7,8 +7,14 @@ import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/feature/usePostAnswer';
 import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
-const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
+type Prop = {
+  id: string;
+  question: string;
+};
+
+const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
   const router = useRouter();
   const { mutate: postAnswer } = usePostAnswer();
 
@@ -29,7 +35,6 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
       { selectQuestionId: Number(selectQuestionId), answer },
       {
         onSuccess: () => {
-          //Todo: invalidateQueries
           queryClient.invalidateQueries({ queryKey: ['projects'] });
           router.push({
             pathname: '/chatroom',
@@ -37,15 +42,14 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id: selectQuestionId }) => {
           });
         },
         onError: (error) => {
-          //Todo: 에러 처리
-          console.log(error);
+          throw error;
         },
       }
     );
   };
   return (
     <section className="flex flex-col justify-between h-full">
-      <QuestionTitle question="당신이 좋아하는 계절은 언제인가요?" />
+      <QuestionTitle question={question} />
       <AnswerForm
         answer={answer}
         onChange={onChange}
@@ -67,6 +71,21 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;
 
+  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const path = '/api/v1/answer';
+  const apiEndpoint = `${baseURL}${path}?selected-question-id=${id}`;
+
+  const getQuestion = async () => {
+    try {
+      const res = await axios.get(apiEndpoint);
+      return res.data.question;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const question = await getQuestion();
+
   const isValidId = (id: any) => {
     return !isNaN(Number(id));
   };
@@ -78,7 +97,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { id },
+    props: { id, question },
   };
 }
 

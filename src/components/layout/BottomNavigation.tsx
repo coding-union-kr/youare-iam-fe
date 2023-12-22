@@ -18,12 +18,12 @@ export type NavIconProps = ComponentProps<'svg'> & {
 const NAV_ITEMS = [
   { href: '/chatroom', Icon: ChatRoomIcon, label: '대화상세' },
   { href: '/questions', Icon: SelectIcon, label: '질문선택' },
-  { href: '/status', Icon: BoardIcon, label: '질문현황' },
+  // { href: '/status', Icon: BoardIcon, label: '질문현황' },
 ];
 
-type NavItmeProps = (typeof NAV_ITEMS)[number];
+type NavItemProps = (typeof NAV_ITEMS)[number];
 
-const NavItem = memo(({ href, Icon, label }: NavItmeProps) => {
+const NavItem = memo(({ href, Icon, label }: NavItemProps) => {
   const router = useRouter();
   const color = navIconColors[getNavItemStatus(router.pathname, href)];
 

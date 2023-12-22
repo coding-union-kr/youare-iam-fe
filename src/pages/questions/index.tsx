@@ -4,7 +4,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
 
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const path = '/api/v1/questions';
 const apiEndpoint = `${baseURL}${path}`;
 
