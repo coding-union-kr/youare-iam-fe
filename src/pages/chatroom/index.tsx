@@ -40,7 +40,7 @@ type PageParam = {
 };
 
 const baseURL = process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL;
-const path = '/api/v1/letters';
+const path = '/api/v1/letters1';
 const apiEndpoint = `${baseURL}${path}`;
 
 const getLetters = async ({ pageParam }: PageParam) => {
@@ -120,7 +120,7 @@ function useReversedInfiniteScroll(
 
 const Page: NextPageWithLayout<Letters> = () => {
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
-  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
+  const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
     initialPageParam: 0,
@@ -155,6 +155,10 @@ const Page: NextPageWithLayout<Letters> = () => {
     bodyText: '',
     handleAction: () => {},
   });
+
+  if (error) {
+    throw error;
+  }
 
   const router = useRouter();
 

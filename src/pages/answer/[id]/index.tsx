@@ -42,8 +42,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
           });
         },
         onError: (error) => {
-          //Todo: 에러 처리
-          console.log(error);
+          throw error;
         },
       }
     );
