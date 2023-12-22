@@ -6,6 +6,7 @@ type AnswerFormProps = {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   errorMessage: string;
   handleSubmit: (e: React.FormEvent) => void;
+  isLoading?: boolean;
 };
 
 export default function AnswerForm({
@@ -13,6 +14,7 @@ export default function AnswerForm({
   onChange,
   errorMessage,
   handleSubmit,
+  isLoading,
 }: AnswerFormProps) {
   return (
     <form
@@ -27,7 +29,12 @@ export default function AnswerForm({
           </p>
         )}
       </div>
-      <Button variant="primary" size="wide" disabled={!!errorMessage}>
+      <Button
+        variant="primary"
+        size="wide"
+        disabled={!!errorMessage}
+        isLoading={isLoading}
+      >
         답변 등록하기
       </Button>
     </form>
