@@ -10,6 +10,7 @@ export default function Button({
   size = 'normal',
   children,
   className,
+  disabled,
   ...props
 }: ButtonProps) {
   const colorVariants = {
@@ -25,9 +26,13 @@ export default function Button({
     wide: 'btn-wide block w-[90%] mx-auto text-base',
   };
 
+  const disabledStyle = disabled
+    ? 'bg-gray-light border-gray-light text-gray-dark'
+    : '';
+
   return (
     <button
-      className={`btn ${colorVariants[variant]} ${sizeVariants[size]} no-animation ${className}`}
+      className={`btn ${colorVariants[variant]} ${sizeVariants[size]} no-animation ${className} ${disabledStyle}`}
       {...props}
     >
       {children}
