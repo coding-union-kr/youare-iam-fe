@@ -31,7 +31,7 @@ export default function InviteStep() {
           //setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {
-          console.log(error);
+          throw error;
         },
       }
     );
