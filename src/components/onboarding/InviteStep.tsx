@@ -23,11 +23,13 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
+          console.log(data);
+
           window.Kakao.Share.sendCustom({
             templateId: TEMPLATE_ID,
             templateArgs: {
               question: onboardingData.selectedQuestion.question,
-              invitedPersonName: '이슬',
+              invitedPersonName: data.invitedPersonName,
               linkKey: data.linkKey,
             },
           });
