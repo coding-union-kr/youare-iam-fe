@@ -2,8 +2,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import axios, { InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
 
 const instance = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   timeout: 15000,
 });
 
@@ -32,18 +31,19 @@ export const post = <T = any, D = any, R = AxiosResponse<T>>(
   return instance.post<T, R>(url, data);
 };
 
-const mockAPIinstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_MOCK_SERVER_URL,
+// Gamti 로컬 서버 연결
+const instanceGT = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL,
   timeout: 15000,
 });
 
-export const mockGet = <T = any, R = AxiosResponse<T>>(url: string) => {
-  return mockAPIinstance.get<T, R>(url);
+export const getGT = <T = any, R = AxiosResponse<T>>(url: string) => {
+  return instanceGT.get<T, R>(url);
 };
 
-export const mockPost = <T = any, D = any, R = AxiosResponse<T>>(
+export const postGT = <T = any, D = any, R = AxiosResponse<T>>(
   url: string,
   data?: D
 ) => {
-  return mockAPIinstance.post<T, R>(url, data);
+  return instanceGT.post<T, R>(url, data);
 };
