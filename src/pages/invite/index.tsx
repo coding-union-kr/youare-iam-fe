@@ -6,7 +6,6 @@ import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
 import { GetStaticPropsContext } from 'next';
@@ -32,7 +31,36 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
   };
 
   const handleSubmitAnswer = () => {
+    // {KAKAO_AUTH_URL}
+    const isLogin = window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
+    if (!isLogin) {
+      window.location.href = KAKAO_AUTH_URL;
+    } else {
+      // post 요청 보내고 chatroom으로 이동
+      const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const path = '/api/v1/members/invite/accept';
+      const apiEndpoint = `${baseURL}${path}`;
+      axios
+        .post(
+          apiEndpoint,
+
+          {
+            linkKey: config.linkKey,
+            // linkKey: params?.id,
+            answer: text,
+          },
+          {
+            headers: {
+              Authorization: localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN),
+            },
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+          router.push('/chatroom');
+        });
+    }
   };
 
   useEffect(() => {
@@ -74,15 +102,14 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
         onChange={handleChangeText}
         className="min-h-[15rem]"
       />
-      <Link
-        href={KAKAO_AUTH_URL}
-        className="w-full"
+      <Button
         onClick={handleSubmitAnswer}
+        variant="primary"
+        size="wide"
+        className="mt-5"
       >
-        <Button variant="primary" size="wide" className="mt-5">
-          답변 등록
-        </Button>
-      </Link>
+        답변 등록
+      </Button>
     </>
   );
 };
