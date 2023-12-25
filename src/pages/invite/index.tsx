@@ -5,15 +5,12 @@ import ListItem from '@/components/ui/ListItem';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
 import axios from 'axios';
-import { get } from 'http';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
 import { GetStaticPropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
-
-const question = '같이 해보고 싶은 버킷리스트가 있나요?';
 
 const config = {
   linkKey: process.env.NEXT_PUBLIC_LINK_KEY,
@@ -27,12 +24,29 @@ type Data = {
 };
 
 const Page: NextPageWithLayout<Data> = ({ data }) => {
+  const [text, setText] = useState('');
   const router = useRouter();
-  console.log(router.pathname);
+
+  const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+  };
+
+  const handleSubmitAnswer = () => {
+    window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
+  };
+
+  useEffect(() => {
+    const storedText = window.localStorage.getItem(
+      LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
+    );
+    if (storedText) {
+      setText(storedText);
+    }
+  }, []);
 
   useEffect(() => {
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.PREV_URL, router.asPath);
-  }, []);
+  }, [router.asPath]);
 
   return (
     <>
@@ -55,8 +69,16 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
       <div className="mb-5">
         <div>답변을 작성해 볼까요?</div>
       </div>
-      <TextArea value="" onChange={() => {}} className="min-h-[15rem]" />
-      <Link href={KAKAO_AUTH_URL} className="w-full">
+      <TextArea
+        value={text}
+        onChange={handleChangeText}
+        className="min-h-[15rem]"
+      />
+      <Link
+        href={KAKAO_AUTH_URL}
+        className="w-full"
+        onClick={handleSubmitAnswer}
+      >
         <Button variant="primary" size="wide" className="mt-5">
           답변 등록
         </Button>
@@ -77,7 +99,6 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
   const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
   // const apiEndpoint = `${baseURL}${path}${params?.id}`;
 
-  console.log(params?.id);
   try {
     const response = await axios.get(apiEndpoint, {
       params: {
