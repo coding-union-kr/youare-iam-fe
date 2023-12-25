@@ -41,10 +41,11 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
       const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const path = '/api/v1/members/invite/accept';
       const apiEndpoint = `${baseURL}${path}`;
+      const accessToken = localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
+      // console.log(accessToken);
       axios
         .post(
           apiEndpoint,
-
           {
             linkKey: config.linkKey,
             // linkKey: params?.id,
@@ -52,12 +53,12 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
           },
           {
             headers: {
-              Authorization: localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN),
+              Authorization: accessToken,
             },
           }
         )
         .then(function (response) {
-          console.log(response);
+          console.log(response.data.selectedQuestionId);
           router.push('/chatroom');
         });
     }
