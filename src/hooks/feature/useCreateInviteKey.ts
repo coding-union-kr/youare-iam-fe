@@ -11,6 +11,7 @@ type OnboardingResponse = {
   data: {
     linkKey: string;
     question: string;
+    invitedPersonName: string;
   };
 };
 

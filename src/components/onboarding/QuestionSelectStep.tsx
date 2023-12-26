@@ -30,19 +30,21 @@ export default function QuestionSelectStep({
 
   const getListItemClasses = (questionId: number) => {
     const baseClasses =
-      'flex flex-col justify-center h-20 px-2 m-1 rounded-lg bg-secondary';
+      'flex flex-col justify-center h-20 px-2 m-1 rounded-lg border-1';
     const selectedClasses =
       onboardingData.selectedQuestion.questionId === questionId
-        ? 'border-2 border-black'
-        : 'border-1 border-gray-light';
+        ? ' bg-primary bg-primary'
+        : ' border-gray-light bg-secondary';
     return `${baseClasses} ${selectedClasses}`;
   };
 
   return (
     <>
-      <p>함께 이야기해보고 싶은 질문을 선택해볼까요?</p>
+      <h1 className="text-lg font-semibold">
+        함께 이야기해보고 싶은 질문을 선택해볼까요?
+      </h1>
 
-      <ul className="overflow-y-scroll h-80rem my-7 ">
+      <ul className="w-[90%] overflow-y-scroll h-80rem my-7">
         {questionList.map((question) => (
           <li
             key={question.questionId}
@@ -53,7 +55,12 @@ export default function QuestionSelectStep({
           </li>
         ))}
       </ul>
-      <Button variant="primary" size="wide" onClick={handleQuestionSubmit}>
+      <Button
+        variant="primary"
+        size="wide"
+        onClick={handleQuestionSubmit}
+        disabled={onboardingData.selectedQuestion.questionId === 0}
+      >
         이 질문으로 시작하기
       </Button>
     </>

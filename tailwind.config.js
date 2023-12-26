@@ -27,6 +27,8 @@ module.exports = {
           secondary: '#F7CBC5',
           accent: '#FF6162',
           yellow: '#F6F7C1',
+          neutral: '#3d4451',
+          'base-100': '#ffffff',
         },
       },
     ],

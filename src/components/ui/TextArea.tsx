@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import { type ComponentProps, useEffect, useRef } from 'react';
 
 type TextAreaProps = ComponentProps<'textarea'> & {
   value: string;
@@ -12,8 +12,15 @@ export default function TextArea({
   className,
   ...props
 }: TextAreaProps) {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    textAreaRef.current?.focus();
+  }, []);
+
   return (
     <textarea
+      ref={textAreaRef}
       className={`block w-[90%] mx-auto min-h-[20rem] textarea rounded-xl border-1 border-gray-dark text-base ${className}`}
       value={value}
       onChange={onChange}

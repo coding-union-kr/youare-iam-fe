@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 type ButtonProps = ComponentProps<'button'> & {
   variant: 'primary' | 'secondary' | 'accent';
   size?: 'xs' | 'sm' | 'normal' | 'wide';
+  isLoading?: boolean;
 };
 
 export default function Button({
@@ -10,6 +11,8 @@ export default function Button({
   size = 'normal',
   children,
   className,
+  disabled,
+  isLoading,
   ...props
 }: ButtonProps) {
   const colorVariants = {
@@ -27,10 +30,14 @@ export default function Button({
 
   return (
     <button
-      className={`btn ${colorVariants[variant]} ${sizeVariants[size]} no-animation ${className}`}
+      className={`btn no-animation flex align-center ${colorVariants[variant]} ${sizeVariants[size]}  ${className}`}
+      disabled={isLoading || disabled}
       {...props}
     >
       {children}
+      {isLoading && (
+        <span className="loading loading-spinner text-gray-dark"></span>
+      )}
     </button>
   );
 }

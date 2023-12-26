@@ -34,7 +34,7 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
   return (
     <>
       <QuestionTitle question={onboardingData.selectedQuestion.question} />
-      <p>내가 먼저 답변을 작성해볼까요?</p>
+      <p className="text-lg">내가 먼저 답변을 작성해볼까요?</p>
       <AnswerForm
         answer={answer}
         onChange={onChange}
