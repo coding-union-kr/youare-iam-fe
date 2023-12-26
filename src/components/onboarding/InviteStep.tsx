@@ -7,6 +7,7 @@ import {
 import { useCreateInviteKey } from '@/hooks/feature/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 const TEMPLATE_ID = 102113;
 
@@ -46,21 +47,33 @@ export default function InviteStep() {
   return (
     <>
       <section className="w-full">
-        <h1 className="text-2xl font-bold">
-          이제 대화방에 첫 질문이 추가되었습니다!
-        </h1>
-        <div>
-          <p className="mt-1 text-lg text-gray-400">
-            초대링크를 전송하면 상대방이 당신의 질문에 답변할 수 있어요.
-          </p>
-        </div>
-        <div className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
+        <motion.div
+          className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0, duration: 1.5 }}
+        >
           <LockIcon />
           <p className="pl-3">{onboardingData.selectedQuestion.question}</p>
-        </div>
-        <p>
-          두 사람의 답변이 완료되면 질문에 대한 서로의 답변을 확인할 수 있어요.
-        </p>
+        </motion.div>
+
+        <motion.article
+          className="p-5 mx-auto mt-10 text-center rounded-md bg-secondary"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1.5 }}
+        >
+          <h1 className="text-xl font-bold">
+            이제 대화방에 첫 질문이 추가되었습니다!
+          </h1>
+          <div className="mt-5 text-gray-400">
+            <p>초대링크를 전송하면 상대방이 당신의 질문에 답변할 수 있어요.</p>
+            <p>
+              두 사람의 답변이 완료되면 질문에 대한 서로의 답변을 확인할 수
+              있어요.
+            </p>
+          </div>
+        </motion.article>
       </section>
       <Button variant="primary" size="wide" onClick={handleInvite}>
         초대링크 전송하기
