@@ -6,13 +6,13 @@ import {
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/feature/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
+import { useRouter } from 'next/router';
+import { m } from 'framer-motion';
 
-const baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://youare-iam.vercel.app/';
+const TEMPLATE_ID = 102113;
 
 export default function InviteStep() {
+  const router = useRouter();
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
   const { mutate: createInviteKey } = useCreateInviteKey();
 
@@ -24,11 +24,19 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
-          //Todo : 초대링크 전송 + toast 알림(초대링크가 전송되었습니다.)
-          console.log(`${baseURL}/invite/${data.linkKey}`);
+          console.log(data);
 
-          // Todo : onboardingState 초기화
-          //setOnboardingData(initialOnboardingState);
+          window.Kakao.Share.sendCustom({
+            templateId: TEMPLATE_ID,
+            templateArgs: {
+              question: onboardingData.selectedQuestion.question,
+              invitedPersonName: data.invitedPersonName,
+              linkKey: data.linkKey,
+            },
+          });
+          // TODO: redirect to chatroom
+          // router.push('/chatroom');
+          // setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {
           throw error;
@@ -39,19 +47,38 @@ export default function InviteStep() {
 
   return (
     <>
-      <div className="p-2 font-neo w-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
-        <div className="pl-1 pr-2">
+      <section className="w-full">
+        <m.div
+          className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0, duration: 1.5 }}
+        >
           <LockIcon />
-        </div>
-        <div>{onboardingData.selectedQuestion.question}</div>
-      </div>
+          <p className="pl-3">{onboardingData.selectedQuestion.question}</p>
+        </m.div>
+
+        <m.article
+          className="p-5 mx-auto mt-10 text-center rounded-md bg-secondary"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1.5 }}
+        >
+          <h1 className="text-xl font-bold">
+            이제 대화방에 첫 질문이 추가되었습니다!
+          </h1>
+          <div className="mt-5 text-gray-400">
+            <p>초대링크를 전송하면 상대방이 당신의 질문에 답변할 수 있어요.</p>
+            <p>
+              두 사람의 답변이 완료되면 질문에 대한 서로의 답변을 확인할 수
+              있어요.
+            </p>
+          </div>
+        </m.article>
+      </section>
       <Button variant="primary" size="wide" onClick={handleInvite}>
         초대링크 전송하기
       </Button>
     </>
   );
 }
-
-// 지금까지 선택된 답변까지도 보여주는게 좋을까?(질문은 보여줘야함 )
-// 초대링크 전송하기 버튼을 누르면, 초대링크를 생성하고, 그 링크를 복사할 수 있게 해준다.
-// 초대링크를 복사할 수 있게 해주는건 어떻게 해야할까?
