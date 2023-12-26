@@ -34,7 +34,8 @@ export default function InviteStep() {
               linkKey: data.linkKey,
             },
           });
-          router.push('/chatroom');
+          // TODO: redirect to chatroom
+          // router.push('/chatroom');
           setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {

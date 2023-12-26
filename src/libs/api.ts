@@ -30,20 +30,3 @@ export const post = <T = any, D = any, R = AxiosResponse<T>>(
 ) => {
   return instance.post<T, R>(url, data);
 };
-
-// Gamti 로컬 서버 연결
-const instanceGT = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_GAMTI_URL,
-  timeout: 15000,
-});
-
-export const getGT = <T = any, R = AxiosResponse<T>>(url: string) => {
-  return instanceGT.get<T, R>(url);
-};
-
-export const postGT = <T = any, D = any, R = AxiosResponse<T>>(
-  url: string,
-  data?: D
-) => {
-  return instanceGT.post<T, R>(url, data);
-};
