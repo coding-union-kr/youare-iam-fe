@@ -13,6 +13,7 @@ import { NextPageWithLayout } from '@/types/page';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/components/error/ErrorFallback';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { LazyMotion, domAnimation } from 'framer-motion';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -59,20 +60,22 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
           <HydrationBoundary state={pageProps.dehydratedState}>
-            <QueryErrorResetBoundary>
-              {({ reset }) => (
-                <ErrorBoundary
-                  onReset={reset}
-                  fallbackRender={({
-                    resetErrorBoundary,
-                  }: ErrorFallbackProp) => (
-                    <ErrorFallback resetErrorBoundary={resetErrorBoundary} />
-                  )}
-                >
-                  {getLayout(<Component {...pageProps} />)}
-                </ErrorBoundary>
-              )}
-            </QueryErrorResetBoundary>
+            <LazyMotion features={domAnimation}>
+              <QueryErrorResetBoundary>
+                {({ reset }) => (
+                  <ErrorBoundary
+                    onReset={reset}
+                    fallbackRender={({
+                      resetErrorBoundary,
+                    }: ErrorFallbackProp) => (
+                      <ErrorFallback resetErrorBoundary={resetErrorBoundary} />
+                    )}
+                  >
+                    {getLayout(<Component {...pageProps} />)}
+                  </ErrorBoundary>
+                )}
+              </QueryErrorResetBoundary>
+            </LazyMotion>
           </HydrationBoundary>
           <ReactQueryDevtools />
         </QueryClientProvider>

@@ -7,7 +7,7 @@ import {
 import { useCreateInviteKey } from '@/hooks/feature/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 const TEMPLATE_ID = 102113;
 
@@ -36,7 +36,7 @@ export default function InviteStep() {
           });
           // TODO: redirect to chatroom
           // router.push('/chatroom');
-          setOnboardingData(initialOnboardingState);
+          // setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {
           throw error;
@@ -48,7 +48,7 @@ export default function InviteStep() {
   return (
     <>
       <section className="w-full">
-        <motion.div
+        <m.div
           className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -56,9 +56,9 @@ export default function InviteStep() {
         >
           <LockIcon />
           <p className="pl-3">{onboardingData.selectedQuestion.question}</p>
-        </motion.div>
+        </m.div>
 
-        <motion.article
+        <m.article
           className="p-5 mx-auto mt-10 text-center rounded-md bg-secondary"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -74,7 +74,7 @@ export default function InviteStep() {
               있어요.
             </p>
           </div>
-        </motion.article>
+        </m.article>
       </section>
       <Button variant="primary" size="wide" onClick={handleInvite}>
         초대링크 전송하기
