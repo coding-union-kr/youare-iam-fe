@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
-import { GetStaticPropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
 const config = {
@@ -22,7 +22,7 @@ type Data = {
   };
 };
 
-const Page: NextPageWithLayout<Data> = ({ data }) => {
+const Page: NextPageWithLayout<Data> = ({ data, id }) => {
   const [text, setText] = useState('');
   const router = useRouter();
 
@@ -31,13 +31,11 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
   };
 
   const handleSubmitAnswer = () => {
-    // {KAKAO_AUTH_URL}
     const isLogin = window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
     if (!isLogin) {
       window.location.href = KAKAO_AUTH_URL;
     } else {
-      // post 요청 보내고 chatroom으로 이동
       const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const path = '/api/v1/members/invite/accept';
       const apiEndpoint = `${baseURL}${path}`;
@@ -47,8 +45,7 @@ const Page: NextPageWithLayout<Data> = ({ data }) => {
         .post(
           apiEndpoint,
           {
-            linkKey: config.linkKey,
-            // linkKey: params?.id,
+            linkKey: id,
             answer: text,
           },
           {
@@ -121,22 +118,25 @@ Page.getLayout = function getLayout(page) {
   );
 };
 
-export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  console.log('context:  ', context);
+  const id = Object.keys(context.query).toString();
+  console.log('id:  ', id);
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const path = '/api/v1/members/invite/info/';
-  const apiEndpoint = `${baseURL}${path}${config.linkKey}`;
-  // const apiEndpoint = `${baseURL}${path}${params?.id}`;
+  const apiEndpoint = `${baseURL}${path}${id}`;
 
   try {
     const response = await axios.get(apiEndpoint, {
       params: {
-        linkKey: config.linkKey,
-        // linkKey: params?.id,
+        linkKey: id,
       },
     });
 
     const data = response.data;
-    return { props: { data } };
+    return { props: { data, id } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
     return { props: { invitedName: [] } };
