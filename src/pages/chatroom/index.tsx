@@ -6,6 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
 type Letters = {
   letters: LetterType[];
@@ -47,8 +48,13 @@ const getLetters = async ({ pageParam }: PageParam) => {
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
+  console.log('url: ', url);
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN),
+      },
+    });
     return response.data;
   } catch (error) {
     throw error;
