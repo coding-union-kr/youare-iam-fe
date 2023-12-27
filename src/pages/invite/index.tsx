@@ -20,6 +20,7 @@ type Data = {
     question: string;
     invitedPersonName: string;
   };
+  id: string;
 };
 
 const Page: NextPageWithLayout<Data> = ({ data, id }) => {
