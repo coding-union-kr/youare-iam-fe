@@ -7,7 +7,7 @@ import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/feature/usePostAnswer';
 import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { get } from '@/libs/api';
 
 type Prop = {
   id: string;
@@ -71,13 +71,9 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;
 
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const path = '/api/v1/answer';
-  const apiEndpoint = `${baseURL}${path}?selected-question-id=${id}`;
-
   const getQuestion = async () => {
     try {
-      const res = await axios.get(apiEndpoint);
+      const res = await get(`/api/v1/answer?selected-question-id=${id}`);
       return res.data.question;
     } catch (error) {
       throw error;
