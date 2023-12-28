@@ -11,14 +11,15 @@ export default function Login() {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/members/kakao/callback?code=${code}`
-        );
-
-        localStorage.setItem(
-          LOCAL_STORAGE_KEYS.TOKEN,
-          res.headers['authorization']
-        );
+        // const res = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/members/kakao/callback?code=${code}`
+        // );
+        // const accessToken = res.headers['authorization'];
+        const res = await axios.get(`/api/auth/kakao?code=${code}`);
+        // localStorage.setItem(
+        //   LOCAL_STORAGE_KEYS.TOKEN,
+        //   res.headers['authorization']
+        // );
 
         const prevUrl = localStorage.getItem(LOCAL_STORAGE_KEYS.PREV_URL);
         if (prevUrl === '/invite') {
