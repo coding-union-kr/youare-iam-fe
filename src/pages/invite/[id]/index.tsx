@@ -11,10 +11,6 @@ import { useRouter } from 'next/router';
 import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 
-const config = {
-  linkKey: process.env.NEXT_PUBLIC_LINK_KEY,
-};
-
 type Data = {
   data: {
     question: string;
@@ -123,7 +119,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   console.log('context:  ', context);
-  const id = Object.keys(context.query).toString();
+  const { id } = context.query;
   console.log('id:  ', id);
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const path = '/api/v1/members/invite/info/';
