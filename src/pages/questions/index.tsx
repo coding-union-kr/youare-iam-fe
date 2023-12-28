@@ -2,7 +2,11 @@ import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
-import { get, post } from '@/libs/api';
+import { post } from '@/libs/api';
+import useQuestionList, {
+  getQuestionList,
+} from '@/hooks/feature/useQuestionList';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 type Questions = {
   questions: Question[];
@@ -15,6 +19,7 @@ type Question = {
 
 const Page: NextPageWithLayout<Questions> = ({ questions }) => {
   const router = useRouter();
+  const { questionList } = useQuestionList();
 
   const handleItemClick = async (questionId: Question['questionId']) => {
     try {
@@ -29,7 +34,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
 
   return (
     <div className="py-20">
-      {questions.map((question) => (
+      {questionList.map((question) => (
         <div
           key={question.questionId}
           className="flex flex-col justify-center items-center"
@@ -48,16 +53,18 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export const getServerSideProps = async () => {
-  try {
-    const response = await get('/api/v1/questions');
-    const questions = response.data;
-    console.log('questions', questions);
-    return { props: { questions } };
-  } catch (error) {
-    console.error('Error fetching data questions:', (error as Error).message);
-    return { props: { questions: [] } };
-  }
+export const getStaticProps = async () => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['question-list'],
+    queryFn: getQuestionList,
+  });
+  return {
+    props: {
+      initialState: dehydrate(queryClient),
+    },
+  };
 };
 
 export default Page;
