@@ -10,6 +10,9 @@ import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
 import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
+import usePostInviteAnswer from '@/hooks/feature/usePostInviteAnswer';
+import { useQueryClient } from '@tanstack/react-query';
+import { get } from '@/libs/api';
 
 type Data = {
   data: {
@@ -22,6 +25,8 @@ type Data = {
 const Page: NextPageWithLayout<Data> = ({ data, id }) => {
   const [text, setText] = useState('');
   const router = useRouter();
+  const { mutate: postInviteAnswer } = usePostInviteAnswer();
+  const queryClient = useQueryClient();
 
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -30,31 +35,22 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
   const handleSubmitAnswer = () => {
     const isLogin = window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
+
     if (!isLogin) {
       window.location.href = KAKAO_AUTH_URL;
     } else {
-      const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const path = '/api/v1/members/invite/accept';
-      const apiEndpoint = `${baseURL}${path}`;
-      const accessToken = localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
-      // console.log(accessToken);
-      axios
-        .post(
-          apiEndpoint,
-          {
-            linkKey: id,
-            answer: text,
+      postInviteAnswer(
+        { linkKey: id, answer: text },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projects'] });
+            router.push('/chatroom');
           },
-          {
-            headers: {
-              Authorization: accessToken,
-            },
-          }
-        )
-        .then(function (response) {
-          console.log(response.data.selectedQuestionId);
-          router.push('/chatroom');
-        });
+          onError: (error) => {
+            throw error;
+          },
+        }
+      );
     }
   };
 
@@ -118,20 +114,10 @@ Page.getLayout = function getLayout(page) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  console.log('context:  ', context);
   const { id } = context.query;
-  console.log('id:  ', id);
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const path = '/api/v1/members/invite/info/';
-  const apiEndpoint = `${baseURL}${path}${id}`;
 
   try {
-    const response = await axios.get(apiEndpoint, {
-      params: {
-        linkKey: id,
-      },
-    });
-
+    const response = await get(`/api/v1/members/invite/info/${id}`);
     const data = response.data;
     return { props: { data, id } };
   } catch (error) {
