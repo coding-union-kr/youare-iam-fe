@@ -4,8 +4,9 @@ import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
+import { get } from '@/libs/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Letters = {
   letters: LetterType[];
@@ -39,16 +40,17 @@ type PageParam = {
   pageParam: number;
 };
 
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const path = '/api/v1/letters';
-const apiEndpoint = `${baseURL}${path}`;
-
 const getLetters = async ({ pageParam }: PageParam) => {
+  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const path = '/api/v1/letters';
+  const apiEndpoint = `${baseURL}${path}`;
+
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
+
   try {
-    const response = await axios.get(url);
+    const response = await get(url);
     return response.data;
   } catch (error) {
     throw error;
@@ -121,6 +123,16 @@ function useReversedInfiniteScroll(
 }
 
 const Page: NextPageWithLayout<Letters> = () => {
+  const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalInfo, setModalInfo] = useState<ModalInfo>({
+    actionText: '',
+    cancelText: '',
+    bodyText: '',
+    handleAction: () => {},
+  });
+  const router = useRouter();
+
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
   const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
     queryKey: ['projects'],
@@ -149,20 +161,6 @@ const Page: NextPageWithLayout<Letters> = () => {
     hasNextPage,
     data?.length ?? 0 // 훅에서 dataLength가 됨
   );
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalInfo, setModalInfo] = useState<ModalInfo>({
-    actionText: '',
-    cancelText: '',
-    bodyText: '',
-    handleAction: () => {},
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  const router = useRouter();
 
   const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
     if (letter.answerCount === 0) {
@@ -203,8 +201,7 @@ const Page: NextPageWithLayout<Letters> = () => {
     }
   };
 
-  // 다음 페이지가 있는지(nextCursor가 -1인지 아닌지) 확인한다.
-  // console.log('hasNextPage: ', hasNextPage);
+  queryClient.invalidateQueries({ queryKey: ['projects'] });
 
   return (
     <div className="pb-[5rem]">

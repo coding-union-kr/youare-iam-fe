@@ -1,12 +1,12 @@
-import axios from 'axios';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
-
-const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const path = '/api/v1/questions';
-const apiEndpoint = `${baseURL}${path}`;
+import { post } from '@/libs/api';
+import useQuestionList, {
+  getQuestionList,
+} from '@/hooks/feature/useQuestionList';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 type Questions = {
   questions: Question[];
@@ -19,36 +19,22 @@ type Question = {
 
 const Page: NextPageWithLayout<Questions> = ({ questions }) => {
   const router = useRouter();
+  const { questionList } = useQuestionList();
 
   const handleItemClick = async (questionId: Question['questionId']) => {
-    // console.log(questionId);
     try {
-      // POST 요청으로 questionId를 보내기
-      const postResponse = await axios.post(apiEndpoint, {
+      await post('/api/v1/questions', {
         questionId: questionId,
       });
-
-      // 응답으로 받은 selectedQuestionId를 가져오기
-      const selectedQuestionId = postResponse.data.selectedQuestionId;
-      // console.log(selectedQuestionId);
-
-      const targetPath = '/chatroom';
-      // selectedQuestionId가 있는 위치로 이동하기
-      // 위치 만들기
-      router.push({
-        pathname: targetPath,
-        // 답변 수정, 답변 등록 페이지에는 selectQuestionId가 들어가야 함.
-        // 질문 선택 페이지에는 마지막 selectQuestionsId가 들어가야 함.
-        // hash: '0',
-      });
+      router.push('/chatroom');
     } catch (error) {
-      console.error('Error fetching data:', (error as Error).message);
+      throw error;
     }
   };
 
   return (
     <div className="py-20">
-      {questions.map((question) => (
+      {questionList.map((question) => (
         <div
           key={question.questionId}
           className="flex flex-col justify-center items-center"
@@ -68,15 +54,17 @@ Page.getLayout = function getLayout(page) {
 };
 
 export const getStaticProps = async () => {
-  try {
-    const response = await axios.get(apiEndpoint);
-    const questions = response.data;
-    console.log('questions', questions);
-    return { props: { questions } };
-  } catch (error) {
-    console.error('Error fetching data:', (error as Error).message);
-    return { props: { questions: [] } };
-  }
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['question-list'],
+    queryFn: getQuestionList,
+  });
+  return {
+    props: {
+      initialState: dehydrate(queryClient),
+    },
+  };
 };
 
 export default Page;
