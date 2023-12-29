@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { get } from '@/libs/api';
 import { useQueryClient } from '@tanstack/react-query';
+import Loading from '@/components/loading/Loading';
 
 type Letters = {
   letters: LetterType[];
@@ -134,7 +135,7 @@ const Page: NextPageWithLayout<Letters> = () => {
   const router = useRouter();
 
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
-  const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
+  const { fetchNextPage, hasNextPage, data, isLoading } = useInfiniteQuery({
     queryKey: ['projects'],
     queryFn: getLetters,
     initialPageParam: 0,
@@ -203,6 +204,9 @@ const Page: NextPageWithLayout<Letters> = () => {
 
   queryClient.invalidateQueries({ queryKey: ['projects'] });
 
+  if (isLoading) {
+    return <Loading path={router.pathname} />;
+  }
   return (
     <div className="pb-[5rem]">
       {/* 모달이 열리면 보일 부분 */}
