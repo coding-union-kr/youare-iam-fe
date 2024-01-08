@@ -45,12 +45,14 @@ const getLetters = async ({ pageParam }: PageParam) => {
   const path = '/api/v1/letters';
   const apiEndpoint = `${baseURL}${path}`;
 
+  console.log('pageparam: ', pageParam);
   const url = pageParam
     ? `${apiEndpoint}?next-cursor=${pageParam}`
     : apiEndpoint;
 
   try {
     const response = await get(url);
+    console.log('response.data: ', response.data);
     return response.data;
   } catch (error) {
     throw error;
@@ -94,7 +96,7 @@ function useReversedInfiniteScroll(
   );
 
   // 스크롤 이벤트 핸들러
-  function handleScroll() {
+  async function handleScroll() {
     // 만약 다음 페이지가 없다면
     if (!hasNextPage) {
       // 코드를 실행하지 않습니다.
@@ -111,7 +113,7 @@ function useReversedInfiniteScroll(
 
     // 만약 스크롤이 450px 미만으로 줄어들었다면(맨 위까지 스크롤이 올라가기 전에) 다음 페이지 가져오기
     if ((containerRef.current?.scrollTop ?? 0) < 450) {
-      fetchNextPage();
+      await fetchNextPage();
     }
   }
 
@@ -143,6 +145,7 @@ const Page: NextPageWithLayout<Letters> = () => {
     // ㄴ 리턴값이 undefined라면 더 이상 가져올 페이지가 없다는 뜻
     // 백엔드에서 넘겨주는 nextCursor: 더 이상 가져올 페이지가 없을 때 -1임
     getNextPageParam: (lastPage) => {
+      console.log('lastPage.nextCursor: ', lastPage.nextCursor);
       return lastPage.nextCursor === -1 ? undefined : lastPage.nextCursor;
     },
 
@@ -150,8 +153,10 @@ const Page: NextPageWithLayout<Letters> = () => {
     // [[5, 6], [3, 4], [1, 2]] -> [[1, 2], [3, 4], [5, 6]] -> [1, 2, 3, 4, 5, 6]
     // data.pages.reverse()를 하면 앞뒤로 새 페이지가 붙는 버그가 생긴다.
     // ㄴ reverse()는 배열 자체를 바꿔버리기 때문. 대신 [...data.pages].reverse()를 해줘야 한다.
-    select: (data) =>
-      ([...data.pages] ?? []).reverse().flatMap((page) => page.letters),
+    select: (data) => {
+      // console.log('...data.pages: ', ...data.pages);
+      return ([...data.pages] ?? []).reverse().flatMap((page) => page.letters);
+    },
   });
 
   // useReversedInfiniteScroll라는 커스텀 훅에서 containerRef와 handleScroll을 가져온다.
@@ -161,7 +166,8 @@ const Page: NextPageWithLayout<Letters> = () => {
     hasNextPage,
     data?.length ?? 0 // 훅에서 dataLength가 됨
   );
-
+  console.log('hasNextPage: ', hasNextPage);
+  console.log(data);
   const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
     if (letter.answerCount === 0) {
       setModalInfo({
@@ -233,6 +239,9 @@ const Page: NextPageWithLayout<Letters> = () => {
           );
         })}
       </div>
+      {/* <button onClick={() => fetchNextPage()}>
+        {hasNextPage ? '더 ' : '더 로드할 것이 없음!'}
+      </button>로드하기 */}
     </div>
   );
 };
