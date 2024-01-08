@@ -67,6 +67,7 @@ function useReversedInfiniteScroll(
   dataLength: number = 0
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isLoadingRef = useRef(false);
   const [prevScrollHeight, setPrevScrollHeight] = useState(0);
 
   // useEffect(함수, 배열)
@@ -112,8 +113,10 @@ function useReversedInfiniteScroll(
     );
 
     // 만약 스크롤이 450px 미만으로 줄어들었다면(맨 위까지 스크롤이 올라가기 전에) 다음 페이지 가져오기
-    if ((containerRef.current?.scrollTop ?? 0) < 450) {
+    if ((containerRef.current?.scrollTop ?? 0) < 450 && !isLoadingRef.current) {
+      isLoadingRef.current = true;
       await fetchNextPage();
+      isLoadingRef.current = false;
     }
   }
 
@@ -240,8 +243,8 @@ const Page: NextPageWithLayout<Letters> = () => {
         })}
       </div>
       {/* <button onClick={() => fetchNextPage()}>
-        {hasNextPage ? '더 ' : '더 로드할 것이 없음!'}
-      </button>로드하기 */}
+        {hasNextPage ? '더 로드하기' : '더 로드할 것이 없음!'}
+      </button> */}
     </div>
   );
 };
