@@ -68,7 +68,7 @@ function useReversedInfiniteScroll(
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isLoadingRef = useRef(false);
-  const [prevScrollHeight, setPrevScrollHeight] = useState(0);
+  const prevScrollHeight = useRef(0);
 
   // useEffect(함수, 배열)
   // 맨 처음에, prevScrollHeight가 바뀔 때, dataLength가 바뀔 때 실행된다.
@@ -77,7 +77,7 @@ function useReversedInfiniteScroll(
     function scrollToPrevScrollHeight() {
       // scrollHeight: 스크롤 된 내용의 전체 높이
       // 처음 접속했을 때 스크롤을 맨 아래로 내린다.
-      if (prevScrollHeight === 0) {
+      if (prevScrollHeight.current === 0) {
         containerRef.current?.scrollTo({
           top: containerRef.current.scrollHeight,
         });
@@ -90,7 +90,7 @@ function useReversedInfiniteScroll(
       // ㄴ 아래 코드가 없으면 페이지가 바뀔 때 스크롤 위치가 유지되지 않음
       // ㄴ 그래서 페이지가 생겼을 때 스크롤이 바로 최상단으로 이동하는 문제가 발생한다.
       containerRef.current?.scrollTo({
-        top: containerRef.current.scrollHeight - prevScrollHeight,
+        top: containerRef.current.scrollHeight - prevScrollHeight.current,
       });
     },
     [prevScrollHeight, dataLength]
@@ -107,10 +107,9 @@ function useReversedInfiniteScroll(
     // scrollHeight은 동일
     // scrollTop은 스크롤이 올라갈수록 줄어듦
     // 즉 prevScrollHeight는 스크롤을 올릴 수록 커짐
-    setPrevScrollHeight(
+    prevScrollHeight.current =
       (containerRef.current?.scrollHeight ?? 0) -
-        (containerRef.current?.scrollTop ?? 0)
-    );
+      (containerRef.current?.scrollTop ?? 0);
 
     // 만약 스크롤이 450px 미만으로 줄어들었다면(맨 위까지 스크롤이 올라가기 전에) 다음 페이지 가져오기
     if ((containerRef.current?.scrollTop ?? 0) < 450 && !isLoadingRef.current) {
