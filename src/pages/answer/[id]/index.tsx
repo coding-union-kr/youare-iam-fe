@@ -5,7 +5,7 @@ import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
-import usePostAnswer from '@/hooks/feature/usePostAnswer';
+import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { useQueryClient } from '@tanstack/react-query';
 import { get } from '@/libs/api';
 

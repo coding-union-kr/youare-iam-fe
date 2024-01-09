@@ -4,7 +4,7 @@ import {
   initialOnboardingState,
   onboardingState,
 } from '@/store/onboardingState';
-import { useCreateInviteKey } from '@/hooks/feature/useCreateInviteKey';
+import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';

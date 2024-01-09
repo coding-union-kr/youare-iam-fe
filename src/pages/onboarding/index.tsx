@@ -8,7 +8,7 @@ import AnswerStep from '@/components/onboarding/AnswerStep';
 import InviteStep from '@/components/onboarding/InviteStep';
 import useQuestionList, {
   getQuestionList,
-} from '@/hooks/feature/useQuestionList';
+} from '@/hooks/queries/useQuestionList';
 
 const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
