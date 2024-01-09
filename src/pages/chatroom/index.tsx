@@ -137,7 +137,7 @@ const Page: NextPageWithLayout<Letters> = () => {
     }
   };
 
-  queryClient.invalidateQueries({ queryKey: ['projects'] });
+  // queryClient.invalidateQueries({ queryKey: ['projects'] });
 
   return (
     <div className="pb-[5rem]">
