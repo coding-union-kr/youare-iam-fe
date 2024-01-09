@@ -10,7 +10,7 @@ import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
 import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
-import usePostInviteAnswer from '@/hooks/feature/usePostInviteAnswer';
+import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { useQueryClient } from '@tanstack/react-query';
 import { get } from '@/libs/api';
 

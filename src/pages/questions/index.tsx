@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { post } from '@/libs/api';
 import useQuestionList, {
   getQuestionList,
-} from '@/hooks/feature/useQuestionList';
+} from '@/hooks/queries/useQuestionList';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 type Questions = {
