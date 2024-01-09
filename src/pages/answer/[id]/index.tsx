@@ -48,6 +48,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
       }
     );
   };
+
   return (
     <section className="flex flex-col justify-between h-full">
       <QuestionTitle question={question} />
