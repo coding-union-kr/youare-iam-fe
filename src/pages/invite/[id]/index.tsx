@@ -13,6 +13,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { useQueryClient } from '@tanstack/react-query';
 import { get } from '@/libs/api';
+import { getAccessToken } from '@/libs/token';
 
 type Data = {
   data: {
@@ -33,7 +34,7 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
   };
 
   const handleSubmitAnswer = () => {
-    const isLogin = window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN);
+    const isLogin = getAccessToken();
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
 
     if (!isLogin) {
@@ -69,13 +70,13 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
 
   return (
     <>
-      <div className="mt-10 flex flex-col items-center">
+      <div className="flex flex-col items-center mt-10">
         <div>{data?.invitedPersonName} 님이</div>
         <div>초대 링크를 보냈어요!</div>
       </div>
       <ListItem
         question={data?.question}
-        className="mt-5 bg-white flex justify-center items-center text-lg"
+        className="flex items-center justify-center mt-5 text-lg bg-white"
       />
       <Image
         src="/logo.png"
