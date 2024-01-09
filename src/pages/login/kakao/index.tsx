@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
-import { setCookie, getCookie, deleteCookie } from 'cookies-next';
-import Cookies from 'js-cookie';
 import { setAccessToken, setAuthHeader } from '@/libs/token';
 import { instance } from '@/libs/api';
 
