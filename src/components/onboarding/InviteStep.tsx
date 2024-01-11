@@ -10,6 +10,10 @@ import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
 
 const TEMPLATE_ID = 102113;
+const domain =
+  process.env.NODE_ENV === 'production'
+    ? 'https://youare-iam.vercel.app'
+    : 'http://localhost:3000';
 
 export default function InviteStep() {
   const router = useRouter();
@@ -32,6 +36,7 @@ export default function InviteStep() {
               question: onboardingData.selectedQuestion.question,
               invitedPersonName: data.invitedPersonName,
               linkKey: data.linkKey,
+              domain,
             },
           });
           // TODO: redirect to chatroom
