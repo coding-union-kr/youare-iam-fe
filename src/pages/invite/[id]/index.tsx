@@ -44,7 +44,7 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
         { linkKey: id, answer: text },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['projects'] });
+            queryClient.invalidateQueries({ queryKey: ['letters'] });
             router.push('/chatroom');
           },
           onError: (error) => {

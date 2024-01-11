@@ -71,7 +71,7 @@ const Page: NextPageWithLayout<Letters> = () => {
 
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
   const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
-    queryKey: ['projects'],
+    queryKey: ['letters'],
     queryFn: getLetters,
     initialPageParam: 0,
 
@@ -136,8 +136,6 @@ const Page: NextPageWithLayout<Letters> = () => {
       setIsModalOpen(true);
     }
   };
-
-  // queryClient.invalidateQueries({ queryKey: ['projects'] });
 
   return (
     <div className="pb-[5rem]">
