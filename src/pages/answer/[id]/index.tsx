@@ -6,15 +6,15 @@ import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
-import { useQueryClient } from '@tanstack/react-query';
-import { get } from '@/libs/api';
+import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
+import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
 
 type Prop = {
   id: string;
   question: string;
 };
 
-const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
+const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   const router = useRouter();
   const { mutate: postAnswer } = usePostAnswer();
 
@@ -22,6 +22,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
     value.trim() ? '' : '답변을 입력해주세요'
   );
 
+  const { question } = useQuestion(Number(selectQuestionId));
   const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,6 +48,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
       }
     );
   };
+
   return (
     <section className="flex flex-col justify-between h-full">
       <QuestionTitle question={question} />
@@ -71,16 +73,12 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;
 
-  const getQuestion = async () => {
-    try {
-      const res = await get(`/api/v1/answer?selected-question-id=${id}`);
-      return res.data.question;
-    } catch (error) {
-      throw error;
-    }
-  };
+  const queryClient = new QueryClient();
 
-  const question = await getQuestion();
+  await queryClient.prefetchQuery({
+    queryKey: ['question', id],
+    queryFn: () => getQuestion(Number(id)),
+  });
 
   const isValidId = (id: any) => {
     return !isNaN(Number(id));
@@ -93,7 +91,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { id, question },
+    props: { id, initialState: dehydrate(queryClient) },
   };
 }
 
