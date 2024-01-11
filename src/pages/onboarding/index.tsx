@@ -57,7 +57,7 @@ Page.getLayout = function getLayout(page) {
 
 export default Page;
 
-export const getStaticProps = async () => {
+export async function getServerSideProps() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -70,4 +70,4 @@ export const getStaticProps = async () => {
       initialState: dehydrate(queryClient),
     },
   };
-};
+}

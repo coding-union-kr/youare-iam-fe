@@ -40,7 +40,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
       {questionList.map((question) => (
         <div
           key={question.questionId}
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col items-center justify-center"
         >
           <ListItem
             question={question.question}
@@ -56,7 +56,7 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export const getStaticProps = async () => {
+export async function getServerSideProps() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -68,6 +68,6 @@ export const getStaticProps = async () => {
       initialState: dehydrate(queryClient),
     },
   };
-};
+}
 
 export default Page;
