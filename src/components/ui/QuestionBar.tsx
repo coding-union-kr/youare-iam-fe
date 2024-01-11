@@ -24,8 +24,6 @@ type letterProps = {
 };
 
 const QuestionBar = ({ onClick, letter }: letterProps) => {
-  // console.log('questionBar letter', letter);
-  // console.log('letter.answerCount', letter.answerCount);
   if (letter.answerCount === 0) {
     return (
       <div
