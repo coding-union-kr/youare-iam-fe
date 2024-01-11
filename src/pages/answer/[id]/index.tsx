@@ -36,7 +36,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
       { selectQuestionId: Number(selectQuestionId), answer },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['projects'] });
+          queryClient.invalidateQueries({ queryKey: ['letters'] });
           router.push({
             pathname: '/chatroom',
             hash: selectQuestionId,

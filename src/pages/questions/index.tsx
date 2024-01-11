@@ -6,7 +6,7 @@ import { post } from '@/libs/api';
 import useQuestionList, {
   getQuestionList,
 } from '@/hooks/queries/useQuestionList';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 
 type Questions = {
   questions: Question[];
@@ -19,6 +19,7 @@ type Question = {
 
 const Page: NextPageWithLayout<Questions> = ({ questions }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { questionList } = useQuestionList();
 
   const handleItemClick = async (questionId: Question['questionId']) => {
@@ -26,6 +27,8 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
       await post('/api/v1/questions', {
         questionId: questionId,
       });
+      queryClient.invalidateQueries({ queryKey: ['question-list'] });
+      queryClient.invalidateQueries({ queryKey: ['letters'] });
       router.push('/chatroom');
     } catch (error) {
       throw error;
