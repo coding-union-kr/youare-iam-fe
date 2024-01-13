@@ -6,26 +6,28 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { get } from '@/libs/api';
-import { useQueryClient } from '@tanstack/react-query';
 import useReversedInfiniteScroll from '@/hooks/common/useReversedInfiniteScroll';
+import { useSetRecoilState } from 'recoil';
+import { myIdState } from '@/store/myIdState';
 
 type Letters = {
   letters: LetterType[];
   nextCursor: number;
+  myId: string;
 };
 
 type LetterType = {
   selectQuestionId: number;
   question: string;
-  createdAt: number;
+  createdAt: string;
   answerCount: number;
   myAnswer?: boolean;
   answer:
     | {
-        memberId: number;
+        memberId: string;
         memberName: string;
         answer: string;
-        createdAt: number;
+        createdAt: string;
       }[]
     | null;
 };
@@ -41,25 +43,28 @@ type PageParam = {
   pageParam: number;
 };
 
-const getLetters = async ({ pageParam }: PageParam) => {
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const path = '/api/v1/letters';
-  const apiEndpoint = `${baseURL}${path}`;
-
-  const url = pageParam
-    ? `${apiEndpoint}?next-cursor=${pageParam}`
-    : apiEndpoint;
-
-  try {
-    const response = await get(url);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const Page: NextPageWithLayout<Letters> = () => {
-  const queryClient = useQueryClient();
+  const setMyId = useSetRecoilState(myIdState);
+  const getLetters = async ({ pageParam }: PageParam) => {
+    const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const path = '/api/v1/letters';
+    const apiEndpoint = `${baseURL}${path}`;
+
+    const url = pageParam
+      ? `${apiEndpoint}?next-cursor=${pageParam}`
+      : apiEndpoint;
+
+    try {
+      const response = await get(url);
+      console.log('response.data', response.data);
+      console.log('typeof response.data.myId', typeof response.data.myId);
+      setMyId(response.data.myId);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',

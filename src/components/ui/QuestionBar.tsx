@@ -5,15 +5,15 @@ import LockIcon from '../icons/LockIcon';
 type LetterType = {
   selectQuestionId: number;
   question: string;
-  createdAt: number;
+  createdAt: string;
   answerCount: number;
   myAnswer?: boolean;
   answer:
     | {
-        memberId: number;
+        memberId: string;
         memberName: string;
         answer: string;
-        createdAt: number;
+        createdAt: string;
       }[]
     | null;
 };
