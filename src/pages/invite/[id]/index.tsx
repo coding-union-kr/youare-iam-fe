@@ -4,7 +4,6 @@ import type { NextPageWithLayout } from '@/types/page';
 import ListItem from '@/components/ui/ListItem';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { useRouter } from 'next/router';
@@ -13,7 +12,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { useQueryClient } from '@tanstack/react-query';
 import { get } from '@/libs/api';
-import { getAccessToken } from '@/libs/token';
+import useAuth from '@/hooks/auth/useAuth';
 
 type Data = {
   data: {
@@ -28,16 +27,16 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
   const router = useRouter();
   const { mutate: postInviteAnswer } = usePostInviteAnswer();
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
   const handleSubmitAnswer = () => {
-    const isLogin = getAccessToken();
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
 
-    if (!isLogin) {
+    if (!isAuthenticated) {
       window.location.href = KAKAO_AUTH_URL;
     } else {
       postInviteAnswer(
