@@ -24,11 +24,6 @@ type Data = {
 };
 
 const Page: NextPageWithLayout<Data> = ({ data, id }) => {
-  const idid = '01da558f-aa57-4363-a830-98c754209f31';
-  const response = get(`/api/v1/members/invite/info/${idid}`);
-  const datadata = response.data;
-  console.log('data: ', datadata);
-
   const [text, setText] = useState('');
   const router = useRouter();
   const { mutate: postInviteAnswer } = usePostInviteAnswer();
@@ -125,17 +120,6 @@ export const getServerSideProps = async (
   try {
     const response = await get(`/api/v1/members/invite/info/${id}`);
     const data = response.data;
-    console.log('data: ', data);
-    // 이거 안됨
-    if (data === undefined) {
-      return {
-        redirect: {
-          destination: '/',
-          permanent: false,
-        },
-      };
-    }
-
     return { props: { data, id } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
