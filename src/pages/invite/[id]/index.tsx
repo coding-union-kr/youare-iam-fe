@@ -122,7 +122,13 @@ export const getServerSideProps = async (
     return { props: { data, id } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
-    return { props: { invitedName: [] } };
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/404',
+      },
+      props: {},
+    };
   }
 };
 
