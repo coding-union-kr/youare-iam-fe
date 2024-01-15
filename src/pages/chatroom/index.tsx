@@ -56,8 +56,6 @@ const Page: NextPageWithLayout<Letters> = () => {
 
     try {
       const response = await get(url);
-      console.log('response.data', response.data);
-      console.log('typeof response.data.myId', typeof response.data.myId);
       setMyId(response.data.myId);
       return response.data;
     } catch (error) {
@@ -75,7 +73,7 @@ const Page: NextPageWithLayout<Letters> = () => {
   const router = useRouter();
 
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
-  const { fetchNextPage, hasNextPage, data, error } = useInfiniteQuery({
+  const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
     queryKey: ['letters'],
     queryFn: getLetters,
     initialPageParam: 0,

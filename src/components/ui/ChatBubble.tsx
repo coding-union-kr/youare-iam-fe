@@ -12,9 +12,8 @@ type ChatBubbleProps = {
 
 const ChatBubble = ({ answer }: ChatBubbleProps) => {
   const myId = useRecoilValue(myIdState);
-  const [myAnswer, otherAnswer] = answer;
-  // const myAnswer = answer.find((answer) => answer.memberId === myId);
-  // const otherAnswer = answer.find((answer) => answer.memberId !== myId);
+  const myAnswer = answer.find((answer) => answer.memberId === myId);
+  const otherAnswer = answer.find((answer) => answer.memberId !== myId);
   return (
     <>
       <div className="chat chat-start">
