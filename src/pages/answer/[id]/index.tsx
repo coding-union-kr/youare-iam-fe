@@ -9,6 +9,8 @@ import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
 
+import { checkAuth } from '@/util/checkAuth';
+
 type Prop = {
   id: string;
   question: string;
@@ -71,15 +73,21 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { id } = context.query;
+  const authCheck = await checkAuth(context);
+  if (authCheck) {
+    return authCheck;
+  }
 
+  const { id } = context.query;
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ['question', id],
     queryFn: () => getQuestion(Number(id)),
+    //add error handling
   });
 
+  // Todo: api 응답이 404일 경우에 notfound 페이지를 보여주도록 수정
   const isValidId = (id: any) => {
     return !isNaN(Number(id));
   };

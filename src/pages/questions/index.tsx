@@ -7,6 +7,8 @@ import useQuestionList, {
   getQuestionList,
 } from '@/hooks/queries/useQuestionList';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
+import { checkAuth } from '@/util/checkAuth';
+import { GetServerSidePropsContext } from 'next';
 
 type Questions = {
   questions: Question[];
@@ -56,7 +58,12 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const authCheck = await checkAuth(context);
+  if (authCheck) {
+    return authCheck;
+  }
+
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
