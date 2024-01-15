@@ -1,14 +1,16 @@
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { get } from '@/libs/api';
-import useReversedInfiniteScroll from '@/hooks/common/useReversedInfiniteScroll';
-import { useSetRecoilState } from 'recoil';
 import { myIdState } from '@/store/myIdState';
+import { checkAuth } from '@/util/checkAuth';
+import useReversedInfiniteScroll from '@/hooks/common/useReversedInfiniteScroll';
 
 type Letters = {
   letters: LetterType[];
@@ -178,4 +180,12 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const authCheck = await checkAuth(context);
+  if (authCheck) {
+    return authCheck;
+  }
+
+  return { props: {} };
+}
 export default Page;

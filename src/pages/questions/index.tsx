@@ -7,6 +7,8 @@ import useQuestionList, {
   getQuestionList,
 } from '@/hooks/queries/useQuestionList';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
+import { checkAuth } from '@/util/checkAuth';
+import { GetServerSidePropsContext } from 'next';
 
 type Questions = {
   questions: Question[];
@@ -40,7 +42,7 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
       {questionList.map((question) => (
         <div
           key={question.questionId}
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col items-center justify-center"
         >
           <ListItem
             question={question.question}
@@ -56,7 +58,12 @@ Page.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export const getStaticProps = async () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const authCheck = await checkAuth(context);
+  if (authCheck) {
+    return authCheck;
+  }
+
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -68,6 +75,6 @@ export const getStaticProps = async () => {
       initialState: dehydrate(queryClient),
     },
   };
-};
+}
 
 export default Page;
