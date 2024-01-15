@@ -28,8 +28,6 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
-          console.log(data);
-
           window.Kakao.Share.sendCustom({
             templateId: TEMPLATE_ID,
             templateArgs: {
@@ -41,7 +39,7 @@ export default function InviteStep() {
           });
           // TODO: redirect to chatroom
           // router.push('/chatroom');
-          // setOnboardingData(initialOnboardingState);
+          setOnboardingData(initialOnboardingState);
         },
         onError: (error) => {
           throw error;

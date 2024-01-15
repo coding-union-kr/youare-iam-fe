@@ -38,12 +38,16 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
 
     if (!isAuthenticated) {
       window.location.href = KAKAO_AUTH_URL;
+      window.localStorage.setItem(LOCAL_STORAGE_KEYS.PREV_URL, router.asPath);
     } else {
       postInviteAnswer(
         { linkKey: id, answer: text },
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['letters'] });
+            window.localStorage.removeItem(
+              LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
+            );
             router.push('/chatroom');
           },
           onError: (error) => {
@@ -62,10 +66,6 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
       setText(storedText);
     }
   }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(LOCAL_STORAGE_KEYS.PREV_URL, router.asPath);
-  }, [router.asPath]);
 
   return (
     <>

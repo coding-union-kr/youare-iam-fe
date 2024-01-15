@@ -22,11 +22,7 @@ export default function Login() {
         setAuthHeader(instance, accessToken);
 
         const prevUrl = localStorage.getItem(LOCAL_STORAGE_KEYS.PREV_URL);
-        if (prevUrl === '/invite') {
-          router.push('/chatroom');
-        } else {
-          router.push(prevUrl || '/onboarding');
-        }
+        router.push(prevUrl || '/chatroom');
         localStorage.removeItem(LOCAL_STORAGE_KEYS.PREV_URL);
       } catch (err) {
         setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
