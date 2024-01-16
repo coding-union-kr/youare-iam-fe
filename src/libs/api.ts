@@ -37,9 +37,9 @@ const interceptorResponseRejected = (error: AxiosError) => {
   if (error.response?.status === 401) {
     removeAccessToken();
     window.location.href = '/';
-    return Promise.reject(error.response.data);
+    return Promise.reject(error.response.data as ErrorResponse);
   }
-  return Promise.reject(error.response?.data);
+  return Promise.reject(error.response?.data as ErrorResponse);
 };
 
 instance.interceptors.response.use(
@@ -60,3 +60,8 @@ export const post = <T = any, D = any, R = AxiosResponse<T>>(
 ) => {
   return instance.post<T, R>(url, data);
 };
+
+export interface ErrorResponse {
+  code: number;
+  message: string;
+}

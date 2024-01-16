@@ -8,6 +8,8 @@ import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
+import { AxiosError } from 'axios';
+import { ErrorResponse } from '@/libs/api';
 
 const TEMPLATE_ID = 102113;
 const domain =
@@ -39,10 +41,11 @@ export default function InviteStep() {
           });
           // TODO: redirect to chatroom
           // router.push('/chatroom');
-          setOnboardingData(initialOnboardingState);
+          // setOnboardingData(initialOnboardingState);
         },
-        onError: (error) => {
-          throw error;
+        onError: (error: unknown) => {
+          const errorResponse = error as ErrorResponse;
+          alert(errorResponse.message);
         },
       }
     );

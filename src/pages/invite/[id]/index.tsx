@@ -11,7 +11,7 @@ import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { useQueryClient } from '@tanstack/react-query';
-import { get } from '@/libs/api';
+import { ErrorResponse, get } from '@/libs/api';
 import useAuth from '@/hooks/auth/useAuth';
 
 type Data = {
@@ -50,8 +50,9 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
             );
             router.push('/chatroom');
           },
-          onError: (error) => {
-            throw error;
+          onError: (error: unknown) => {
+            const errorResponse = error as ErrorResponse;
+            alert(errorResponse.message);
           },
         }
       );
