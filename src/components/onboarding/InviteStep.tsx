@@ -8,8 +8,7 @@ import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { AxiosError } from 'axios';
-import { ErrorResponse } from '@/libs/api';
+import type { ErrorResponse } from '@/types/api';
 
 const TEMPLATE_ID = 102113;
 const domain =
@@ -30,6 +29,8 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
+          //Todo: 카카오 공유하기 try catch로 감싸기
+          console.log(data);
           window.Kakao.Share.sendCustom({
             templateId: TEMPLATE_ID,
             templateArgs: {

@@ -11,8 +11,9 @@ import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { useQueryClient } from '@tanstack/react-query';
-import { ErrorResponse, get } from '@/libs/api';
+import { get } from '@/libs/api';
 import useAuth from '@/hooks/auth/useAuth';
+import type { ErrorResponse } from '@/types/api';
 
 type Data = {
   data: {
