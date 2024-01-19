@@ -107,7 +107,8 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             <b>백엔드</b>
             <br/>
-            <img src='docs/gamti.jpg' width='40%'>
+            <img src='docs/gamti.jpg' width='30%'>
+            <br/>
             <br/>
             <a href="https://github.com/samjan29">https://github.com/samjan29</a>
         </td>
@@ -157,7 +158,8 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             <b>프론트</b>
             <br/>
-            <img src='docs/biyam.jpg' width='40%'>
+            <img src='docs/biyam.jpg' width='30%'>
+            <br/>
             <br/>
             <a href="https://github.com/biyamn">https://github.com/biyamn</a>
         </td>
