@@ -96,7 +96,7 @@ _너는 어떻게 생각해? 나는…_
         <td style="width: 50%;">
             <b>🧡김미정(쪙이)🧡</b>
             <br/>
-            <b>백엔드</b>
+            <b style='font-size:12px'>백엔드</b>
             <br/>
             <img src='docs/jjung.jpg' width='40%'>
             <br/>
@@ -105,10 +105,9 @@ _너는 어떻게 생각해? 나는…_
         <td style="width: 50%;">
             <b>💛전다빈(감티)💛</b>
             <br/>
-            <b>백엔드</b>
+            <b style='font-size:12px'>백엔드</b>
             <br/>
             <img src='docs/gamti.jpg' width='30%'>
-            <br/>
             <br/>
             <a href="https://github.com/samjan29">https://github.com/samjan29</a>
         </td>
@@ -142,12 +141,10 @@ _너는 어떻게 생각해? 나는…_
         </td>
     </tr>
     <tr align="center">
-    </tr>
-    <tr align="center">
         <td style="width: 50%;">
             <b>🤎이슬(밤밤)🤎</b>
             <br/>
-            <b>프론트</b>
+            <b style='font-size:12px'>프론트</b>
             <br/>
             <img src='docs/bambam.png' width='50%'>
             <br/>
@@ -156,10 +153,9 @@ _너는 어떻게 생각해? 나는…_
         <td style="width: 50%;">
             <b>💙이지선(비얌)💙</b>
             <br/>
-            <b>프론트</b>
+            <b style='font-size:12px'>프론트</b>
             <br/>
             <img src='docs/biyam.jpg' width='30%'>
-            <br/>
             <br/>
             <a href="https://github.com/biyamn">https://github.com/biyamn</a>
         </td>
