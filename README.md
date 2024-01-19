@@ -173,7 +173,7 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             - 레이아웃 구현
         </td>
-        <td style="width: 50%;">
+        <td style="width: 50%; word-break: keep-all;">
             새롭게 배우고 코드에 적용해보는 것을 좋아해요.
             <br/>
             <br/>
