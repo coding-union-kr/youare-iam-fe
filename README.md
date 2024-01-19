@@ -111,6 +111,24 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             <a href="https://github.com/samjan29">https://github.com/samjan29</a>
         </td>
+        <td style="width: 50%;">
+            <b>🤎이슬(밤밤)🤎</b>
+            <br/>
+            <b style='font-size:12px'>프론트</b>
+            <br/>
+            <img src='docs/bambam.png' width='50%'>
+            <br/>
+            <a href="https://github.com/seul-dev">https://github.com/seul-dev</a>
+        </td>
+        <td style="width: 50%;">
+            <b>💙이지선(비얌)💙</b>
+            <br/>
+            <b style='font-size:12px'>프론트</b>
+            <br/>
+            <img src='docs/biyam.jpg' width='30%'>
+            <br/>
+            <a href="https://github.com/biyamn">https://github.com/biyamn</a>
+        </td>
     </tr>
     <tr align="center">
         <td style="width: 50%;">
@@ -139,28 +157,6 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             - 배포
         </td>
-    </tr>
-    <tr align="center">
-        <td style="width: 50%;">
-            <b>🤎이슬(밤밤)🤎</b>
-            <br/>
-            <b style='font-size:12px'>프론트</b>
-            <br/>
-            <img src='docs/bambam.png' width='50%'>
-            <br/>
-            <a href="https://github.com/seul-dev">https://github.com/seul-dev</a>
-        </td>
-        <td style="width: 50%;">
-            <b>💙이지선(비얌)💙</b>
-            <br/>
-            <b style='font-size:12px'>프론트</b>
-            <br/>
-            <img src='docs/biyam.jpg' width='30%'>
-            <br/>
-            <a href="https://github.com/biyamn">https://github.com/biyamn</a>
-        </td>
-    </tr>
-    <tr align="center">
         <td style="width: 50%;">
             컴포넌트화, 모듈화, 클래스화를 좋아합니다.
             <br/>
