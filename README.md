@@ -99,6 +99,7 @@ _너는 어떻게 생각해? 나는…_
             <b>백엔드</b>
             <br/>
             <img src='docs/jjung.jpg' width='40%'>
+            <br/>
             <a href="https://github.com/meezzui">https://github.com/meezzui</a>    
         </td>
         <td style="width: 50%;">
@@ -106,7 +107,8 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             <b>백엔드</b>
             <br/>
-            <img src='docs/gamti.jpg' width='50%'>
+            <img src='docs/gamti.jpg' width='40%'>
+            <br/>
             <a href="https://github.com/samjan29">https://github.com/samjan29</a>
         </td>
     </tr>
@@ -115,6 +117,7 @@ _너는 어떻게 생각해? 나는…_
             한 번 시작한 일은 절대 포기하지 않아요😊
             <br/>
             <b>Springboot</b>, <b>Mybatis</b>, <b>Mysql</b>, <b>JPA</b> 경험이 있으며 현재 JPA를 공부 중 입니다!!
+            <br/>
             <br/>
             <b>[담당기능]</b>
             <br/>
@@ -125,6 +128,7 @@ _너는 어떻게 생각해? 나는…_
         <td style="width: 50%;">
             개발을 좋아하고 문제 해결이 재밌어요!
             <br />
+            <br/>
             <b>[담당기능]</b>
             <br/>
             - Refresh token
@@ -145,6 +149,7 @@ _너는 어떻게 생각해? 나는…_
             <b>프론트</b>
             <br/>
             <img src='docs/bambam.png' width='50%'>
+            <br/>
             <a href="https://github.com/seul-dev">https://github.com/seul-dev</a>
         </td>
         <td style="width: 50%;">
@@ -152,13 +157,15 @@ _너는 어떻게 생각해? 나는…_
             <br/>
             <b>프론트</b>
             <br/>
-            <img src='docs/biyam.jpg' width='50%'>
+            <img src='docs/biyam.jpg' width='40%'>
+            <br/>
             <a href="https://github.com/biyamn">https://github.com/biyamn</a>
         </td>
     </tr>
     <tr align="center">
         <td style="width: 50%;">
             컴포넌트화, 모듈화, 클래스화를 좋아합니다.
+            <br/>
             <br/>
             <b>[담당기능]</b>
             <br/>
@@ -170,6 +177,7 @@ _너는 어떻게 생각해? 나는…_
         </td>
         <td style="width: 50%;">
             새롭게 배우고 코드에 적용해보는 것을 좋아해요.
+            <br/>
             <br/>
             <b>[담당기능]</b>
             <br/>
