@@ -1,5 +1,7 @@
 import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
+
 import type { NextPageWithLayout } from '@/types/page';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
@@ -8,8 +10,8 @@ import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
-
 import { checkAuth } from '@/util/checkAuth';
+import { ErrorResponse } from '@/types/api';
 
 type Prop = {
   id: string;
@@ -44,8 +46,9 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
             hash: selectQuestionId,
           });
         },
-        onError: (error) => {
-          throw error;
+        onError: (error: unknown) => {
+          const errorResponse = error as ErrorResponse;
+          toast.error(errorResponse.message);
         },
       }
     );

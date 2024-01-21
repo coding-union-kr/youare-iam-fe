@@ -14,6 +14,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/components/error/ErrorFallback';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { LazyMotion, domAnimation } from 'framer-motion';
+import { Toaster } from 'react-hot-toast';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -59,6 +60,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       ></Script>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
+          <Toaster />
           <HydrationBoundary state={pageProps.dehydratedState}>
             <LazyMotion features={domAnimation}>
               <QueryErrorResetBoundary>

@@ -1,4 +1,7 @@
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
+import { m } from 'framer-motion';
+import toast from 'react-hot-toast';
 import Button from '@/components/ui/Button';
 import {
   initialOnboardingState,
@@ -6,8 +9,6 @@ import {
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
-import { useRouter } from 'next/router';
-import { m } from 'framer-motion';
 import type { ErrorResponse } from '@/types/api';
 
 const TEMPLATE_ID = 102113;
@@ -46,7 +47,7 @@ export default function InviteStep() {
         },
         onError: (error: unknown) => {
           const errorResponse = error as ErrorResponse;
-          alert(errorResponse.message);
+          toast.error(errorResponse.message);
         },
       }
     );
