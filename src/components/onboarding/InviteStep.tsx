@@ -8,7 +8,6 @@ import {
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
-import { showToastErrorMessage } from '@/util/showToastErrorMessage';
 
 const TEMPLATE_ID = 102113;
 const domain =
@@ -44,7 +43,6 @@ export default function InviteStep() {
           // router.push('/chatroom');
           // setOnboardingData(initialOnboardingState);
         },
-        onError: showToastErrorMessage,
       }
     );
   };

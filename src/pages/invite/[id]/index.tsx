@@ -14,7 +14,6 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/api';
 import useAuth from '@/hooks/auth/useAuth';
-import { showToastErrorMessage } from '@/util/showToastErrorMessage';
 
 type Data = {
   data: {
@@ -52,7 +51,6 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
             );
             router.push('/chatroom');
           },
-          onError: showToastErrorMessage,
         }
       );
     }

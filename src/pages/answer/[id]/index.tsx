@@ -10,7 +10,6 @@ import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
 import { checkAuth } from '@/util/checkAuth';
-import { showToastErrorMessage } from '@/util/showToastErrorMessage';
 
 type Prop = {
   id: string;
@@ -45,7 +44,6 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
             hash: selectQuestionId,
           });
         },
-        onError: showToastErrorMessage,
       }
     );
   };
