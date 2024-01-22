@@ -52,7 +52,7 @@ export default function Modal({
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button onClick={handleClose}>close</button>
         </form>
       </dialog>
     </>
