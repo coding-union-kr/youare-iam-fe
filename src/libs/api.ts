@@ -3,6 +3,7 @@ import axios, {
   type AxiosResponse,
   AxiosRequestConfig,
   AxiosError,
+  AxiosInstance,
 } from 'axios';
 import {
   getAccessToken,
@@ -48,24 +49,12 @@ const interceptorResponseRejected = async (error: AxiosError) => {
     if (code === 'AU001') {
       removeAccessToken();
       window.location.href = '/login';
+      return Promise.reject(error.response.data as ErrorResponse);
     }
 
-    // code : AU002 - 액세스 토큰 재발급 -> 토큰 다시 저장, 헤더에 토큰 설정 -> 요청 재시도
+    // code : AU002 - 액세스 토큰 재발급 api -> 토큰 다시 저장, 헤더에 토큰 설정 -> 요청 재시도
     if (code === 'AU002') {
-      console.log(code);
-      try {
-        const res = await instance.post('api/v1/members/auth/token');
-        const accessToken = res.headers['authorization'].split(' ')[1];
-
-        setAccessToken(accessToken);
-        setAuthHeader(instance, accessToken);
-
-        // 기존 요청 재시도
-        return instance(originalRequest);
-      } catch (error) {
-        // Todo: refresh 만료에 대한 처리
-        console.log(error);
-      }
+      refreshTokenAndRetryRequest(instance, originalRequest);
     }
 
     return Promise.reject(error.response.data as ErrorResponse);
@@ -91,3 +80,46 @@ export const post = <T = any, D = any, R = AxiosResponse<T>>(
 ) => {
   return instance.post<T, R>(url, data);
 };
+
+async function refreshTokenAndRetryRequest(
+  failedRequestInstance: AxiosInstance,
+  failedRequestConfig: AxiosRequestConfig
+) {
+  const refreshInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    timeout: 15000,
+  });
+  const existingAccessToken = getAccessToken();
+
+  if (!existingAccessToken) {
+    removeAccessToken();
+    window.location.href = '/';
+    return;
+  }
+  setAuthHeader(refreshInstance, existingAccessToken);
+
+  try {
+    const res = await refreshInstance.post('/api/v1/members/auth/token');
+
+    if (res.status === 201) {
+      const accessToken = res.headers['authorization'].split(' ')[1];
+
+      setAccessToken(accessToken);
+      setAuthHeader(failedRequestInstance, accessToken);
+
+      // 기존 요청 재시도
+      return failedRequestInstance(failedRequestConfig);
+    }
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const errorResponse = axiosError.response?.data as ErrorResponse;
+
+    if (errorResponse.code === 'AU003') {
+      removeAccessToken();
+      window.location.href = '/';
+      return Promise.reject(errorResponse);
+    }
+
+    return Promise.reject(errorResponse);
+  }
+}
