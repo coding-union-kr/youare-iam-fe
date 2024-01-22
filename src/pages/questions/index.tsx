@@ -9,6 +9,7 @@ import useQuestionList, {
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import { checkAuth } from '@/util/checkAuth';
 import { GetServerSidePropsContext } from 'next';
+import type { ErrorResponse } from '@/types/api';
 
 type Questions = {
   questions: Question[];
@@ -33,7 +34,12 @@ const Page: NextPageWithLayout<Questions> = ({ questions }) => {
       queryClient.invalidateQueries({ queryKey: ['letters'] });
       router.push('/chatroom');
     } catch (error) {
-      throw error;
+      const e = error as ErrorResponse;
+      if (e.status === 409) {
+        if (e.code === 'Q003') {
+          alert('이미 선택된 질문입니다.');
+        }
+      }
     }
   };
 
