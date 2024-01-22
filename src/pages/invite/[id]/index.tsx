@@ -1,16 +1,17 @@
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
+import type { GetServerSidePropsContext } from 'next';
+import { useQueryClient } from '@tanstack/react-query';
+
 import BasicLayout from '@/components/layout/BasicLayout';
 import type { NextPageWithLayout } from '@/types/page';
 import ListItem from '@/components/ui/ListItem';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
-import { useState, useEffect } from 'react';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
-import { useRouter } from 'next/router';
-import type { GetServerSidePropsContext } from 'next';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
-import { useQueryClient } from '@tanstack/react-query';
 import { get } from '@/libs/api';
 import useAuth from '@/hooks/auth/useAuth';
 
@@ -49,9 +50,6 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
               LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
             );
             router.push('/chatroom');
-          },
-          onError: (error) => {
-            throw error;
           },
         }
       );

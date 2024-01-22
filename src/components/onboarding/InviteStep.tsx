@@ -1,4 +1,6 @@
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
+import { m } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import {
   initialOnboardingState,
@@ -6,8 +8,6 @@ import {
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
-import { useRouter } from 'next/router';
-import { m } from 'framer-motion';
 
 const TEMPLATE_ID = 102113;
 const domain =
@@ -18,7 +18,7 @@ const domain =
 export default function InviteStep() {
   const router = useRouter();
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
-  const { mutate: createInviteKey } = useCreateInviteKey();
+  const { mutate: createInviteKey, isPending } = useCreateInviteKey();
 
   const handleInvite = () => {
     createInviteKey(
@@ -28,6 +28,8 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
+          //Todo: 카카오 공유하기 try catch로 감싸기
+          console.log(data);
           window.Kakao.Share.sendCustom({
             templateId: TEMPLATE_ID,
             templateArgs: {
@@ -39,10 +41,7 @@ export default function InviteStep() {
           });
           // TODO: redirect to chatroom
           // router.push('/chatroom');
-          setOnboardingData(initialOnboardingState);
-        },
-        onError: (error) => {
-          throw error;
+          // setOnboardingData(initialOnboardingState);
         },
       }
     );
@@ -79,7 +78,12 @@ export default function InviteStep() {
           </div>
         </m.article>
       </section>
-      <Button variant="primary" size="wide" onClick={handleInvite}>
+      <Button
+        variant="primary"
+        size="wide"
+        onClick={handleInvite}
+        isLoading={isPending}
+      >
         초대링크 전송하기
       </Button>
     </>

@@ -5,6 +5,7 @@ import axios, {
   AxiosError,
 } from 'axios';
 import { getAccessToken, removeAccessToken } from './token';
+import { ErrorResponse } from '@/types/api';
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -36,10 +37,10 @@ const interceptorResponseFulfilled = (res: AxiosResponse) => {
 const interceptorResponseRejected = (error: AxiosError) => {
   if (error.response?.status === 401) {
     removeAccessToken();
-    window.location.href = '/';
-    return Promise.reject(error.response.data);
+    // window.location.href = '/';
+    return Promise.reject(error.response.data as ErrorResponse);
   }
-  return Promise.reject(error.response?.data);
+  return Promise.reject(error.response?.data as ErrorResponse);
 };
 
 instance.interceptors.response.use(
