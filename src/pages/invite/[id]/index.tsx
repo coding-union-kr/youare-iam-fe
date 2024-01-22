@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import type { GetServerSidePropsContext } from 'next';
 import { useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 import BasicLayout from '@/components/layout/BasicLayout';
 import type { NextPageWithLayout } from '@/types/page';
@@ -15,7 +14,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/api';
 import useAuth from '@/hooks/auth/useAuth';
-import type { ErrorResponse } from '@/types/api';
+import { showToastErrorMessage } from '@/util/showToastErrorMessage';
 
 type Data = {
   data: {
@@ -53,10 +52,7 @@ const Page: NextPageWithLayout<Data> = ({ data, id }) => {
             );
             router.push('/chatroom');
           },
-          onError: (error: unknown) => {
-            const errorResponse = error as ErrorResponse;
-            toast.error(errorResponse.message);
-          },
+          onError: showToastErrorMessage,
         }
       );
     }

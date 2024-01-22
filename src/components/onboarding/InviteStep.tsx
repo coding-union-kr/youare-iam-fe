@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { m } from 'framer-motion';
-import toast from 'react-hot-toast';
 import Button from '@/components/ui/Button';
 import {
   initialOnboardingState,
@@ -9,7 +8,7 @@ import {
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import LockIcon from '../icons/LockIcon';
-import type { ErrorResponse } from '@/types/api';
+import { showToastErrorMessage } from '@/util/showToastErrorMessage';
 
 const TEMPLATE_ID = 102113;
 const domain =
@@ -45,10 +44,7 @@ export default function InviteStep() {
           // router.push('/chatroom');
           // setOnboardingData(initialOnboardingState);
         },
-        onError: (error: unknown) => {
-          const errorResponse = error as ErrorResponse;
-          toast.error(errorResponse.message);
-        },
+        onError: showToastErrorMessage,
       }
     );
   };
