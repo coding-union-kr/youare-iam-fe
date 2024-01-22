@@ -10,7 +10,7 @@ import QuestionBar from '@/components/ui/QuestionBar';
 import { get } from '@/libs/api';
 import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
-import useReversedInfiniteScroll from '@/hooks/common/useReversedInfiniteScroll';
+import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
 
 type Letters = {
   letters: LetterType[];
