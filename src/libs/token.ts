@@ -2,7 +2,7 @@ import type { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN } from '@/constants/auth';
 
-const ACCESS_TOKEN_EXPIRES = 1 / 48; // 백엔드 액세스 토큰의 만료시간 30분
+const ACCESS_TOKEN_EXPIRES = 14; // 2주 (리프레시 토큰 만료 기간)
 const isProduction = process.env.NODE_ENV === 'production';
 
 export const getAccessToken = () => {
