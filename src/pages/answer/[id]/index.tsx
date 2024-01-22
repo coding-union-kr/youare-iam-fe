@@ -19,7 +19,7 @@ type Prop = {
 
 const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   const router = useRouter();
-  const { mutate: postAnswer } = usePostAnswer();
+  const { mutate: postAnswer, isPending } = usePostAnswer();
 
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
@@ -58,6 +58,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
         onChange={onChange}
         errorMessage={errorMessage}
         handleSubmit={handleSubmit}
+        isLoading={isPending}
       />
     </section>
   );

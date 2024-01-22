@@ -19,7 +19,7 @@ const domain =
 export default function InviteStep() {
   const router = useRouter();
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
-  const { mutate: createInviteKey } = useCreateInviteKey();
+  const { mutate: createInviteKey, isPending } = useCreateInviteKey();
 
   const handleInvite = () => {
     createInviteKey(
@@ -80,7 +80,12 @@ export default function InviteStep() {
           </div>
         </m.article>
       </section>
-      <Button variant="primary" size="wide" onClick={handleInvite}>
+      <Button
+        variant="primary"
+        size="wide"
+        onClick={handleInvite}
+        isLoading={isPending}
+      >
         초대링크 전송하기
       </Button>
     </>
