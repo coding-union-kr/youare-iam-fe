@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+
 import type { NextPageWithLayout } from '@/types/page';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
@@ -8,7 +9,6 @@ import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
-
 import { checkAuth } from '@/util/checkAuth';
 
 type Prop = {
@@ -18,7 +18,7 @@ type Prop = {
 
 const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   const router = useRouter();
-  const { mutate: postAnswer } = usePostAnswer();
+  const { mutate: postAnswer, isPending } = usePostAnswer();
 
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
@@ -44,9 +44,6 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
             hash: selectQuestionId,
           });
         },
-        onError: (error) => {
-          throw error;
-        },
       }
     );
   };
@@ -59,6 +56,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
         onChange={onChange}
         errorMessage={errorMessage}
         handleSubmit={handleSubmit}
+        isLoading={isPending}
       />
     </section>
   );
