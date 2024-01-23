@@ -115,11 +115,26 @@ async function refreshTokenAndRetryRequest(
     const errorResponse = axiosError.response?.data as ErrorResponse;
 
     if (errorResponse.code === 'AU003') {
-      removeAccessToken();
-      window.location.href = '/';
-      return Promise.reject(errorResponse);
+      // 로그아웃 처리 후 로그인 페이지로 이동
+      // removeAccessToken();
+      // window.location.href = '/';
+      console.log(errorResponse);
+      try {
+        const res = await refreshInstance.delete('/api/v1/members/auth/logout');
+
+        if (res.status === 205) {
+          // removeAccessToken();
+          console.log('로그아웃 성공');
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorResponse = axiosError.response?.data as ErrorResponse;
+        console.log(errorResponse);
+      }
+
+      return;
     }
 
-    return Promise.reject(errorResponse);
+    console.log('error');
   }
 }
