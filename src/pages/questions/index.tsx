@@ -33,16 +33,6 @@ const Page: NextPageWithLayout<Questions> = () => {
         onSuccess: () => {
           router.push('/chatroom');
         },
-        // onError: (error) => {
-        //   // TODO: 에러 처리
-        //   const e = error as unknown as ErrorResponse;
-        //   if (e.status === 409) {
-        //     if (e.code === 'Q003') {
-        //       queryClient.invalidateQueries({ queryKey: ['question-list'] });
-        //       queryClient.invalidateQueries({ queryKey: ['letters'] });
-        //     }
-        //   }
-        // },
       }
     );
   };
