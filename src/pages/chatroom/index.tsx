@@ -156,7 +156,7 @@ const Page: NextPageWithLayout<Letters> = () => {
         // max-h-[calc(100vh-5rem-0.75rem)]: 스크롤이 있을 높이를 지정한다.
         // ㄴ 5rem은 BottomNavigation 높이, 0.5rem은 QuestionBar의 패딩 높이, 0.5rem은 여백
         // overflow-y-auto: y축이 더 길 때(세로) 스크롤이 생기도록 설정, 내용이 넘칠 때만 스크롤바 표시
-        className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto"
+        className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto overflow-x-hidden"
         // letters를 감싸고 있는 container. ref를 지정했다.
         ref={containerRef}
         // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
