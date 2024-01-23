@@ -9,32 +9,32 @@ import useQuestionList, {
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import { checkAuth } from '@/util/checkAuth';
 import { GetServerSidePropsContext } from 'next';
+import type { ErrorResponse } from '@/types/api';
+import type { Question } from '@/types/api';
+import usePostQuestion from '@/hooks/queries/usePostQuestion';
 
 type Questions = {
   questions: Question[];
 };
 
-type Question = {
-  questionId: number;
-  question: string;
-};
-
-const Page: NextPageWithLayout<Questions> = ({ questions }) => {
+const Page: NextPageWithLayout<Questions> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { questionList } = useQuestionList();
-
+  const { mutate: postQuestion } = usePostQuestion();
   const handleItemClick = async (questionId: Question['questionId']) => {
-    try {
-      await post('/api/v1/questions', {
-        questionId: questionId,
-      });
-      queryClient.invalidateQueries({ queryKey: ['question-list'] });
-      queryClient.invalidateQueries({ queryKey: ['letters'] });
-      router.push('/chatroom');
-    } catch (error) {
-      throw error;
-    }
+    postQuestion(
+      { questionId: questionId },
+      {
+        onSettled: () => {
+          queryClient.invalidateQueries({ queryKey: ['question-list'] });
+          queryClient.invalidateQueries({ queryKey: ['letters'] });
+        },
+        onSuccess: () => {
+          router.push('/chatroom');
+        },
+      }
+    );
   };
 
   return (
