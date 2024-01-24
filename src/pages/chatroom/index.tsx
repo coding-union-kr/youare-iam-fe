@@ -11,14 +11,14 @@ import { get } from '@/libs/clientSideApi';
 import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
+import axios from 'axios';
+// type Data = {
+//   letters: Letter[];
+//   nextCursor: number;
+//   myId: string;
+// };
 
-type Letters = {
-  letters: LetterType[];
-  nextCursor: number;
-  myId: string;
-};
-
-type LetterType = {
+type Letter = {
   selectQuestionId: number;
   question: string;
   createdAt: string;
@@ -34,6 +34,11 @@ type LetterType = {
     | null;
 };
 
+type UserStatus = {
+  userStatus: string;
+  linkKey: string;
+};
+
 type ModalInfo = {
   actionText: string;
   cancelText: string;
@@ -45,7 +50,10 @@ type PageParam = {
   pageParam: number;
 };
 
-const Page: NextPageWithLayout<Letters> = () => {
+const Page: NextPageWithLayout<UserStatus> = ({ userStatus, linkKey }) => {
+  console.log('userStatus: ', userStatus);
+  console.log('linkKey: ', linkKey);
+
   const setMyId = useSetRecoilState(myIdState);
   const getLetters = async ({ pageParam }: PageParam) => {
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -103,7 +111,7 @@ const Page: NextPageWithLayout<Letters> = () => {
     hasNextPage,
     data?.length ?? 0 // 훅에서 dataLength가 됨
   );
-  const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
+  const handleQuestionBarClick = ({ letter }: { letter: Letter }) => {
     if (letter.answerCount === 0) {
       setModalInfo({
         actionText: '답변 작성하러 가기',
@@ -162,7 +170,7 @@ const Page: NextPageWithLayout<Letters> = () => {
         // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
         onScroll={handleScroll}
       >
-        {data?.map((letter: LetterType, index: number) => {
+        {data?.map((letter: Letter, index: number) => {
           return (
             <QuestionBar
               key={index}
@@ -186,6 +194,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return authCheck;
   }
 
-  return { props: {} };
+  const res = await get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/members/user-status`
+  );
+
+  const { userStatus, linkKey } = res.data;
+
+  console.log('userStatus: ', userStatus);
+  console.log('linkKey: ', linkKey);
+
+  return { props: { userStatus, linkKey } };
 }
 export default Page;
