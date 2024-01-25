@@ -12,6 +12,10 @@ import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
 import axios from 'axios';
+import { parseCookies } from 'nookies';
+import { ACCESS_TOKEN } from '@/constants/auth';
+import { setAuthHeader } from '@/libs/token';
+
 // type Data = {
 //   letters: Letter[];
 //   nextCursor: number;
@@ -34,9 +38,11 @@ type Letter = {
     | null;
 };
 
-type UserStatus = {
-  userStatus: string;
-  linkKey: string;
+type UserData = {
+  userData: {
+    userStatus: string;
+    linkKey?: string;
+  };
 };
 
 type ModalInfo = {
@@ -50,10 +56,9 @@ type PageParam = {
   pageParam: number;
 };
 
-const Page: NextPageWithLayout<UserStatus> = ({ userStatus, linkKey }) => {
-  console.log('userStatus: ', userStatus);
-  console.log('linkKey: ', linkKey);
-
+const Page: NextPageWithLayout<UserData> = (userData) => {
+  const { userStatus, linkKey } = userData.userData;
+  const router = useRouter();
   const setMyId = useSetRecoilState(myIdState);
   const getLetters = async ({ pageParam }: PageParam) => {
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -80,7 +85,6 @@ const Page: NextPageWithLayout<UserStatus> = ({ userStatus, linkKey }) => {
     bodyText: '',
     handleAction: () => {},
   });
-  const router = useRouter();
 
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
@@ -170,15 +174,22 @@ const Page: NextPageWithLayout<UserStatus> = ({ userStatus, linkKey }) => {
         // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
         onScroll={handleScroll}
       >
-        {data?.map((letter: Letter, index: number) => {
-          return (
-            <QuestionBar
-              key={index}
-              letter={letter}
-              onClick={() => handleQuestionBarClick({ letter })}
-            />
-          );
-        })}
+        {userStatus === 'COUPLE_USER' ? (
+          data?.map((letter: Letter, index: number) => {
+            return (
+              <QuestionBar
+                key={index}
+                letter={letter}
+                onClick={() => handleQuestionBarClick({ letter })}
+              />
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center mt-10">
+            <div>초대 수락을 기다리고 있어요.</div>
+            <div>커플이 되면 답변을 볼 수 있어요!</div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -194,15 +205,33 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return authCheck;
   }
 
-  const res = await get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/members/user-status`
-  );
+  const instance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    timeout: 15000,
+  });
 
-  const { userStatus, linkKey } = res.data;
+  const cookies = parseCookies(context);
+  const accessToken = cookies[ACCESS_TOKEN];
+  setAuthHeader(instance, accessToken);
 
-  console.log('userStatus: ', userStatus);
-  console.log('linkKey: ', linkKey);
+  try {
+    const res = await instance.get(`/api/v1/members/user-status`);
 
-  return { props: { userStatus, linkKey } };
+    if (res.data.userStatus === 'NON_COUPLE_USER') {
+      return {
+        redirect: {
+          destination: '/onboarding',
+          permanent: false,
+        },
+      };
+    }
+
+    return { props: { userData: res.data } };
+  } catch (error) {
+    console.error('Error fetching data:', (error as Error).message);
+    return {
+      props: {},
+    };
+  }
 }
 export default Page;
