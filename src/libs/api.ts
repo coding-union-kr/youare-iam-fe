@@ -12,8 +12,7 @@ import {
   setAuthHeader,
 } from './token';
 import { ErrorResponse } from '@/types/api';
-import { showToastErrorMessage } from '@/util/showToastErrorMessage';
-import toast from 'react-hot-toast';
+import { showToastErrorMessage, showToastSuccessMessage } from '@/util/toast';
 
 const ERROR_CODES = {
   INVALID_ACCESS_TOKEN: 'AU001',
@@ -129,7 +128,7 @@ async function refreshTokenAndRetryRequest(
       try {
         const res = await refreshInstance.delete('/api/v1/members/auth/logout');
         if (res.status === 205) {
-          toast.success('로그아웃 되었습니다.');
+          showToastSuccessMessage('로그아웃 되었습니다.');
           removeAccessToken();
           window.location.href = '/';
         }

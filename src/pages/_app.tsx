@@ -15,7 +15,7 @@ import ErrorFallback from '@/components/error/ErrorFallback';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
-import { showToastErrorMessage } from '@/util/showToastErrorMessage';
+import { showToastErrorMessage } from '@/util/toast';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
