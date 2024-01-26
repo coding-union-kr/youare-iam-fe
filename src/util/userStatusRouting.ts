@@ -16,6 +16,7 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
 
   const res = await instance.get(`/api/v1/members/user-status`);
 
+  // TODO: /invite/[id], /answer/[id] 정규표현식 처리하기
   const unauthorizedPagesForCoupleUser = ['/onboarding', '/invite'];
   const unauthorizedPagesForCoupleWaitingUser = [
     '/onboarding',
