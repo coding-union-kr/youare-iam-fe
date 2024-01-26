@@ -13,12 +13,7 @@ import {
 } from './token';
 import { ErrorResponse } from '@/types/api';
 import { showToastErrorMessage, showToastSuccessMessage } from '@/util/toast';
-
-const ERROR_CODES = {
-  INVALID_ACCESS_TOKEN: 'AU001',
-  EXPIRED_ACCESS_TOKEN: 'AU002',
-  EXPIRED_REFRESH_TOKEN: 'AU003',
-};
+import { ERROR_CODES } from '@/constants/error';
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
