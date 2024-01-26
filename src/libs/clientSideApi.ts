@@ -26,8 +26,6 @@ export const instance = axios.create({
 });
 
 const interceptorRequestFulfilled = (config: InternalAxiosRequestConfig) => {
-  if (typeof window === 'undefined') return config;
-
   const accessToken = getAccessToken();
   if (!config.headers) return config;
   if (!accessToken) return config;

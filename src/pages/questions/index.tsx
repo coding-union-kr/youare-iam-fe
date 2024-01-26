@@ -2,7 +2,7 @@ import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
 import { useRouter } from 'next/router';
-import { post } from '@/libs/api';
+import { post } from '@/libs/clientSideApi';
 import useQuestionList, {
   getQuestionList,
 } from '@/hooks/queries/useQuestionList';

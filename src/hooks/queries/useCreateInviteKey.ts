@@ -1,5 +1,5 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { post } from '@/libs/api';
+import { post } from '@/libs/clientSideApi';
 
 type OnboardingData = {
   questionId: number;

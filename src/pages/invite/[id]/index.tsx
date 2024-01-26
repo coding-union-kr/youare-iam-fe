@@ -12,7 +12,7 @@ import Button from '@/components/ui/Button';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
-import { get } from '@/libs/api';
+import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 
 type Data = {

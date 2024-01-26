@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import { setAccessToken, setAuthHeader } from '@/libs/token';
-import { instance } from '@/libs/api';
+import { instance } from '@/libs/clientSideApi';
 
 export default function Login() {
   const [error, setError] = useState<string | null>(null);
