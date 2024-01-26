@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import type { GetServerSidePropsContext } from 'next';
 import { useQueryClient } from '@tanstack/react-query';
-
 import BasicLayout from '@/components/layout/BasicLayout';
 import type { NextPageWithLayout } from '@/types/page';
 import ListItem from '@/components/ui/ListItem';
@@ -14,6 +13,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
+import { userStatusRouting } from '@/util/userStatusRouting';
 
 type Data = {
   data: {
@@ -113,6 +113,12 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query;
+
+  const redirection = await userStatusRouting(context);
+
+  if (redirection) {
+    return redirection;
+  }
 
   try {
     const response = await get(`/api/v1/members/invite/info/${id}`);

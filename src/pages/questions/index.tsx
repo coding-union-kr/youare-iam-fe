@@ -9,6 +9,7 @@ import useQuestionList from '@/hooks/queries/useQuestionList';
 import { checkAuth } from '@/util/checkAuth';
 import usePostQuestion from '@/hooks/queries/usePostQuestion';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { userStatusRouting } from '@/util/userStatusRouting';
 
 type Questions = {
   questions: Question[];
@@ -69,6 +70,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: ['question-list'],
     queryFn: () => fetchData<Question[]>(api, '/questions'),
   });
+
+  const redirection = await userStatusRouting(context);
+
+  if (redirection) {
+    return redirection;
+  }
+
   return {
     props: {
       initialState: dehydrate(queryClient),

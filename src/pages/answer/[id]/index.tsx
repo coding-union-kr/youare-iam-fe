@@ -12,6 +12,7 @@ import useQuestion from '@/hooks/queries/useQuestion';
 import { checkAuth } from '@/util/checkAuth';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { Question } from '@/types/api';
+import { userStatusRouting } from '@/util/userStatusRouting';
 
 type Prop = {
   id: string;
@@ -104,6 +105,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       notFound: true,
     };
+  }
+
+  const redirection = await userStatusRouting(context);
+
+  if (redirection) {
+    return redirection;
   }
 
   return {

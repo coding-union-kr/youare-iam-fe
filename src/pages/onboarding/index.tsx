@@ -10,6 +10,7 @@ import InviteStep from '@/components/onboarding/InviteStep';
 import useQuestionList from '@/hooks/queries/useQuestionList';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { Question } from '@/types/api';
+import { userStatusRouting } from '@/util/userStatusRouting';
 
 const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
@@ -67,6 +68,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: ['question-list'],
     queryFn: () => fetchData<Question[]>(api, '/questions'),
   });
+
+  const redirection = await userStatusRouting(context);
+
+  if (redirection) {
+    return redirection;
+  }
 
   return {
     props: {

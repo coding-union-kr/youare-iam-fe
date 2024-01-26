@@ -15,12 +15,7 @@ import axios from 'axios';
 import { parseCookies } from 'nookies';
 import { ACCESS_TOKEN } from '@/constants/auth';
 import { setAuthHeader } from '@/libs/token';
-
-// type Data = {
-//   letters: Letter[];
-//   nextCursor: number;
-//   myId: string;
-// };
+import { userStatusRouting } from '@/util/userStatusRouting';
 
 type Letter = {
   selectQuestionId: number;
@@ -214,9 +209,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const accessToken = cookies[ACCESS_TOKEN];
   setAuthHeader(instance, accessToken);
 
+  const redirection = await userStatusRouting(context);
+
+  if (redirection) {
+    return redirection;
+  }
+
   try {
     const res = await instance.get(`/api/v1/members/user-status`);
-
     if (res.data.userStatus === 'NON_COUPLE_USER') {
       return {
         redirect: {
@@ -225,7 +225,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       };
     }
-
     return { props: { userData: res.data } };
   } catch (error) {
     console.error('Error fetching data:', (error as Error).message);
