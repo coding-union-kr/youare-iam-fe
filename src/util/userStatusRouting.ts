@@ -29,16 +29,10 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
   ];
 
   const path = context.resolvedUrl;
-  console.log('res.data.userStatus: ', res.data.userStatus);
 
-  console.log('path: ', path);
-  // TODO: userStatus에 따라 라우팅 불가하게끔 해야 함
   switch (res.data.userStatus) {
     case 'COUPLE_USER':
-      console.log('coupleuser 임');
-
       if (unauthorizedPagesForCoupleUser.includes(path)) {
-        console.log('coupleuser 페이지 접근 불가 처리됨');
         return {
           redirect: {
             permanent: false,
@@ -48,9 +42,7 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
       }
       break;
     case 'COUPLE_WAITING_USER':
-      console.log('couplewaitinguser 임');
       if (unauthorizedPagesForCoupleWaitingUser.includes(path)) {
-        console.log('couplewaitinguser 페이지 접근 불가 처리됨');
         return {
           redirect: {
             permanent: false,
@@ -60,9 +52,7 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
       }
       break;
     case 'NON_COUPLE_USER':
-      console.log('noncoupleuser 임');
       if (unauthorizedPagesForNonCoupleUser.includes(path)) {
-        console.log('noncoupleuser 페이지 접근 불가 처리됨');
         return {
           redirect: {
             permanent: false,
