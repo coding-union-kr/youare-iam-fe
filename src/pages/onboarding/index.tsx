@@ -1,14 +1,15 @@
+import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
 import Intro from '@/components/onboarding/Intro';
 import QuestionSelectStep from '@/components/onboarding/QuestionSelectStep';
 import AnswerStep from '@/components/onboarding/AnswerStep';
 import InviteStep from '@/components/onboarding/InviteStep';
-import useQuestionList, {
-  getQuestionList,
-} from '@/hooks/queries/useQuestionList';
+import useQuestionList from '@/hooks/queries/useQuestionList';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import type { Question } from '@/types/api';
 
 const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
@@ -57,12 +58,14 @@ Page.getLayout = function getLayout(page) {
 
 export default Page;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
+
+  const api = createServerSideInstance(context);
 
   await queryClient.prefetchQuery({
     queryKey: ['question-list'],
-    queryFn: getQuestionList,
+    queryFn: () => fetchData<Question[]>(api, '/questions'),
   });
 
   return {
