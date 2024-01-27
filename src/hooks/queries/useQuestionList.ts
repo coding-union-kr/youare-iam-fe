@@ -1,4 +1,4 @@
-import { get } from '@/libs/api';
+import { get } from '@/libs/clientSideApi';
 import { Question } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 

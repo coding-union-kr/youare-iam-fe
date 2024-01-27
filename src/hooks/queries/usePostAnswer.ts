@@ -1,5 +1,5 @@
 import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { post } from '@/libs/api';
+import { post } from '@/libs/clientSideApi';
 
 type Answer = {
   selectQuestionId: number;

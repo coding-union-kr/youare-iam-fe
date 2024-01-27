@@ -8,8 +8,10 @@ import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
-import useQuestion, { getQuestion } from '@/hooks/queries/useQuestion';
+import useQuestion from '@/hooks/queries/useQuestion';
 import { checkAuth } from '@/util/checkAuth';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { Question } from '@/types/api';
 
 type Prop = {
   id: string;
@@ -78,11 +80,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.query;
   const queryClient = new QueryClient();
+  const api = createServerSideInstance(context);
+
+  const getQuestion = async (id: number) => {
+    const data = await fetchData<Question>(
+      api,
+      `/api/v1/answer?selected-question-id=${id}`
+    );
+    return data.question;
+  };
 
   await queryClient.prefetchQuery({
     queryKey: ['question', id],
     queryFn: () => getQuestion(Number(id)),
-    //add error handling
   });
 
   // Todo: api 응답이 404일 경우에 notfound 페이지를 보여주도록 수정

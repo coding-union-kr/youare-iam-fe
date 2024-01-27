@@ -7,7 +7,7 @@ import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
 import Modal from '@/components/ui/Modal';
 import QuestionBar from '@/components/ui/QuestionBar';
-import { get } from '@/libs/api';
+import { get } from '@/libs/clientSideApi';
 import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
