@@ -1,17 +1,14 @@
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
+import type { Question } from '@/types/api';
 import MainLayout from '@/components/layout/MainLayout';
 import ListItem from '@/components/ui/ListItem';
-import { useRouter } from 'next/router';
-import { post } from '@/libs/clientSideApi';
-import useQuestionList, {
-  getQuestionList,
-} from '@/hooks/queries/useQuestionList';
-import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
+import useQuestionList from '@/hooks/queries/useQuestionList';
 import { checkAuth } from '@/util/checkAuth';
-import { GetServerSidePropsContext } from 'next';
-import type { ErrorResponse } from '@/types/api';
-import type { Question } from '@/types/api';
 import usePostQuestion from '@/hooks/queries/usePostQuestion';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 
 type Questions = {
   questions: Question[];
@@ -64,11 +61,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return authCheck;
   }
 
+  const api = createServerSideInstance(context);
+
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ['question-list'],
-    queryFn: getQuestionList,
+    queryFn: () => fetchData<Question[]>(api, '/questions'),
   });
   return {
     props: {

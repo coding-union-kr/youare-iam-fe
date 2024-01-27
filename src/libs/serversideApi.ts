@@ -121,3 +121,12 @@ async function refreshTokenAndRetryRequest(
     }
   }
 }
+
+export const fetchData = async <T>(
+  apiInstance: AxiosInstance,
+  url: string,
+  config?: InternalAxiosRequestConfig
+) => {
+  const { data } = await apiInstance.get<T>(url, config);
+  return data;
+};
