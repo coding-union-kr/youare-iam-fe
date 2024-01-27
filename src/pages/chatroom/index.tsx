@@ -15,7 +15,7 @@ import axios from 'axios';
 import { parseCookies } from 'nookies';
 import { ACCESS_TOKEN } from '@/constants/auth';
 import { setAuthHeader } from '@/libs/token';
-import { userStatusRouting } from '@/util/userStatusRouting';
+import { disallowAccess } from '@/util/disallowAccess';
 
 type Letter = {
   selectQuestionId: number;
@@ -209,7 +209,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const accessToken = cookies[ACCESS_TOKEN];
   setAuthHeader(instance, accessToken);
 
-  const redirection = await userStatusRouting(context);
+  const redirection = await disallowAccess(context);
 
   if (redirection) {
     return redirection;

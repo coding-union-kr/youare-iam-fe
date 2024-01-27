@@ -13,7 +13,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
-import { userStatusRouting } from '@/util/userStatusRouting';
+import { disallowAccess } from '@/util/disallowAccess';
 
 type Data = {
   data: {
@@ -114,7 +114,7 @@ export const getServerSideProps = async (
 ) => {
   const { id } = context.query;
 
-  const redirection = await userStatusRouting(context);
+  const redirection = await disallowAccess(context);
 
   if (redirection) {
     return redirection;

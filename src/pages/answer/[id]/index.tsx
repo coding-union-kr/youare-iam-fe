@@ -12,7 +12,7 @@ import useQuestion from '@/hooks/queries/useQuestion';
 import { checkAuth } from '@/util/checkAuth';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { Question } from '@/types/api';
-import { userStatusRouting } from '@/util/userStatusRouting';
+import { disallowAccess } from '@/util/disallowAccess';
 
 type Prop = {
   id: string;
@@ -107,7 +107,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const redirection = await userStatusRouting(context);
+  const redirection = await disallowAccess(context);
 
   if (redirection) {
     return redirection;

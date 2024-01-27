@@ -6,7 +6,7 @@ import { GetServerSidePropsContext } from 'next';
 
 type UserStatus = 'COUPLE_USER' | 'COUPLE_WAITING_USER' | 'NON_COUPLE_USER';
 
-export const userStatusRouting = async (context: GetServerSidePropsContext) => {
+export const disallowAccess = async (context: GetServerSidePropsContext) => {
   const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
     timeout: 15000,
@@ -34,7 +34,7 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
       pathPatterns.questions,
       pathPatterns.answer,
     ],
-    NON_COUPLE_USER: [pathPatterns.questions, pathPatterns.answer], // checkAuth 때문에 동작하지 않음
+    NON_COUPLE_USER: [pathPatterns.questions, pathPatterns.answer],
   };
 
   const userStatus = res.data.userStatus as UserStatus;
