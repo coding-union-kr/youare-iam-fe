@@ -16,15 +16,18 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
 
   const res = await instance.get(`/api/v1/members/user-status`);
 
-  // TODO: /invite/[id], /answer/[id] 정규표현식 처리하기
-  const unauthorizedPagesForCoupleUser = ['/onboarding', '/invite'];
+  const inviteRegex =
+    /^\/invite\/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$/;
+  const answerRegex = /^\/answer\/\d*$/;
+
+  const unauthorizedPagesForCoupleUser = ['/onboarding', '/invite/[id]'];
   const unauthorizedPagesForCoupleWaitingUser = [
     '/onboarding',
-    '/invite',
-    '/answer',
+    '/invite/[id]',
+    '/answer/[id]',
   ];
   const unauthorizedPagesForNonCoupleUser = [
-    '/answer',
+    '/answer/[id]',
     '/questions',
     // '/chatroom', -> chatroom에 들어가면 onboarding으로 리다이렉트되기 때문에 넣으면 안됨
   ];
@@ -33,7 +36,10 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
 
   switch (res.data.userStatus) {
     case 'COUPLE_USER':
-      if (unauthorizedPagesForCoupleUser.includes(path)) {
+      if (
+        unauthorizedPagesForCoupleUser.includes(path) ||
+        inviteRegex.test(path)
+      ) {
         return {
           redirect: {
             permanent: false,
@@ -43,7 +49,11 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
       }
       break;
     case 'COUPLE_WAITING_USER':
-      if (unauthorizedPagesForCoupleWaitingUser.includes(path)) {
+      if (
+        unauthorizedPagesForCoupleWaitingUser.includes(path) ||
+        inviteRegex.test(path) ||
+        answerRegex.test(path)
+      ) {
         return {
           redirect: {
             permanent: false,
@@ -53,7 +63,10 @@ export const userStatusRouting = async (context: GetServerSidePropsContext) => {
       }
       break;
     case 'NON_COUPLE_USER':
-      if (unauthorizedPagesForNonCoupleUser.includes(path)) {
+      if (
+        unauthorizedPagesForNonCoupleUser.includes(path) ||
+        answerRegex.test(path)
+      ) {
         return {
           redirect: {
             permanent: false,
