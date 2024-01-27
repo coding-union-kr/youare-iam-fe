@@ -55,7 +55,7 @@ const interceptorResponseRejected = async (error: AxiosError) => {
 
     // code : AU002 - 액세스 토큰 재발급 api -> 토큰 다시 저장, 헤더에 토큰 설정 -> 요청 재시도
     if (errorResponse.code === ERROR_CODES.EXPIRED_ACCESS_TOKEN) {
-      refreshTokenAndRetryRequest(instance, originalRequest);
+      return refreshTokenAndRetryRequest(instance, originalRequest);
     }
 
     return Promise.reject(error.response.data as ErrorResponse);
@@ -67,20 +67,6 @@ instance.interceptors.response.use(
   interceptorResponseFulfilled,
   interceptorResponseRejected
 );
-
-export const get = <T = any, R = AxiosResponse<T>>(
-  url: string,
-  config?: AxiosRequestConfig
-) => {
-  return instance.get<T, R>(url, config);
-};
-
-export const post = <T = any, D = any, R = AxiosResponse<T>>(
-  url: string,
-  data?: D
-) => {
-  return instance.post<T, R>(url, data);
-};
 
 async function refreshTokenAndRetryRequest(
   failedRequestInstance: AxiosInstance,
@@ -137,3 +123,17 @@ async function refreshTokenAndRetryRequest(
     }
   }
 }
+
+export const get = <T = any, R = AxiosResponse<T>>(
+  url: string,
+  config?: AxiosRequestConfig
+) => {
+  return instance.get<T, R>(url, config);
+};
+
+export const post = <T = any, D = any, R = AxiosResponse<T>>(
+  url: string,
+  data?: D
+) => {
+  return instance.post<T, R>(url, data);
+};
