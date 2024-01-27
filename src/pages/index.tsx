@@ -2,8 +2,11 @@ import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
 import KakaoLoginButton from '@/components/ui/KakaoLoginButton';
 import Image from 'next/image';
+import useAuth from '@/hooks/auth/useAuth';
+import StartServiceButton from '@/components/ui/ StartServiceButton';
 
 const Home: NextPageWithLayout = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <div className="h-[80%] flex flex-col justify-center">
@@ -19,7 +22,7 @@ const Home: NextPageWithLayout = () => {
           너는, 나는
         </h1>
       </div>
-      <KakaoLoginButton />
+      {isAuthenticated ? <StartServiceButton /> : <KakaoLoginButton />}
     </>
   );
 };
