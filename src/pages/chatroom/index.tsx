@@ -11,14 +11,11 @@ import { get } from '@/libs/clientSideApi';
 import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
+import { disallowAccess } from '@/util/disallowAccess';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import type { UserData } from '@/types/api';
 
-type Letters = {
-  letters: LetterType[];
-  nextCursor: number;
-  myId: string;
-};
-
-type LetterType = {
+type Letter = {
   selectQuestionId: number;
   question: string;
   createdAt: string;
@@ -45,7 +42,9 @@ type PageParam = {
   pageParam: number;
 };
 
-const Page: NextPageWithLayout<Letters> = () => {
+const Page: NextPageWithLayout<UserData> = (userData) => {
+  const { userStatus, linkKey } = userData;
+  const router = useRouter();
   const setMyId = useSetRecoilState(myIdState);
   const getLetters = async ({ pageParam }: PageParam) => {
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -72,7 +71,6 @@ const Page: NextPageWithLayout<Letters> = () => {
     bodyText: '',
     handleAction: () => {},
   });
-  const router = useRouter();
 
   // useInfiniteQuery에서 fetchNextPage와 hasNextPage를 가져온다.
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
@@ -103,7 +101,7 @@ const Page: NextPageWithLayout<Letters> = () => {
     hasNextPage,
     data?.length ?? 0 // 훅에서 dataLength가 됨
   );
-  const handleQuestionBarClick = ({ letter }: { letter: LetterType }) => {
+  const handleQuestionBarClick = ({ letter }: { letter: Letter }) => {
     if (letter.answerCount === 0) {
       setModalInfo({
         actionText: '답변 작성하러 가기',
@@ -162,15 +160,22 @@ const Page: NextPageWithLayout<Letters> = () => {
         // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
         onScroll={handleScroll}
       >
-        {data?.map((letter: LetterType, index: number) => {
-          return (
-            <QuestionBar
-              key={index}
-              letter={letter}
-              onClick={() => handleQuestionBarClick({ letter })}
-            />
-          );
-        })}
+        {userStatus === 'COUPLE_USER' ? (
+          data?.map((letter: Letter, index: number) => {
+            return (
+              <QuestionBar
+                key={index}
+                letter={letter}
+                onClick={() => handleQuestionBarClick({ letter })}
+              />
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center mt-10">
+            <div>초대 수락을 기다리고 있어요.</div>
+            <div>커플이 되면 답변을 볼 수 있어요!</div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -186,6 +191,30 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return authCheck;
   }
 
-  return { props: {} };
+  const api = createServerSideInstance(context);
+
+  const getUserData = async () => {
+    const data = await fetchData<UserData>(api, `/api/v1/members/user-status`);
+    return data;
+  };
+
+  const userData = await getUserData();
+
+  if (userData.userStatus === 'NON_COUPLE_USER') {
+    return {
+      redirect: {
+        destination: '/onboarding',
+        permanent: false,
+      },
+    };
+  }
+
+  const redirection = await disallowAccess(context);
+
+  if (redirection) {
+    return redirection;
+  }
+
+  return { props: userData };
 }
 export default Page;
