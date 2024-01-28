@@ -11,11 +11,9 @@ import { get } from '@/libs/clientSideApi';
 import { myIdState } from '@/store/myIdState';
 import { checkAuth } from '@/util/checkAuth';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
-import axios from 'axios';
-import { parseCookies } from 'nookies';
-import { ACCESS_TOKEN } from '@/constants/auth';
-import { setAuthHeader } from '@/libs/token';
 import { disallowAccess } from '@/util/disallowAccess';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import type { UserData } from '@/types/api';
 
 type Letter = {
   selectQuestionId: number;
@@ -33,13 +31,6 @@ type Letter = {
     | null;
 };
 
-type UserData = {
-  userData: {
-    userStatus: string;
-    linkKey?: string;
-  };
-};
-
 type ModalInfo = {
   actionText: string;
   cancelText: string;
@@ -52,7 +43,7 @@ type PageParam = {
 };
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
-  const { userStatus, linkKey } = userData.userData;
+  const { userStatus, linkKey } = userData;
   const router = useRouter();
   const setMyId = useSetRecoilState(myIdState);
   const getLetters = async ({ pageParam }: PageParam) => {
@@ -200,14 +191,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return authCheck;
   }
 
-  const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-    timeout: 15000,
-  });
+  const api = createServerSideInstance(context);
 
-  const cookies = parseCookies(context);
-  const accessToken = cookies[ACCESS_TOKEN];
-  setAuthHeader(instance, accessToken);
+  const getUserData = async () => {
+    const data = await fetchData<UserData>(api, `/api/v1/members/user-status`);
+    return data;
+  };
+
+  const userData = await getUserData();
+
+  if (userData.userStatus === 'NON_COUPLE_USER') {
+    return {
+      redirect: {
+        destination: '/onboarding',
+        permanent: false,
+      },
+    };
+  }
 
   const redirection = await disallowAccess(context);
 
@@ -215,22 +215,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return redirection;
   }
 
-  try {
-    const res = await instance.get(`/api/v1/members/user-status`);
-    if (res.data.userStatus === 'NON_COUPLE_USER') {
-      return {
-        redirect: {
-          destination: '/onboarding',
-          permanent: false,
-        },
-      };
-    }
-    return { props: { userData: res.data } };
-  } catch (error) {
-    console.error('Error fetching data:', (error as Error).message);
-    return {
-      props: {},
-    };
-  }
+  return { props: userData };
 }
 export default Page;

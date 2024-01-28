@@ -15,7 +15,7 @@ import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 import { disallowAccess } from '@/util/disallowAccess';
 
-type Data = {
+type InviteData = {
   data: {
     question: string;
     invitedPersonName: string;
@@ -23,7 +23,7 @@ type Data = {
   id: string;
 };
 
-const Page: NextPageWithLayout<Data> = ({ data, id }) => {
+const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
   const [text, setText] = useState('');
   const router = useRouter();
   const { mutate: postInviteAnswer } = usePostInviteAnswer();

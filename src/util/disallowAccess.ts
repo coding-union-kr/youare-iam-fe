@@ -1,22 +1,17 @@
-import axios from 'axios';
-import { parseCookies } from 'nookies';
-import { ACCESS_TOKEN } from '@/constants/auth';
-import { setAuthHeader } from '@/libs/token';
 import { GetServerSidePropsContext } from 'next';
-
-type UserStatus = 'COUPLE_USER' | 'COUPLE_WAITING_USER' | 'NON_COUPLE_USER';
+import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import type { UserData, UserStatus } from '@/types/api';
 
 export const disallowAccess = async (context: GetServerSidePropsContext) => {
-  const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-    timeout: 15000,
-  });
+  const api = createServerSideInstance(context);
 
-  const cookies = parseCookies(context);
-  const accessToken = cookies[ACCESS_TOKEN];
-  setAuthHeader(instance, accessToken);
-
-  const res = await instance.get(`/api/v1/members/user-status`);
+  const getUserStatus = async () => {
+    const { userStatus } = await fetchData<UserData>(
+      api,
+      '/api/v1/members/user-status'
+    );
+    return userStatus;
+  };
 
   const path = context.resolvedUrl;
 
@@ -31,14 +26,23 @@ export const disallowAccess = async (context: GetServerSidePropsContext) => {
     COUPLE_USER: [pathPatterns.onboarding, pathPatterns.invite],
     COUPLE_WAITING_USER: [
       pathPatterns.onboarding,
-      pathPatterns.questions,
       pathPatterns.answer,
+      pathPatterns.invite,
     ],
     NON_COUPLE_USER: [pathPatterns.questions, pathPatterns.answer],
   };
 
-  const userStatus = res.data.userStatus as UserStatus;
-  if (disallowedPaths[userStatus]?.some((pattern) => pattern.test(path))) {
+  try {
+    const userStatus = await getUserStatus();
+    if (disallowedPaths[userStatus]?.some((pattern) => pattern.test(path))) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/',
+        },
+      };
+    }
+  } catch (error) {
     return {
       redirect: {
         permanent: false,
