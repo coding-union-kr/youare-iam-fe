@@ -17,24 +17,27 @@ const ChatBubble = ({ answer }: ChatBubbleProps) => {
   const myAnswer = answer.find((answer) => answer.memberId === myId);
   const otherAnswer = answer.find((answer) => answer.memberId !== myId);
 
-  const myDate = myAnswer ? applyDateFormatting(myAnswer.createdAt) : null;
-  const otherDate = otherAnswer
-    ? applyDateFormatting(otherAnswer.createdAt)
-    : null;
-
   return (
     <>
       <div className="chat chat-start">
         <div className="chat-bubble bg-[#ffffff] text-neutral-500 flex items-center">
           {otherAnswer?.answer}
         </div>
-        <div className="chat-footer opacity-50 ">{otherDate}</div>
+        {otherAnswer && (
+          <div className="chat-footer opacity-50">
+            {applyDateFormatting(otherAnswer.createdAt)}
+          </div>
+        )}
       </div>
       <div className="chat chat-end">
         <div className="chat-bubble bg-[#FEB2B2] text-neutral-500 flex items-center">
           {myAnswer?.answer}
         </div>
-        <div className="chat-footer opacity-50">{myDate}</div>
+        {myAnswer && (
+          <div className="chat-footer opacity-50">
+            {applyDateFormatting(myAnswer.createdAt)}
+          </div>
+        )}
       </div>
     </>
   );
