@@ -1,7 +1,6 @@
 import ChatBubble from './ChatBubble';
 import OpenIcon from '../icons/OpenIcon';
 import LockIcon from '../icons/LockIcon';
-import { applyDateFormatting } from '@/util/applyDateFormatting';
 
 type LetterType = {
   selectQuestionId: number;
@@ -25,7 +24,6 @@ type letterProps = {
 };
 
 const QuestionBar = ({ onClick, letter }: letterProps) => {
-  const date = applyDateFormatting(letter.createdAt);
   if (letter.answerCount === 0) {
     return (
       <div
@@ -63,7 +61,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
             </div>
             <div className="chat chat-end bg-blend-multiply">
               <div className="chat-bubble bg-[#FEB2B2] px-24"></div>
-              <div className="chat-footer opacity-50">{date}</div>
+              <div className="chat-footer opacity-50">{letter.createdAt}</div>
             </div>
           </>
         ) : (
@@ -74,7 +72,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
               </div>
               <div className="chat chat-start">
                 <div className="chat-bubble bg-[#ffffff] px-24"></div>
-                <div className="chat-footer opacity-50">{date}</div>
+                <div className="chat-footer opacity-50">{letter.createdAt}</div>
               </div>
             </div>
           </>
