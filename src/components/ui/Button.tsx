@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 
 type ButtonProps = ComponentProps<'button'> & {
-  variant: 'primary' | 'secondary' | 'accent';
+  variant: 'primary' | 'secondary' | 'accent' | 'ghost';
   size?: 'xs' | 'sm' | 'normal' | 'wide';
   isLoading?: boolean;
 };
@@ -19,6 +19,7 @@ export default function Button({
     primary: 'btn-primary',
     secondary: 'btn-secondary',
     accent: 'btn-accent',
+    ghost: 'btn-ghost',
   };
 
   const sizeVariants = {
