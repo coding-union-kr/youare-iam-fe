@@ -19,7 +19,7 @@ export default function Button({
     primary: 'btn-primary',
     secondary: 'btn-secondary',
     accent: 'btn-accent',
-    ghost: 'btn-ghost',
+    ghost: 'btn-ghost border-1 border-gray-light',
   };
 
   const sizeVariants = {

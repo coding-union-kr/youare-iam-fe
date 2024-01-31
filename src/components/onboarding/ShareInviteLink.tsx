@@ -7,6 +7,7 @@ import KakaoIcon from '../icons/KakaoIcon';
 import { kakaoStyle } from '../ui/KakaoLoginButton';
 import useInvitationInfo from '@/hooks/queries/useInvitationInfo';
 import LockIcon from '../icons/LockIcon';
+import Image from 'next/image';
 
 const TEMPLATE_ID = 102113;
 
@@ -40,7 +41,15 @@ export default function ShareInviteLink({ linkKey }: Props) {
         <p className="pl-3">{info.question}</p>
       </div>
 
-      <article className="p-8 mx-8 rounded-lg bg-opacity-60 bg-secondary">
+      <article className="flex flex-col items-center p-8 mx-8 rounded-lg shadow-md bg-opacity-60 bg-secondary">
+        <Image
+          src="/logo-removebg.png"
+          priority
+          alt="service-logo"
+          width="100"
+          height="100"
+          className="mb-5"
+        />
         <p className="text-lg font-semibold">초대 수락을 기다리고 있어요</p>
         <div className="mt-5 text-gray-400">
           <p>
@@ -53,7 +62,7 @@ export default function ShareInviteLink({ linkKey }: Props) {
       </article>
       <div>
         <Button
-          className={`${kakaoStyle} flex items-center justify-center`}
+          className={`${kakaoStyle} flex items-center justify-center mb-2`}
           variant="primary"
           size="wide"
           onClick={shareInviteLink}
