@@ -14,7 +14,7 @@ export default function Intro({ onNext }: OnboardingStepProps) {
   });
 
   useEffect(() => {
-    const timer = setInterval(nextStep, 3000);
+    const timer = setInterval(nextStep, 2000);
 
     return () => {
       clearInterval(timer);
@@ -46,39 +46,30 @@ export default function Intro({ onNext }: OnboardingStepProps) {
             </m.div>
           )}
           {currentStep === 2 && (
-            <article>
-              <m.p
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 1.5 }}
-              >
-                사랑하는 사람과
-              </m.p>
-              <m.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 2.0 }}
-              >
-                함께 이야기해보고 싶은 질문을
-              </m.p>
-              <m.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 2.5 }}
-              >
-                선택하러 가볼까요?
-              </m.p>
-            </article>
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <p>사랑하는 사람과</p>
+              <p>함께 이야기해보고 싶은 질문을</p>
+              <p>선택하러 가볼까요?</p>
+            </m.div>
           )}
         </AnimatePresence>
       </section>
       {currentStep === 2 && (
-        <Button variant="primary" size="wide" onClick={onNext}>
-          시작하기
-        </Button>
+        <m.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ delay: 1.0 }}
+          className="w-full"
+        >
+          <Button variant="primary" size="wide" onClick={onNext}>
+            시작하기
+          </Button>
+        </m.div>
       )}
     </>
   );
