@@ -1,24 +1,18 @@
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { m } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import {
   initialOnboardingState,
   onboardingState,
 } from '@/store/onboardingState';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
-import LockIcon from '../icons/LockIcon';
-
-const TEMPLATE_ID = 102113;
-const domain =
-  process.env.NODE_ENV === 'production'
-    ? 'https://youare-iam.vercel.app'
-    : 'http://localhost:3000';
+import { showToastSuccessMessage } from '@/util/toast';
+import NotificationCard from './NotificationCard';
 
 export default function InviteStep() {
   const router = useRouter();
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
-  const { mutate: createInviteKey, isPending } = useCreateInviteKey();
+  const { mutate: createInviteKey, isPending, isError } = useCreateInviteKey();
 
   const handleInvite = () => {
     createInviteKey(
@@ -28,19 +22,8 @@ export default function InviteStep() {
       },
       {
         onSuccess: ({ data }) => {
-          //Todo: 카카오 공유하기 try catch로 감싸기
-          console.log(data);
-          window.Kakao.Share.sendCustom({
-            templateId: TEMPLATE_ID,
-            templateArgs: {
-              question: onboardingData.selectedQuestion.question,
-              invitedPersonName: data.invitedPersonName,
-              linkKey: data.linkKey,
-              domain,
-            },
-          });
-          // TODO: redirect to chatroom
-          // router.push('/chatroom');
+          showToastSuccessMessage('초대링크가 생성되었습니다!');
+          router.push('/chatroom');
           // setOnboardingData(initialOnboardingState);
         },
       }
@@ -49,26 +32,11 @@ export default function InviteStep() {
 
   return (
     <>
-      <section className="w-full">
-        <m.div
-          className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0, duration: 1.5 }}
-        >
-          <LockIcon />
-          <p className="pl-3">{onboardingData.selectedQuestion.question}</p>
-        </m.div>
-
-        <m.article
-          className="p-5 mx-auto mt-10 text-center rounded-md bg-secondary"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1.5 }}
-        >
-          <h1 className="text-xl font-bold">
-            이제 대화방에 첫 질문이 추가되었습니다!
-          </h1>
+      <section className="w-full pt-10">
+        <h1 className="mb-16 text-xl font-bold text-center">
+          초대링크를 만들어서 대화를 시작해보세요!
+        </h1>
+        <NotificationCard>
           <div className="mt-5 text-gray-400">
             <p>초대링크를 전송하면 상대방이 당신의 질문에 답변할 수 있어요.</p>
             <p>
@@ -76,15 +44,16 @@ export default function InviteStep() {
               있어요.
             </p>
           </div>
-        </m.article>
+        </NotificationCard>
       </section>
       <Button
         variant="primary"
         size="wide"
         onClick={handleInvite}
         isLoading={isPending}
+        disabled={isError}
       >
-        초대링크 전송하기
+        초대링크 생성하기
       </Button>
     </>
   );
