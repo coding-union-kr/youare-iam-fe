@@ -9,7 +9,7 @@ export default function StartServiceButton() {
 
   return (
     <Button onClick={handelClick} size="wide" variant="primary">
-      서비스 시작하기
+      시작하기
     </Button>
   );
 }
