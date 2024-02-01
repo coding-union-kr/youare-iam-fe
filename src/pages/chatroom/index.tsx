@@ -14,6 +14,8 @@ import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll
 import { disallowAccess } from '@/util/disallowAccess';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { UserData } from '@/types/api';
+import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
+import { kakaoShare } from '@/util/kakaoShare';
 
 type Letter = {
   selectQuestionId: number;
@@ -117,12 +119,12 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
     } else if (letter.answerCount === 1) {
       if (letter.myAnswer === true) {
         setModalInfo({
-          actionText: '수정하기',
+          actionText: '답변 요청하기',
           cancelText: '되돌아가기',
           bodyText:
-            '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
+            '상대가 답변을 등록하지 않았어요.<br>답변을 작성할 수 있도록<br/> 메시지를 보내볼까요?',
           handleAction: () => {
-            console.log('수정하기 action');
+            kakaoShare(letter.question, letter.selectQuestionId);
           },
         });
       } else {
@@ -150,18 +152,18 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
           isModalOpen={isModalOpen}
         />
       )}
-      <div
-        // max-h-[calc(100vh-5rem-0.75rem)]: 스크롤이 있을 높이를 지정한다.
-        // ㄴ 5rem은 BottomNavigation 높이, 0.5rem은 QuestionBar의 패딩 높이, 0.5rem은 여백
-        // overflow-y-auto: y축이 더 길 때(세로) 스크롤이 생기도록 설정, 내용이 넘칠 때만 스크롤바 표시
-        className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto overflow-x-hidden"
-        // letters를 감싸고 있는 container. ref를 지정했다.
-        ref={containerRef}
-        // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
-        onScroll={handleScroll}
-      >
-        {userStatus === 'COUPLE_USER' ? (
-          data?.map((letter: Letter, index: number) => {
+      {userStatus === 'COUPLE_USER' && (
+        <div
+          // max-h-[calc(100vh-5rem-0.75rem)]: 스크롤이 있을 높이를 지정한다.
+          // ㄴ 5rem은 BottomNavigation 높이, 0.5rem은 QuestionBar의 패딩 높이, 0.5rem은 여백
+          // overflow-y-auto: y축이 더 길 때(세로) 스크롤이 생기도록 설정, 내용이 넘칠 때만 스크롤바 표시
+          className="max-h-[calc(100vh-5rem-0.5rem-0.5rem)] overflow-y-auto overflow-x-hidden"
+          // letters를 감싸고 있는 container. ref를 지정했다.
+          ref={containerRef}
+          // 스크롤이 움직이면 실행되는 handleScroll이라는 이벤트핸들러가 실행된다.
+          onScroll={handleScroll}
+        >
+          {data?.map((letter: Letter, index: number) => {
             return (
               <QuestionBar
                 key={index}
@@ -169,14 +171,13 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
                 onClick={() => handleQuestionBarClick({ letter })}
               />
             );
-          })
-        ) : (
-          <div className="flex flex-col items-center mt-10">
-            <div>초대 수락을 기다리고 있어요.</div>
-            <div>커플이 되면 답변을 볼 수 있어요!</div>
-          </div>
-        )}
-      </div>
+          })}
+        </div>
+      )}
+
+      {userStatus === 'COUPLE_WAITING_USER' && (
+        <ShareInviteLink linkKey={linkKey} />
+      )}
     </div>
   );
 };

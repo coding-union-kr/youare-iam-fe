@@ -32,7 +32,7 @@ export default function AnswerForm({
       <Button
         variant="primary"
         size="wide"
-        disabled={!!errorMessage}
+        disabled={!answer.trim() || !!errorMessage}
         isLoading={isLoading}
       >
         답변 등록하기
