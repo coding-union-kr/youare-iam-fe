@@ -1,22 +1,33 @@
 export const applyDateFormatting = (chatDate: string) => {
-  const parsedChatDate = new Date(Date.parse(chatDate));
+  const getDifferenceInDays = () => {
+    const past = new Date(chatDate).getTime();
+    const current = new Date().getTime();
+    const differenceInDays = Math.abs(current - past);
+    const diffDays = Math.floor(differenceInDays / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
 
-  const chatYear = parsedChatDate.getFullYear();
-  const chatMonth = parsedChatDate.getMonth() + 1;
-  const chatDay = parsedChatDate.getDate();
-
-  const currentDay = new Date().getDate();
+  const getYYMMDD = () => {
+    const parsedChatDate = new Date(Date.parse(chatDate));
+    const year = parsedChatDate.getFullYear();
+    const month = parsedChatDate.getMonth() + 1;
+    const day = parsedChatDate.getDate();
+    return `${year}년 ${month}월 ${day}일`;
+  };
 
   const getFormattedDate = () => {
-    if (currentDay - chatDay === 0) {
+    const diffDays = getDifferenceInDays();
+    const YYMMDD = getYYMMDD();
+    if (diffDays === 0) {
       return '오늘';
-    } else if (currentDay - chatDay < 4) {
-      return `${currentDay - chatDay}일 전`;
+    } else if (diffDays > 0 && diffDays < 4) {
+      return `${diffDays}일 전`;
     } else {
-      return `${chatYear}년 ${chatMonth}월 ${chatDay}일`;
+      return YYMMDD;
     }
   };
 
   const formattedDate = getFormattedDate();
+
   return formattedDate;
 };
