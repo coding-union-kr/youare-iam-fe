@@ -25,7 +25,7 @@ export default function useInvitationInfo(linkKey: string) {
     isLoading,
     isError,
   } = useQuery<InvitationInfo>({
-    queryKey: ['invitationInfo', linkKey],
+    queryKey: ['invitationInfo'],
     queryFn: () => getInvitationInfo(linkKey),
   });
   return { info, error, isLoading, isError };
