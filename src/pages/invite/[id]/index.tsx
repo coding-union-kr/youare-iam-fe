@@ -14,6 +14,7 @@ import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 import { disallowAccess } from '@/util/disallowAccess';
+import useUserStatus from '@/hooks/queries/useUserStatus';
 
 type InviteData = {
   data: {
@@ -46,6 +47,7 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['letters'] });
+            queryClient.invalidateQueries({ queryKey: ['user-status'] });
             window.localStorage.removeItem(
               LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
             );
@@ -114,11 +116,11 @@ export const getServerSideProps = async (
 ) => {
   const { id } = context.query;
 
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   try {
     const response = await get(`/api/v1/members/invite/info/${id}`);

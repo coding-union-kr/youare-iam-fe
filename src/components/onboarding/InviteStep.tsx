@@ -8,11 +8,13 @@ import {
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import { showToastSuccessMessage } from '@/util/toast';
 import NotificationCard from './NotificationCard';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function InviteStep() {
   const router = useRouter();
   const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
   const { mutate: createInviteKey, isPending, isError } = useCreateInviteKey();
+  const queryClient = useQueryClient();
 
   const handleInvite = () => {
     createInviteKey(
@@ -24,6 +26,7 @@ export default function InviteStep() {
         onSuccess: ({ data }) => {
           showToastSuccessMessage('초대링크가 생성되었습니다!');
           router.push('/chatroom');
+          queryClient.invalidateQueries({ queryKey: ['user-status'] });
           // setOnboardingData(initialOnboardingState);
         },
       }
