@@ -1,14 +1,19 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import { setAccessToken, setAuthHeader } from '@/libs/token';
 import { instance } from '@/libs/clientSideApi';
+import useUserStatus from '@/hooks/queries/useUserStatus';
+import { authState } from '@/store/auth';
 
 export default function Login() {
+  const [isAuthenticated, setIsAuthenticated] = useRecoilState(authState);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { code } = router.query;
+  const { userData } = useUserStatus(isAuthenticated);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -22,6 +27,7 @@ export default function Login() {
         setAuthHeader(instance, accessToken);
 
         const prevUrl = localStorage.getItem(LOCAL_STORAGE_KEYS.PREV_URL);
+        setIsAuthenticated(true);
         router.push(prevUrl || '/chatroom');
         localStorage.removeItem(LOCAL_STORAGE_KEYS.PREV_URL);
       } catch (err) {
@@ -32,7 +38,7 @@ export default function Login() {
     if (code) {
       fetchToken();
     }
-  }, [code, router]);
+  }, [code, router, setIsAuthenticated]);
 
   return <div>{error && <p>{error}</p>}</div>;
 }
