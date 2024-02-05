@@ -13,8 +13,8 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
-import { disallowAccess } from '@/util/disallowAccess';
 import useUserStatus from '@/hooks/queries/useUserStatus';
+import { invitePageAccess } from '@/util/invitePageAccess';
 
 type InviteData = {
   data: {
@@ -116,11 +116,10 @@ export const getServerSideProps = async (
 ) => {
   const { id } = context.query;
 
-  // const redirection = await disallowAccess(context);
-
-  // if (redirection) {
-  //   return redirection;
-  // }
+  const checkAccess = await invitePageAccess(context);
+  if (checkAccess) {
+    return checkAccess;
+  }
 
   try {
     const response = await get(`/api/v1/members/invite/info/${id}`);
