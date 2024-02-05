@@ -48,7 +48,7 @@ export const createServerSideInstance = (
       // code : AU001 : 토큰 삭제->  로그인 페이지로 이동
       if (errorResponse.code === ERROR_CODES.INVALID_ACCESS_TOKEN) {
         removeServersideAccessToken(context);
-        // window.location.href = '/';
+        window.location.href = '/';
         return Promise.reject(error.response.data as ErrorResponse);
       }
 
@@ -87,6 +87,9 @@ async function refreshTokenAndRetryRequest(
   }
   setAuthHeader(refreshInstance, existingAccessToken);
 
+  if (!failedRequestConfig) return;
+  if (!failedRequestConfig.headers) return;
+
   try {
     const res = await refreshInstance.post('/api/v1/members/auth/token');
 
@@ -95,11 +98,10 @@ async function refreshTokenAndRetryRequest(
 
       setServersideAccessToken(context, accessToken);
       setAuthHeader(failedRequestInstance, accessToken);
+      failedRequestConfig.headers.Authorization = `Bearer ${accessToken}`;
 
       // 기존 요청 재시도
-      return failedRequestInstance(failedRequestConfig).then((res) => {
-        return Promise.resolve(res);
-      });
+      return failedRequestInstance(failedRequestConfig);
     }
   } catch (error) {
     const axiosError = error as AxiosError;

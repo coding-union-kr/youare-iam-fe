@@ -85,6 +85,9 @@ async function refreshTokenAndRetryRequest(
   }
   setAuthHeader(refreshInstance, existingAccessToken);
 
+  if (!failedRequestConfig) return;
+  if (!failedRequestConfig.headers) return;
+
   try {
     const res = await refreshInstance.post('/api/v1/members/auth/token');
 
@@ -93,6 +96,7 @@ async function refreshTokenAndRetryRequest(
 
       setAccessToken(accessToken);
       setAuthHeader(failedRequestInstance, accessToken);
+      failedRequestConfig.headers.Authorization = `Bearer ${accessToken}`;
 
       // 기존 요청 재시도
       return failedRequestInstance(failedRequestConfig);
