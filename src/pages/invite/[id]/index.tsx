@@ -14,7 +14,7 @@ import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 import useUserStatus from '@/hooks/queries/useUserStatus';
-import { checkIsLogin } from '@/util/checkIsLogin';
+import { invitePageAccess } from '@/util/invitePageAccess';
 
 type InviteData = {
   data: {
@@ -116,9 +116,9 @@ export const getServerSideProps = async (
 ) => {
   const { id } = context.query;
 
-  const loginCheck = await checkIsLogin(context);
-  if (loginCheck) {
-    return loginCheck;
+  const checkAccess = await invitePageAccess(context);
+  if (checkAccess) {
+    return checkAccess;
   }
 
   try {

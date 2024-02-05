@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { UserData } from '@/types/api';
 import { get } from '@/libs/clientSideApi';
 
-export const getUserStatus = async () => {
+const getUserStatus = async () => {
   const res = await get<UserData>('/api/v1/members/user-status');
   return res.data;
 };

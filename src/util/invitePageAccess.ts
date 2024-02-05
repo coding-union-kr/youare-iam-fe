@@ -9,7 +9,7 @@ type UserStatus = {
   linkKey: string;
 };
 
-export const checkIsLogin = async (context: GetServerSidePropsContext) => {
+export const invitePageAccess = async (context: GetServerSidePropsContext) => {
   const api = createServerSideInstance(context);
   const queryClient = new QueryClient();
 
