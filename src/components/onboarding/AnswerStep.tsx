@@ -7,10 +7,10 @@ import type { OnboardingStepProps } from './Intro';
 
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
-import { useSSR } from '@/hooks/common/useSSR';
+import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 
 export default function AnswerStep({ onNext }: OnboardingStepProps) {
-  const [onboardingData, setOnboardingData] = useSSR(
+  const [onboardingData, setOnboardingData] = useRecoilStateSSR(
     onboardingState,
     initialOnboardingState
   );

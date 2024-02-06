@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { type RecoilState, useRecoilState } from 'recoil';
 
-export function useSSR<T>(recoilState: RecoilState<T>, defaultValue: T) {
+export function useRecoilStateSSR<T>(
+  recoilState: RecoilState<T>,
+  defaultValue: T
+) {
   const [isInitial, setIsInitial] = useState(true);
   const [value, setValue] = useRecoilState(recoilState);
 

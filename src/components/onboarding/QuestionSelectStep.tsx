@@ -6,7 +6,7 @@ import {
 } from '@/store/onboardingState';
 import { Question } from '@/types/api';
 import Button from '@/components/ui/Button';
-import { useSSR } from '@/hooks/common/useSSR';
+import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 
 type QuestionSelectStepProps = OnboardingStepProps & {
   questionList: Question[];
@@ -16,11 +16,10 @@ export default function QuestionSelectStep({
   onNext,
   questionList,
 }: QuestionSelectStepProps) {
-  const [onboardingData, setOnboardingData] = useSSR(
+  const [onboardingData, setOnboardingData] = useRecoilStateSSR(
     onboardingState,
     initialOnboardingState
   );
-  // useRecoilState(onboardingState);
 
   const handleSelectQuestion = (question: Question) => {
     setOnboardingData({
