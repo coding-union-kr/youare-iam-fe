@@ -57,7 +57,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
         {letter.myAnswer ? (
           <>
             <div className="relative">
-              <div className="absolute top-4 left-[15%] w-full h-full z-10 text-gray-dark">
+              <div className="font-neo text-sm absolute top-4 left-[15%] w-[90%] h-full z-10 text-gray-dark">
                 두 사람 모두 등록해야 확인할 수 있어요.
               </div>
             </div>
@@ -69,7 +69,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
         ) : (
           <>
             <div className="relative" id={letter.selectQuestionId.toString()}>
-              <div className="absolute top-4 left-[15%] w-full h-full z-10 text-gray-dark">
+              <div className="font-neo text-sm absolute top-4 left-[15%] w-[90%] h-full z-10 text-gray-dark">
                 두 사람 모두 등록해야 확인할 수 있어요.
               </div>
               <div className="chat chat-start">
