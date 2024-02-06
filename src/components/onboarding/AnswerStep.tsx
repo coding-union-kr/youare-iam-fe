@@ -1,12 +1,20 @@
 import { useRecoilState } from 'recoil';
-import { onboardingState } from '@/store/onboardingState';
+import {
+  initialOnboardingState,
+  onboardingState,
+} from '@/store/onboardingState';
 import type { OnboardingStepProps } from './Intro';
 import useInput from '@/hooks/common/useInput';
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
+import { useSSR } from '@/hooks/common/useSSR';
+import { useEffect } from 'react';
 
 export default function AnswerStep({ onNext }: OnboardingStepProps) {
-  const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
+  const [onboardingData, setOnboardingData] = useSSR(
+    onboardingState,
+    initialOnboardingState
+  );
 
   const onChangeCallback = (newAnswer: string) => {
     setOnboardingData((prevState) => ({
@@ -30,6 +38,7 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
 
     onNext();
   };
+  // console.log('recoil', onboardingData.answer);
 
   return (
     <>

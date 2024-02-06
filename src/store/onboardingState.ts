@@ -1,4 +1,7 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const initialOnboardingState = {
   selectedQuestion: {
@@ -8,7 +11,8 @@ export const initialOnboardingState = {
   answer: '',
 };
 
-export const onboardingState = atom({
+export const onboardingState = atom<typeof initialOnboardingState>({
   key: 'onboardingState',
   default: initialOnboardingState,
+  effects_UNSTABLE: [persistAtom],
 });
