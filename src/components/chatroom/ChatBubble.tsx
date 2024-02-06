@@ -20,7 +20,7 @@ const ChatBubble = ({ answer }: ChatBubbleProps) => {
   return (
     <>
       <div className="chat chat-start">
-        <div className="chat-bubble bg-[#ffffff] text-neutral-500 flex items-center">
+        <div className="chat-bubble bg-[#ffffff]  text-neutral-950 flex items-center">
           {otherAnswer?.answer}
         </div>
         {otherAnswer && (
@@ -30,7 +30,7 @@ const ChatBubble = ({ answer }: ChatBubbleProps) => {
         )}
       </div>
       <div className="chat chat-end">
-        <div className="chat-bubble bg-[#FEB2B2] text-neutral-500 flex items-center">
+        <div className="chat-bubble bg-[#FEB2B2]  text-neutral-950 flex items-center">
           {myAnswer?.answer}
         </div>
         {myAnswer && (
