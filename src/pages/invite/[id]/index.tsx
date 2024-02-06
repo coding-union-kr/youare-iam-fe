@@ -13,7 +13,6 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
-import useUserStatus from '@/hooks/queries/useUserStatus';
 import { invitePageAccess } from '@/util/invitePageAccess';
 
 type InviteData = {
@@ -98,6 +97,7 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
         variant="primary"
         size="wide"
         className="mt-5"
+        disabled={!text.trim()}
       >
         답변 등록
       </Button>
