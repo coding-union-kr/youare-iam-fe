@@ -1,30 +1,39 @@
-import { useRecoilState } from 'recoil';
-import { onboardingState } from '@/store/onboardingState';
+import { type ChangeEventHandler, useState } from 'react';
+import {
+  initialOnboardingState,
+  onboardingState,
+} from '@/store/onboardingState';
 import type { OnboardingStepProps } from './Intro';
-import useInput from '@/hooks/common/useInput';
+
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
+import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 
 export default function AnswerStep({ onNext }: OnboardingStepProps) {
-  const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
+  const [onboardingData, setOnboardingData] = useRecoilStateSSR(
+    onboardingState,
+    initialOnboardingState
+  );
+  const [errorMessage, setErrorErrorMessage] = useState('');
 
-  const onChangeCallback = (newAnswer: string) => {
+  const onChange: ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = ({ target }) => {
+    const { value } = target;
+
     setOnboardingData((prevState) => ({
       ...prevState,
-      answer: newAnswer,
+      answer: value,
     }));
-  };
 
-  const [answer, onChange, errorMessage] = useInput(
-    onboardingData.answer,
-    (value) => (value.trim() ? '' : '답변을 입력해주세요'),
-    onChangeCallback
-  );
+    const errorMessage = value.trim() ? '' : '답변을 입력해주세요';
+    setErrorErrorMessage(errorMessage);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!answer) {
+    if (!onboardingData.answer) {
       return;
     }
 
@@ -36,7 +45,7 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
       <QuestionTitle question={onboardingData.selectedQuestion.question} />
       <p className="text-lg font-semibold">내가 먼저 답변을 작성해볼까요?</p>
       <AnswerForm
-        answer={answer}
+        answer={onboardingData.answer}
         onChange={onChange}
         errorMessage={errorMessage}
         handleSubmit={handleSubmit}
