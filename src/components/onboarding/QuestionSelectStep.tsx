@@ -1,8 +1,12 @@
 import { useRecoilState } from 'recoil';
 import type { OnboardingStepProps } from './Intro';
-import { onboardingState } from '@/store/onboardingState';
+import {
+  initialOnboardingState,
+  onboardingState,
+} from '@/store/onboardingState';
 import { Question } from '@/types/api';
 import Button from '@/components/ui/Button';
+import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 
 type QuestionSelectStepProps = OnboardingStepProps & {
   questionList: Question[];
@@ -12,7 +16,10 @@ export default function QuestionSelectStep({
   onNext,
   questionList,
 }: QuestionSelectStepProps) {
-  const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
+  const [onboardingData, setOnboardingData] = useRecoilStateSSR(
+    onboardingState,
+    initialOnboardingState
+  );
 
   const handleSelectQuestion = (question: Question) => {
     setOnboardingData({
@@ -37,6 +44,7 @@ export default function QuestionSelectStep({
         : ' border-gray-light bg-secondary';
     return `${baseClasses} ${selectedClasses}`;
   };
+  console.log('recoil', onboardingData.selectedQuestion.questionId);
 
   return (
     <>

@@ -1,18 +1,21 @@
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useQueryClient } from '@tanstack/react-query';
 import Button from '@/components/ui/Button';
 import {
   initialOnboardingState,
   onboardingState,
 } from '@/store/onboardingState';
+import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import { showToastSuccessMessage } from '@/util/toast';
 import NotificationCard from './NotificationCard';
-import { useQueryClient } from '@tanstack/react-query';
 
 export default function InviteStep() {
   const router = useRouter();
-  const [onboardingData, setOnboardingData] = useRecoilState(onboardingState);
+  const [onboardingData, setOnboardingData] = useRecoilStateSSR(
+    onboardingState,
+    initialOnboardingState
+  );
   const { mutate: createInviteKey, isPending, isError } = useCreateInviteKey();
   const queryClient = useQueryClient();
 
@@ -27,7 +30,7 @@ export default function InviteStep() {
           showToastSuccessMessage('초대링크가 생성되었습니다!');
           router.push('/chatroom');
           queryClient.invalidateQueries({ queryKey: ['user-status'] });
-          // setOnboardingData(initialOnboardingState);
+          setOnboardingData(initialOnboardingState);
         },
       }
     );
