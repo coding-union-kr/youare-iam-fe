@@ -14,6 +14,7 @@ import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 import { invitePageAccess } from '@/util/invitePageAccess';
+import { queryKeys } from '@/constants/queryKeys';
 
 type InviteData = {
   data: {
@@ -45,8 +46,8 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
         { linkKey: id, answer: text },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['letters'] });
-            queryClient.invalidateQueries({ queryKey: ['user-status'] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.letters });
+            queryClient.invalidateQueries({ queryKey: queryKeys.userStatus });
             window.localStorage.removeItem(
               LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
             );
