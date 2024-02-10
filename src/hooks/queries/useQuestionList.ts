@@ -1,3 +1,4 @@
+import { queryKeys } from '@/constants/queryKeys';
 import { get } from '@/libs/clientSideApi';
 import { Question } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
@@ -16,7 +17,7 @@ export default function useQuestionList() {
     isLoading,
     isError,
   } = useQuery<Question[]>({
-    queryKey: ['question-list'],
+    queryKey: queryKeys.questions,
     queryFn: getQuestionList,
   });
 

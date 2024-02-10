@@ -3,6 +3,7 @@ import { ACCESS_TOKEN } from '@/constants/auth';
 import { parseCookies } from 'nookies';
 import { QueryClient } from '@tanstack/react-query';
 import type { GetServerSidePropsContext } from 'next';
+import { queryKeys } from '@/constants/queryKeys';
 
 type UserStatus = {
   userStatus: string;
@@ -19,7 +20,7 @@ export const invitePageAccess = async (context: GetServerSidePropsContext) => {
   if (accessToken) {
     try {
       const data: UserStatus = await queryClient.fetchQuery({
-        queryKey: ['user-status'],
+        queryKey: queryKeys.userStatus,
         queryFn: () => fetchData(api, '/api/v1/members/user-status'),
       });
       if (
