@@ -10,6 +10,7 @@ import { checkAuth } from '@/util/checkAuth';
 import usePostQuestion from '@/hooks/queries/usePostQuestion';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { disallowAccess } from '@/util/disallowAccess';
+import SEO from '@/components/SEO/SEO';
 
 type Questions = {
   questions: Question[];
@@ -36,19 +37,25 @@ const Page: NextPageWithLayout<Questions> = () => {
   };
 
   return (
-    <div className="py-20">
-      {questionList.map((question) => (
-        <div
-          key={question.questionId}
-          className="flex flex-col items-center justify-center"
-        >
-          <ListItem
-            question={question.question}
-            onClick={() => handleItemClick(question.questionId)}
-          />
-        </div>
-      ))}
-    </div>
+    <>
+      <SEO
+        title="질문 선택"
+        description="서로에 대해 더 알아가고 싶은 질문들을 탐색하세요. 질문을 통해 깊은 대화를 시작해 보세요."
+      />
+      <div className="py-20">
+        {questionList.map((question) => (
+          <div
+            key={question.questionId}
+            className="flex flex-col items-center justify-center"
+          >
+            <ListItem
+              question={question.question}
+              onClick={() => handleItemClick(question.questionId)}
+            />
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
