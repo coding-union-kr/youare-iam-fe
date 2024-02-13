@@ -5,6 +5,9 @@ const Custom404 = () => {
   return (
     <section>
       <div className="h-screen flex flex-col items-center py-20 justify-between">
+        <div className="font-neo text-2xl mb-4 text-gray-dark">
+          앗, 오류가 발생했어요!
+        </div>
         <div>
           <div className="font-neo text-4xl mb-4 text-primary">
             404 Page Not Found
