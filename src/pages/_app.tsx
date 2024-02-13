@@ -35,7 +35,7 @@ type ErrorFallbackProp = {
 ChannelService.loadScript();
 
 ChannelService.boot({
-  pluginKey: '92026e47-f0e5-4445-a8f3-4696b96518c8',
+  pluginKey: process.env.NEXT_PUBLIC_PLUGIN_KEY as string,
 });
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
