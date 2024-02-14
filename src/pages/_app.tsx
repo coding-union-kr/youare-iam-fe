@@ -16,8 +16,6 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { showToastErrorMessage } from '@/util/toast';
-import * as ChannelService from '@channel.io/channel-web-sdk-loader';
-
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -31,12 +29,6 @@ declare global {
 type ErrorFallbackProp = {
   resetErrorBoundary: (...args: any[]) => void;
 };
-
-ChannelService.loadScript();
-
-ChannelService.boot({
-  pluginKey: process.env.NEXT_PUBLIC_PLUGIN_KEY as string,
-});
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
