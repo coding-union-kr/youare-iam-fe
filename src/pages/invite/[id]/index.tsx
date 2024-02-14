@@ -14,6 +14,7 @@ import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
 import { get } from '@/libs/clientSideApi';
 import useAuth from '@/hooks/auth/useAuth';
 import { invitePageAccess } from '@/util/invitePageAccess';
+import SEO from '@/components/SEO/SEO';
 
 type InviteData = {
   data: {
@@ -68,6 +69,10 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
 
   return (
     <>
+      <SEO
+        title={`${data.invitedPersonName}님의 초대 페이지`}
+        description={`${data.question} - ${data.invitedPersonName}님이 보낸 질문에 답변해보세요!`}
+      />
       <div className="flex flex-col items-center mt-10">
         <div>{data?.invitedPersonName} 님이</div>
         <div>초대 링크를 보냈어요!</div>
@@ -116,10 +121,10 @@ export const getServerSideProps = async (
 ) => {
   const { id } = context.query;
 
-  const checkAccess = await invitePageAccess(context);
-  if (checkAccess) {
-    return checkAccess;
-  }
+  // const checkAccess = await invitePageAccess(context);
+  // if (checkAccess) {
+  //   return checkAccess;
+  // }
 
   try {
     const response = await get(`/api/v1/members/invite/info/${id}`);

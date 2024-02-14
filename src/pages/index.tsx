@@ -4,11 +4,14 @@ import KakaoLoginButton from '@/components/ui/KakaoLoginButton';
 import Image from 'next/image';
 import useAuth from '@/hooks/auth/useAuth';
 import StartServiceButton from '@/components/ui/ StartServiceButton';
+import SEO from '@/components/SEO/SEO';
 
 const Home: NextPageWithLayout = () => {
   const { isAuthenticated } = useAuth();
+
   return (
     <>
+      <SEO />
       <div className="h-[80%] flex flex-col justify-center">
         <h2 className="block mb-10 text-2xl font-bold text-center font-neo"></h2>
         <Image
