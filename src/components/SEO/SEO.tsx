@@ -25,6 +25,8 @@ export default function SEO({ title, description }: Props) {
       <meta property="og:description" content={pageDescription} />
       <meta property="og:image" content={pageImage} />
       <meta property="og:url" content={pageUrl} />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:creator" content="@youare_iam_" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={pageImage} />
