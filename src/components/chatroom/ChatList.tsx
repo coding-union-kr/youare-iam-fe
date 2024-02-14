@@ -6,6 +6,7 @@ import { get } from '@/libs/clientSideApi';
 import { myIdState } from '@/store/myIdState';
 import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/constants/queryKeys';
 
 type Letter = {
   selectQuestionId: number;
@@ -57,7 +58,7 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
   };
 
   const { fetchNextPage, hasNextPage, data } = useInfiniteQuery({
-    queryKey: ['letters'],
+    queryKey: queryKeys.letters,
     queryFn: getLetters,
     initialPageParam: 0,
 

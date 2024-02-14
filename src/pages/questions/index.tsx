@@ -10,6 +10,7 @@ import { checkAuth } from '@/util/checkAuth';
 import usePostQuestion from '@/hooks/queries/usePostQuestion';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { disallowAccess } from '@/util/disallowAccess';
+import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 
 type Questions = {
@@ -26,8 +27,8 @@ const Page: NextPageWithLayout<Questions> = () => {
       { questionId: questionId },
       {
         onSettled: () => {
-          queryClient.invalidateQueries({ queryKey: ['question-list'] });
-          queryClient.invalidateQueries({ queryKey: ['letters'] });
+          queryClient.invalidateQueries({ queryKey: queryKeys.questions });
+          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
         },
         onSuccess: () => {
           router.push('/chatroom');
@@ -74,7 +75,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['question-list'],
+    queryKey: queryKeys.questions,
     queryFn: () => fetchData<Question[]>(api, '/questions'),
   });
 

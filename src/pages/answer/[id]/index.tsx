@@ -13,6 +13,7 @@ import { checkAuth } from '@/util/checkAuth';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { Question } from '@/types/api';
 import { disallowAccess } from '@/util/disallowAccess';
+import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 
 type Prop = {
@@ -42,7 +43,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
       { selectQuestionId: Number(selectQuestionId), answer },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['letters'] });
+          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
           router.push({
             pathname: '/chatroom',
             hash: selectQuestionId,
@@ -96,7 +97,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 
   await queryClient.prefetchQuery({
-    queryKey: ['question', id],
+    queryKey: queryKeys.question(Number(id)),
     queryFn: () => getQuestion(Number(id)),
   });
 
