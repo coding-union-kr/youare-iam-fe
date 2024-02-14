@@ -9,6 +9,7 @@ import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { UserData } from '@/types/api';
 import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
 import ChatList from '@/components/chatroom/ChatList';
+import SEO from '@/components/SEO/SEO';
 
 type ModalInfo = {
   actionText: string;
@@ -28,23 +29,29 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
   });
 
   return (
-    <div className="pb-[5rem]">
-      {/* 모달이 열리면 보일 부분 */}
-      {isModalOpen && (
-        <Modal
-          modalInfo={modalInfo}
-          setIsModalOpen={setIsModalOpen}
-          isModalOpen={isModalOpen}
-        />
-      )}
-      {userStatus === 'COUPLE_USER' && (
-        <ChatList setModalInfo={setModalInfo} setIsModalOpen={setIsModalOpen} />
-      )}
+    <>
+      <SEO title="대화 상세" />
+      <div className="pb-[5rem]">
+        {/* 모달이 열리면 보일 부분 */}
+        {isModalOpen && (
+          <Modal
+            modalInfo={modalInfo}
+            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isModalOpen}
+          />
+        )}
+        {userStatus === 'COUPLE_USER' && (
+          <ChatList
+            setModalInfo={setModalInfo}
+            setIsModalOpen={setIsModalOpen}
+          />
+        )}
 
-      {userStatus === 'COUPLE_WAITING_USER' && (
-        <ShareInviteLink linkKey={linkKey} />
-      )}
-    </div>
+        {userStatus === 'COUPLE_WAITING_USER' && (
+          <ShareInviteLink linkKey={linkKey} />
+        )}
+      </div>
+    </>
   );
 };
 
