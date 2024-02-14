@@ -9,6 +9,7 @@ import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import { showToastSuccessMessage } from '@/util/toast';
 import NotificationCard from './NotificationCard';
+import { queryKeys } from '@/constants/queryKeys';
 
 export default function InviteStep() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function InviteStep() {
         onSuccess: ({ data }) => {
           showToastSuccessMessage('초대링크가 생성되었습니다!');
           router.push('/chatroom');
-          queryClient.invalidateQueries({ queryKey: ['user-status'] });
+          queryClient.invalidateQueries({ queryKey: queryKeys.userStatus });
           setOnboardingData(initialOnboardingState);
         },
       }

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { get } from '@/libs/clientSideApi';
+import { queryKeys } from '@/constants/queryKeys';
 
 type InvitationInfo = {
   question: string;
@@ -25,7 +26,7 @@ export default function useInvitationInfo(linkKey: string) {
     isLoading,
     isError,
   } = useQuery<InvitationInfo>({
-    queryKey: ['invitationInfo'],
+    queryKey: queryKeys.invitationInfo,
     queryFn: () => getInvitationInfo(linkKey),
   });
   return { info, error, isLoading, isError };
