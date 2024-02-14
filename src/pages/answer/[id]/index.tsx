@@ -14,6 +14,7 @@ import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { Question } from '@/types/api';
 import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
+import SEO from '@/components/SEO/SEO';
 
 type Prop = {
   id: string;
@@ -53,16 +54,19 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   };
 
   return (
-    <section className="flex flex-col justify-between h-full">
-      <QuestionTitle question={question} />
-      <AnswerForm
-        answer={answer}
-        onChange={onChange}
-        errorMessage={errorMessage}
-        handleSubmit={handleSubmit}
-        isLoading={isPending}
-      />
-    </section>
+    <>
+      <SEO title="답변 등록하기" />
+      <section className="flex flex-col justify-between h-full">
+        <QuestionTitle question={question} />
+        <AnswerForm
+          answer={answer}
+          onChange={onChange}
+          errorMessage={errorMessage}
+          handleSubmit={handleSubmit}
+          isLoading={isPending}
+        />
+      </section>
+    </>
   );
 };
 
