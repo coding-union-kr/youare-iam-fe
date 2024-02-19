@@ -21,8 +21,12 @@ const Page: NextPageWithLayout<Questions> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { questionList } = useQuestionList();
-  const { mutate: postQuestion } = usePostQuestion();
+  const { mutate: postQuestion, isError } = usePostQuestion();
   const handleItemClick = async (questionId: Question['questionId']) => {
+    if (isError) {
+      return;
+    }
+
     postQuestion(
       { questionId: questionId },
       {
