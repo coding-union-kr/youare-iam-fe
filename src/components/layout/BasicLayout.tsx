@@ -7,7 +7,7 @@ type BasicLayoutProps = {
 
 export default function BasicLayout({ children, className }: BasicLayoutProps) {
   return (
-    <main className={`${className} flex flex-col items-center  h-screen`}>
+    <main className={`${className} flex flex-col items-center h-screen`}>
       {children}
     </main>
   );
