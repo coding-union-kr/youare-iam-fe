@@ -13,8 +13,7 @@ module.exports = {
       'gray-light': '#BDBDBD',
     },
     fontFamily: {
-      sans: ['Pretendard', 'Arial', 'sans-serif'],
-      neo: ['Neo둥근모', 'neodgm', 'sans-serif'],
+      neo: ['var(--local-neo-font)', 'sans-serif'],
     },
     extend: {},
   },

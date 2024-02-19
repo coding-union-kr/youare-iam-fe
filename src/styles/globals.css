@@ -8,6 +8,13 @@
   margin: 0;
 }
 
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
 body {
   max-width: 512px;
   width: 100%;
@@ -15,4 +22,5 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: #f5f5f5;
+  font-family: 'Pretendard', Arial, sans-serif;
 }
