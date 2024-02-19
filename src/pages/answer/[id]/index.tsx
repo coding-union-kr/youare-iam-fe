@@ -56,7 +56,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   return (
     <>
       <SEO title="답변 등록하기" />
-      <section className="flex flex-col justify-between h-full">
+      <section className="flex flex-col justify-between h-full pt-10">
         <QuestionTitle question={question} />
         <AnswerForm
           answer={answer}
@@ -112,11 +112,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   return {
     props: { id, initialState: dehydrate(queryClient) },
