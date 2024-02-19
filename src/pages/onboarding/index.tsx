@@ -71,7 +71,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   await queryClient.prefetchQuery({
     queryKey: ['question-list'],
-    queryFn: () => fetchData<Question[]>(api, '/questions'),
+    queryFn: () => fetchData<Question[]>(api, '/api/v1/questions'),
   });
 
   const redirection = await disallowAccess(context);
