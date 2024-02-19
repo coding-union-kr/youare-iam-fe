@@ -34,21 +34,21 @@ export default function ShareInviteLink({ linkKey }: Props) {
   }
 
   return (
-    <section className="flex flex-col justify-between h-[80vh] mt-4">
+    <section className="flex flex-col justify-between h-[80dvh] mt-4">
       <div className="p-2 pl-4 font-neo rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center">
         <LockIcon />
         <p className="pl-3">{info.question}</p>
       </div>
 
       <NotificationCard>
-        <p className="text-lg font-semibold">초대 수락을 기다리고 있어요</p>
+        <p className="text-lg font-semibold">초대 수락을 기다리고 있어요!</p>
         <div className="mt-5 text-gray-400">
           <p>
             아직 상대방이 <br />
-            초대를 수락하지 않았습니다
+            초대를 수락하지 않았습니다.
           </p>
 
-          <p className="mt-3 font-semibold">아래의 초대링크를 전송해주세요</p>
+          <p className="mt-3 font-semibold">아래의 초대링크를 전송해주세요.</p>
         </div>
       </NotificationCard>
 

@@ -7,7 +7,7 @@ type Props = {
 
 export default function NotificationCard({ children }: Props) {
   return (
-    <article className="flex flex-col items-center p-8 mx-8 rounded-lg shadow-md bg-opacity-60 bg-secondary">
+    <article className="flex flex-col items-center p-8 mx-8 text-center rounded-lg shadow-md bg-opacity-60 bg-secondary">
       <Image
         src="/logo-removebg.png"
         priority
