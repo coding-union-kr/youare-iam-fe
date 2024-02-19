@@ -34,7 +34,7 @@
             <br/>
             <b style='font-size:12px'>백엔드</b>
             <br/>
-            <img src='docs/jjung.jpg'>
+            <img src='docs/jjung.jpg' width='40%'>
             <br/>
             <a href="https://github.com/meezzui">https://github.com/meezzui</a>    
         </td>
@@ -237,7 +237,7 @@ _너는 어떻게 생각해? 나는…_
       <b>이동하여 카카오 로그인을 할 수 있습니다.</b>
     </td>
     <td align="center">
-      <img src='./docs/login.gif'>
+      <img src='./docs/login.gif' width='80%'>
     </td>
   </tr>
   <tr align="center">
@@ -249,7 +249,7 @@ _너는 어떻게 생각해? 나는…_
      <b>상대방에게 묻고 싶은 질문을 선택하고, 카카오톡 친구에게 공유하여 초대할 수 있습니다.</b>
     </td>
     <td align="center">   
-      <img src='./docs/send-invitation.gif'>
+      <img src='./docs/send-invitation.gif' width='80%'>
     </td>
     </td>
   </tr>
@@ -268,7 +268,7 @@ _너는 어떻게 생각해? 나는…_
      <b>- 로그인에 성공하면 로그인 전에 작성한 답변을 등록할 수 있으며, 커플이 맺어짐과 동시에 서로의 답변을 확인할 수 있습니다.</b>
     </td>
     <td align="center">   
-      <img src='./docs/accept-invitation.gif'>
+      <img src='./docs/accept-invitation.gif' width='80%'>
     </td>
     </td>
   </tr>
@@ -286,7 +286,7 @@ _너는 어떻게 생각해? 나는…_
       <b>확인할 수 있습니다.</b>
     </td>
     <td align="center">
-      <img src='./docs/question.gif'>
+      <img src='./docs/question.gif' width='80%'>
     </td>
   </tr>
   <tr align="center">
@@ -303,7 +303,7 @@ _너는 어떻게 생각해? 나는…_
       <b>안내 메시지가 오버레이되며 답변을 확인할 수 없습니다.</b>
     </td>
     <td align="center">
-      <img src='./docs/answer.gif'>
+      <img src='./docs/answer.gif' width='80%'>
     </td>
   </tr>
   <tr align="center">
@@ -323,7 +323,7 @@ _너는 어떻게 생각해? 나는…_
       <b>오래된 질문은 스크롤을 위로 올려 확인할 수 있습니다.</b>
     </td>
     <td align="center">
-      <img src='./docs/chatroom.gif'>
+      <img src='./docs/chatroom.gif' width='80%'>
     </td>
   </tr>
 </table>
@@ -380,7 +380,7 @@ $ npm run dev
 
 <br />
 
-# 😊프로젝트 진행을 위한 노력😊
+# 🏃 프로젝트 진행을 위한 노력
 
 저희는 3주간의 기획 기간과 3주간의 개발 기간을 합쳐 총 6주차에 MVP를 출시하겠다는 목표를 세웠습니다.
 <br/>
@@ -388,7 +388,7 @@ $ npm run dev
 <br/>
 또한 기존의 MVP 목표에 리프레시 토큰 구현이 추가되었고 테스트를 하며 서비스를 더 보완하는 시간을 가졌습니다. 5주 간의 추가 개발 기간을 가진 후 11주차에 릴리즈를 하게 되었습니다.
 
-1. 그라운드 룰📃
+### 그라운드 룰📃
 
 - 팀 일정 관리 도구🛠
   - 프로젝트 기간 동안 일정 관리를 위해서 노션(Notion) 캘린더, 슬랙(Slack)을 이용했습니다.
@@ -406,7 +406,7 @@ $ npm run dev
 
 <br/>
 
-2. 기능 우선순위💈
+### 기능 우선순위💈
 
 - 첫 기획 완료 후 필수 기능과 추가 기능이 무엇인지 정의하고 나눠서 MVP 목표를 설정했습니다.
 - MVP 목표 중에서도 중요도로 정리를 해서 소셜 로그인, 질문 선택 후 등록, 답변 등록, 질문과 답변 상세 조회 를 핵심 기능으로 설정했습니다.
@@ -418,7 +418,7 @@ $ npm run dev
 
 <br/>
 
-3. 프론트 엔드 팀원 업무 분배🙋‍♀️
+### 프론트 엔드 팀원 업무 분배🙋‍♀️
 
 프론트 엔드 팀은 다음과 같이 역할과 책임을 분배하였습니다.
 
