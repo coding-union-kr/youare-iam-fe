@@ -39,7 +39,7 @@ export default function InviteStep() {
 
   return (
     <>
-      <section className="w-full pt-10">
+      <section className="w-full pt-3">
         <h1 className="mb-24 text-xl font-bold text-center">
           초대링크를 만들어서 대화를 시작해보세요!
         </h1>
