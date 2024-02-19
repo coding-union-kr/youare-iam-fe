@@ -21,8 +21,12 @@ const Page: NextPageWithLayout<Questions> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { questionList } = useQuestionList();
-  const { mutate: postQuestion } = usePostQuestion();
+  const { mutate: postQuestion, isError } = usePostQuestion();
   const handleItemClick = async (questionId: Question['questionId']) => {
+    if (isError) {
+      return;
+    }
+
     postQuestion(
       { questionId: questionId },
       {
@@ -43,7 +47,7 @@ const Page: NextPageWithLayout<Questions> = () => {
         title="질문 선택"
         description="서로에 대해 더 알아가고 싶은 질문들을 탐색하세요. 질문을 통해 깊은 대화를 시작해 보세요."
       />
-      <div className="py-20">
+      <div className="pt-8 pb-20">
         {questionList.map((question) => (
           <div
             key={question.questionId}

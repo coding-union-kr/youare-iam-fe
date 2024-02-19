@@ -15,7 +15,11 @@ module.exports = {
     fontFamily: {
       neo: ['var(--local-neo-font)', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      height: {
+        screen: '100dvh',
+      },
+    },
   },
   plugins: [require('daisyui')],
   daisyui: {
