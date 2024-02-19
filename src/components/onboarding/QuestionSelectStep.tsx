@@ -44,7 +44,6 @@ export default function QuestionSelectStep({
         : ' border-gray-light bg-secondary';
     return `${baseClasses} ${selectedClasses}`;
   };
-  console.log('recoil', onboardingData.selectedQuestion.questionId);
 
   return (
     <>

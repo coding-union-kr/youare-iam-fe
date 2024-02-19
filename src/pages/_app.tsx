@@ -16,6 +16,8 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { showToastErrorMessage } from '@/util/toast';
+import localFont from 'next/font/local';
+
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -29,6 +31,11 @@ declare global {
 type ErrorFallbackProp = {
   resetErrorBoundary: (...args: any[]) => void;
 };
+
+const neo = localFont({
+  src: [{ path: '../../public/fonts/neodgm.woff2' }],
+  variable: '--local-neo-font',
+});
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -76,7 +83,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                       <ErrorFallback resetErrorBoundary={resetErrorBoundary} />
                     )}
                   >
-                    {getLayout(<Component {...pageProps} />)}
+                    <div className={`${neo.variable}`}>
+                      {getLayout(<Component {...pageProps} />)}
+                    </div>
                   </ErrorBoundary>
                 )}
               </QueryErrorResetBoundary>
