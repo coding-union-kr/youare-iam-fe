@@ -7,7 +7,10 @@ export default function Document() {
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ko_KR" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="msapplication-TileColor" content="#F7C9C3"></meta>
+        <meta name="theme-color" content="#FF9081"></meta>
       </Head>
       <body>
         <Main />
