@@ -10,7 +10,10 @@ export default function Document() {
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="msapplication-TileColor" content="#F7C9C3"></meta>
-        <meta name="theme-color" content="#FF9081"></meta>
+        <meta name="theme-color" content="#F7C9C3"></meta>
+
+        {/* ios */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
       <body>
         <Main />
