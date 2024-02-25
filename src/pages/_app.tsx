@@ -17,6 +17,7 @@ import { LazyMotion, domAnimation } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { showToastErrorMessage } from '@/util/toast';
 import localFont from 'next/font/local';
+import PwaSplashScript from '@/components/Script/PwaSplashScript';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -68,6 +69,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
         onLoad={kakaoInit}
       ></Script>
+      <PwaSplashScript />
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
           <Toaster />
