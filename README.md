@@ -11,7 +11,8 @@
 <br/>
 🧵 이용 가이드라인: https://bit.ly/youare-iam
 <br/>
-💙 트위터: https://twitter.com/youare_iam_
+💙 트위터: [https://twitter.com/youare_iam_]https://twitter.com/youare_iam_
+
 <br/>
 📮 피드백&문의: https://youare-iam.channel.io
 
