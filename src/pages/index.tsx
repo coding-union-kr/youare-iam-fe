@@ -2,13 +2,14 @@ import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
 import KakaoLoginButton from '@/components/ui/KakaoLoginButton';
 import Image from 'next/image';
-import useAuth from '@/hooks/auth/useAuth';
 import StartServiceButton from '@/components/ui/ StartServiceButton';
 import SEO from '@/components/SEO/SEO';
+import { GetServerSidePropsContext } from 'next';
+import { isAuthenticated } from '@/util/isAuthenticated';
 
-const Home: NextPageWithLayout = () => {
-  const { isAuthenticated } = useAuth();
-
+const Home: NextPageWithLayout<{ isAuthenticated: boolean }> = (
+  isAuthenticated
+) => {
   return (
     <>
       <SEO />
@@ -35,5 +36,15 @@ Home.getLayout = function getLayout(page) {
     <BasicLayout className="bg-[#F7CBC3] justify-center">{page}</BasicLayout>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { authStatus } = await isAuthenticated(context);
+
+  return {
+    props: {
+      isAuthenticated: authStatus,
+    },
+  };
+}
 
 export default Home;
