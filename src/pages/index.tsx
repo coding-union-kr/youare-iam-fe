@@ -1,10 +1,10 @@
+import { GetServerSidePropsContext } from 'next';
+import Image from 'next/image';
 import type { NextPageWithLayout } from '@/types/page';
 import BasicLayout from '@/components/layout/BasicLayout';
 import KakaoLoginButton from '@/components/ui/KakaoLoginButton';
-import Image from 'next/image';
 import StartServiceButton from '@/components/ui/ StartServiceButton';
 import SEO from '@/components/SEO/SEO';
-import { GetServerSidePropsContext } from 'next';
 import { isAuthenticated } from '@/util/isAuthenticated';
 
 const Home: NextPageWithLayout<{ isAuthenticated: boolean }> = (
