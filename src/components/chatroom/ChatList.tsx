@@ -99,12 +99,12 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
     } else if (letter.answerCount === 1) {
       if (letter.myAnswer === true) {
         setModalInfo({
-          actionText: '답변 요청하기',
+          actionText: '답변 수정하기',
           cancelText: '되돌아가기',
           bodyText:
-            '상대가 답변을 등록하지 않았어요.<br>답변을 작성할 수 있도록<br/> 메시지를 보내볼까요?',
+            '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
           handleAction: () => {
-            kakaoShare(letter.question, letter.selectQuestionId);
+            router.push(`/answer/edit/${letter.selectQuestionId}`);
           },
         });
       } else {
