@@ -7,9 +7,9 @@ import StartServiceButton from '@/components/ui/ StartServiceButton';
 import SEO from '@/components/SEO/SEO';
 import { isAuthenticated } from '@/util/isAuthenticated';
 
-const Home: NextPageWithLayout<{ isAuthenticated: boolean }> = (
-  isAuthenticated
-) => {
+const Home: NextPageWithLayout<{ isAuthenticated: boolean }> = ({
+  isAuthenticated,
+}) => {
   return (
     <>
       <SEO />
