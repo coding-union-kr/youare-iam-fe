@@ -4,4 +4,5 @@ export const queryKeys = {
   question: (id: number) => ['question', id],
   userStatus: ['userStatus'],
   invitationInfo: ['invitationInfo'],
+  answer: (id: number) => ['answer', id],
 };

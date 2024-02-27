@@ -9,18 +9,22 @@ import { disallowAccess } from '@/util/disallowAccess';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { queryKeys } from '@/constants/queryKeys';
 import useInput from '@/hooks/common/useInput';
-import useQuestion from '@/hooks/queries/useQuestion';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
 import SEO from '@/components/SEO/SEO';
 import useEditAnswer from '@/hooks/queries/useEditAnswer';
+import { getExistingAnswer } from '@/hooks/queries/useAnswer';
 
-const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
+const Page: NextPageWithLayout<{
+  id: string;
+  question: string;
+  existingAnswer: string;
+}> = ({ id, question, existingAnswer }) => {
   const router = useRouter();
-  const [answer, onChange, errorMessage] = useInput('', (value) =>
+  const [answer, onChange, errorMessage] = useInput(existingAnswer, (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
   );
-  const { question } = useQuestion(Number(id));
+
   const { mutate: editAnswer, isPending } = useEditAnswer();
   const queryClient = useQueryClient();
 
@@ -39,6 +43,7 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
             pathname: '/chatroom',
             hash: id,
           });
+          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
         },
       }
     );
@@ -54,6 +59,7 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
           onChange={onChange}
           errorMessage={errorMessage}
           handleSubmit={handleSubmit}
+          isLoading={isPending}
         />
       </section>
     </>
@@ -92,13 +98,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return data.question;
   };
 
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.question(Number(id)),
-    queryFn: () => getQuestion(Number(id)),
-  });
+  const [question, answer] = await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: queryKeys.question(Number(id)),
+      queryFn: () => getQuestion(Number(id)),
+    }),
+    queryClient.fetchQuery({
+      queryKey: queryKeys.answer(Number(id)),
+      queryFn: () => getExistingAnswer(api, Number(id)),
+    }),
+  ]);
 
   return {
-    props: { id, initialState: dehydrate(queryClient) },
+    props: {
+      id,
+      question,
+      existingAnswer: answer,
+      initialState: dehydrate(queryClient),
+    },
   };
 }
 
