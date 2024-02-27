@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useQueryClient, QueryClient, dehydrate } from '@tanstack/react-query';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import type { NextPageWithLayout } from '@/types/page';
 import type { Question } from '@/types/api';
@@ -12,12 +13,16 @@ import useQuestion from '@/hooks/queries/useQuestion';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
 import SEO from '@/components/SEO/SEO';
+import useEditAnswer from '@/hooks/queries/useEditAnswer';
 
 const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
+  const router = useRouter();
   const [answer, onChange, errorMessage] = useInput('', (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
   );
   const { question } = useQuestion(Number(id));
+  const { mutate: editAnswer, isPending } = useEditAnswer();
+  const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +31,17 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
       return;
     }
 
-    //Todo: 답변 수정하기 api 연결
+    editAnswer(
+      { selectQuestionId: Number(id), answer },
+      {
+        onSuccess: () => {
+          router.push({
+            pathname: '/chatroom',
+            hash: id,
+          });
+        },
+      }
+    );
   };
 
   return (
