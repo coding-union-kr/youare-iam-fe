@@ -31,7 +31,7 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
   return (
     <>
       <SEO title="대화 상세" />
-      <div className="pb-[5rem]">
+      <div>
         {/* 모달이 열리면 보일 부분 */}
         {isModalOpen && (
           <Modal
