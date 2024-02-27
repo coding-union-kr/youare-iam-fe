@@ -18,3 +18,8 @@ export type UserData = {
   userStatus: UserStatus;
   linkKey: string;
 };
+
+export type Answer = {
+  selectQuestionId: number;
+  answer: string;
+};

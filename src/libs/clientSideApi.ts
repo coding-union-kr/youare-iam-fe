@@ -141,3 +141,10 @@ export const post = <T = any, D = any, R = AxiosResponse<T>>(
 ) => {
   return instance.post<T, R>(url, data);
 };
+
+export const put = <T = any, D = any, R = AxiosResponse<T>>(
+  url: string,
+  data?: D
+) => {
+  return instance.put<T, R>(url, data);
+};

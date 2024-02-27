@@ -1,23 +1,32 @@
 import { GetServerSidePropsContext } from 'next';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useQueryClient, QueryClient, dehydrate } from '@tanstack/react-query';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import type { NextPageWithLayout } from '@/types/page';
-import type { Question } from '@/types/api';
 import { checkAuth } from '@/util/checkAuth';
 import { disallowAccess } from '@/util/disallowAccess';
-import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { createServerSideInstance } from '@/libs/serversideApi';
 import { queryKeys } from '@/constants/queryKeys';
 import useInput from '@/hooks/common/useInput';
-import useQuestion from '@/hooks/queries/useQuestion';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
 import SEO from '@/components/SEO/SEO';
+import useEditAnswer from '@/hooks/queries/useEditAnswer';
+import { getExistingAnswer } from '@/hooks/queries/useAnswer';
+import { getQuestion } from '@/hooks/queries/useQuestion';
 
-const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
-  const [answer, onChange, errorMessage] = useInput('', (value) =>
+const Page: NextPageWithLayout<{
+  id: string;
+  question: string;
+  existingAnswer: string;
+}> = ({ id, question, existingAnswer }) => {
+  const router = useRouter();
+  const [answer, onChange, errorMessage] = useInput(existingAnswer, (value) =>
     value.trim() ? '' : '답변을 입력해주세요'
   );
-  const { question } = useQuestion(Number(id));
+
+  const { mutate: editAnswer, isPending } = useEditAnswer();
+  const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +35,18 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
       return;
     }
 
-    //Todo: 답변 수정하기 api 연결
+    editAnswer(
+      { selectQuestionId: Number(id), answer },
+      {
+        onSuccess: () => {
+          router.push({
+            pathname: '/chatroom',
+            hash: id,
+          });
+          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
+        },
+      }
+    );
   };
 
   return (
@@ -39,6 +59,7 @@ const Page: NextPageWithLayout<{ id: string }> = ({ id }) => {
           onChange={onChange}
           errorMessage={errorMessage}
           handleSubmit={handleSubmit}
+          isLoading={isPending}
         />
       </section>
     </>
@@ -69,21 +90,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
   const api = createServerSideInstance(context);
 
-  const getQuestion = async (id: number) => {
-    const data = await fetchData<Question>(
-      api,
-      `/api/v1/answer?selected-question-id=${id}`
-    );
-    return data.question;
-  };
-
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.question(Number(id)),
-    queryFn: () => getQuestion(Number(id)),
-  });
+  const [question, answer] = await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: queryKeys.question(Number(id)),
+      queryFn: () => getQuestion(api, Number(id)),
+    }),
+    queryClient.fetchQuery({
+      queryKey: queryKeys.answer(Number(id)),
+      queryFn: () => getExistingAnswer(api, Number(id)),
+    }),
+  ]);
 
   return {
-    props: { id, initialState: dehydrate(queryClient) },
+    props: {
+      id,
+      question,
+      existingAnswer: answer,
+      initialState: dehydrate(queryClient),
+    },
   };
 }
 
