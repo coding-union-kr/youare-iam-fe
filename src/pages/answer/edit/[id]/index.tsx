@@ -3,10 +3,9 @@ import { useRouter } from 'next/router';
 import { useQueryClient, QueryClient, dehydrate } from '@tanstack/react-query';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import type { NextPageWithLayout } from '@/types/page';
-import type { Question } from '@/types/api';
 import { checkAuth } from '@/util/checkAuth';
 import { disallowAccess } from '@/util/disallowAccess';
-import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { createServerSideInstance } from '@/libs/serversideApi';
 import { queryKeys } from '@/constants/queryKeys';
 import useInput from '@/hooks/common/useInput';
 import QuestionTitle from '@/components/answer/QuestionTitle';
@@ -14,6 +13,7 @@ import AnswerForm from '@/components/answer/AnswerForm';
 import SEO from '@/components/SEO/SEO';
 import useEditAnswer from '@/hooks/queries/useEditAnswer';
 import { getExistingAnswer } from '@/hooks/queries/useAnswer';
+import { getQuestion } from '@/hooks/queries/useQuestion';
 
 const Page: NextPageWithLayout<{
   id: string;
@@ -90,18 +90,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
   const api = createServerSideInstance(context);
 
-  const getQuestion = async (id: number) => {
-    const data = await fetchData<Question>(
-      api,
-      `/api/v1/answer/question?selected-question-id=${id}`
-    );
-    return data.question;
-  };
-
   const [question, answer] = await Promise.all([
     queryClient.fetchQuery({
       queryKey: queryKeys.question(Number(id)),
-      queryFn: () => getQuestion(Number(id)),
+      queryFn: () => getQuestion(api, Number(id)),
     }),
     queryClient.fetchQuery({
       queryKey: queryKeys.answer(Number(id)),
