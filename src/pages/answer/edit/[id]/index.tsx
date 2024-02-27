@@ -87,7 +87,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const getQuestion = async (id: number) => {
     const data = await fetchData<Question>(
       api,
-      `/api/v1/answer?selected-question-id=${id}`
+      `/api/v1/answer/question?selected-question-id=${id}`
     );
     return data.question;
   };

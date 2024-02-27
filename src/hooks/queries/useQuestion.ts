@@ -7,7 +7,9 @@ type Question = {
 };
 
 export const getQuestion = async (id: number) => {
-  const res = await get<Question>(`/api/v1/answer?selected-question-id=${id}`);
+  const res = await get<Question>(
+    `/api/v1/answer/question?selected-question-id=${id}`
+  );
   return res.data.question;
 };
 
