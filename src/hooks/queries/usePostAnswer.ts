@@ -1,10 +1,6 @@
 import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { post } from '@/libs/clientSideApi';
-
-type Answer = {
-  selectQuestionId: number;
-  answer: string;
-};
+import { type Answer } from '@/types/api';
 
 export const usePostAnswer = (
   options?: UseMutationOptions<void, unknown, Answer>

@@ -1,17 +1,15 @@
 import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-
+import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
-import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
-import useQuestion from '@/hooks/queries/useQuestion';
+import { getQuestion } from '@/hooks/queries/useQuestion';
 import { checkAuth } from '@/util/checkAuth';
-import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
-import { Question } from '@/types/api';
+import { createServerSideInstance } from '@/libs/serversideApi';
 import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
@@ -21,7 +19,7 @@ type Prop = {
   question: string;
 };
 
-const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
+const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
   const router = useRouter();
   const { mutate: postAnswer, isPending } = usePostAnswer();
 
@@ -29,7 +27,6 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
     value.trim() ? '' : '답변을 입력해주세요'
   );
 
-  const { question } = useQuestion(Number(selectQuestionId));
   const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,7 +53,7 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId }) => {
   return (
     <>
       <SEO title="답변 등록하기" />
-      <section className="flex flex-col justify-between h-full pt-10">
+      <section className="flex flex-col justify-between h-full pt-3">
         <QuestionTitle question={question} />
         <AnswerForm
           answer={answer}
@@ -88,17 +85,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
   const api = createServerSideInstance(context);
 
-  const getQuestion = async (id: number) => {
-    const data = await fetchData<Question>(
-      api,
-      `/api/v1/answer?selected-question-id=${id}`
-    );
-    return data.question;
-  };
-
-  await queryClient.prefetchQuery({
+  const data = await queryClient.fetchQuery({
     queryKey: queryKeys.question(Number(id)),
-    queryFn: () => getQuestion(Number(id)),
+    queryFn: () => getQuestion(api, Number(id)),
   });
 
   // Todo: api 응답이 404일 경우에 notfound 페이지를 보여주도록 수정
@@ -112,14 +101,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  // const redirection = await disallowAccess(context);
+  const redirection = await disallowAccess(context);
 
-  // if (redirection) {
-  //   return redirection;
-  // }
+  if (redirection) {
+    return redirection;
+  }
 
   return {
-    props: { id, initialState: dehydrate(queryClient) },
+    props: { id, question: data, initialState: dehydrate(queryClient) },
   };
 }
 
