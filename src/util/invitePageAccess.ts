@@ -23,10 +23,7 @@ export const invitePageAccess = async (context: GetServerSidePropsContext) => {
         queryKey: queryKeys.userStatus,
         queryFn: () => fetchData(api, '/api/v1/members/user-status'),
       });
-      if (
-        data.userStatus === 'COUPLE_USER' ||
-        data.userStatus === 'COUPLE_WAITING_USER'
-      ) {
+      if (data.userStatus === 'COUPLE_USER') {
         return {
           redirect: {
             permanent: false,
