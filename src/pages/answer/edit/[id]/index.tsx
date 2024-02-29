@@ -21,9 +21,7 @@ const Page: NextPageWithLayout<{
   existingAnswer: string;
 }> = ({ id, question, existingAnswer }) => {
   const router = useRouter();
-  const [answer, onChange, errorMessage] = useInput(existingAnswer, (value) =>
-    value.trim() ? '' : '답변을 입력해주세요'
-  );
+  const [answer, onChange, errorMessage] = useInput(existingAnswer);
 
   const { mutate: editAnswer, isPending } = useEditAnswer();
   const queryClient = useQueryClient();
@@ -31,7 +29,7 @@ const Page: NextPageWithLayout<{
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!answer) {
+    if (!!errorMessage) {
       return;
     }
 
