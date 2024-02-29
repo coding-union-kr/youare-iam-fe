@@ -6,9 +6,19 @@ type ReturnType = [
   string,
 ];
 
+export const validateAnswer = (answer: string) => {
+  if (!answer.trim()) {
+    return '답변을 입력해주세요';
+  } else if (answer.length > 1000) {
+    return '답변은 최대 1000자까지 입력 가능합니다';
+  }
+
+  return '';
+};
+
 const useInput = (
   initialValue: string,
-  validator = (value: string) => ''
+  validator = validateAnswer
 ): ReturnType => {
   const [state, setState] = useState(initialValue);
   const [error, setError] = useState('');
