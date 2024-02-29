@@ -16,6 +16,8 @@ import useAuth from '@/hooks/auth/useAuth';
 import { invitePageAccess } from '@/util/invitePageAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
+import AnswerForm from '@/components/answer/AnswerForm';
+import useInput from '@/hooks/common/useInput';
 
 type InviteData = {
   data: {
@@ -26,18 +28,18 @@ type InviteData = {
 };
 
 const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
-  const [text, setText] = useState('');
+  const [text, onChange, error, setText] = useInput('');
   const router = useRouter();
   const { mutate: postInviteAnswer } = usePostInviteAnswer();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
 
-  const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-  };
-
   const handleSubmitAnswer = () => {
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
+
+    if (!!error) {
+      return;
+    }
 
     if (!isAuthenticated) {
       window.location.href = KAKAO_AUTH_URL;
@@ -66,7 +68,7 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
     if (storedText) {
       setText(storedText);
     }
-  }, []);
+  }, [setText]);
 
   return (
     <>
@@ -93,27 +95,22 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
       <div className="mb-5">
         <div>답변을 작성해 볼까요?</div>
       </div>
-      <TextArea
-        value={text}
-        onChange={handleChangeText}
-        className="min-h-[15rem]"
+      <AnswerForm
+        answer={text}
+        onChange={onChange}
+        errorMessage={error}
+        handleSubmit={handleSubmitAnswer}
+        isLoading={false}
       />
-      <Button
-        onClick={handleSubmitAnswer}
-        variant="primary"
-        size="wide"
-        className="mt-5"
-        disabled={!text.trim()}
-      >
-        답변 등록
-      </Button>
     </>
   );
 };
 
 Page.getLayout = function getLayout(page) {
   return (
-    <BasicLayout className="bg-[#F7CBC3] justify-center">{page}</BasicLayout>
+    <BasicLayout className="bg-[#F7CBC3] justify-center pb-10">
+      {page}
+    </BasicLayout>
   );
 };
 

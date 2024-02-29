@@ -8,6 +8,7 @@ import type { OnboardingStepProps } from './Intro';
 import AnswerForm from '@/components/answer/AnswerForm';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
+import { validateAnswer } from '@/hooks/common/useInput';
 
 export default function AnswerStep({ onNext }: OnboardingStepProps) {
   const [onboardingData, setOnboardingData] = useRecoilStateSSR(
@@ -26,14 +27,15 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
       answer: value,
     }));
 
-    const errorMessage = value.trim() ? '' : '답변을 입력해주세요';
+    const errorMessage = validateAnswer(value);
+
     setErrorErrorMessage(errorMessage);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!onboardingData.answer) {
+    if (!!errorMessage) {
       return;
     }
 
@@ -53,3 +55,7 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
     </>
   );
 }
+
+// 답변 유효성 추가하기 - 글자 수 제한
+
+//초대링크 생성,초대수락, 답변등록, 답변 수정

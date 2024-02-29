@@ -23,16 +23,14 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
   const router = useRouter();
   const { mutate: postAnswer, isPending } = usePostAnswer();
 
-  const [answer, onChange, errorMessage] = useInput('', (value) =>
-    value.trim() ? '' : '답변을 입력해주세요'
-  );
+  const [answer, onChange, errorMessage] = useInput('');
 
   const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!answer) {
+    if (!!errorMessage) {
       return;
     }
 
