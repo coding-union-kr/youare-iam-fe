@@ -1,9 +1,16 @@
-import { type ChangeEventHandler, useCallback, useState } from 'react';
+import {
+  type ChangeEventHandler,
+  useCallback,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 
 type ReturnType = [
   string,
   ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>,
   string,
+  Dispatch<SetStateAction<string>>,
 ];
 
 export const validateAnswer = (answer: string) => {
@@ -35,7 +42,7 @@ const useInput = (
       [validator]
     );
 
-  return [state, onChange, error];
+  return [state, onChange, error, setState];
 };
 
 export default useInput;
