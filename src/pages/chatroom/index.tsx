@@ -72,23 +72,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return data;
   };
 
-  const userData = await getUserData();
-
-  if (userData.userStatus === 'NON_COUPLE_USER') {
-    return {
-      redirect: {
-        destination: '/onboarding',
-        permanent: false,
-      },
-    };
-  }
-
   const redirection = await disallowAccess(context);
 
   if (redirection) {
     return redirection;
   }
 
-  return { props: userData };
+  try {
+    const userData = await getUserData();
+
+    if (userData.userStatus === 'NON_COUPLE_USER') {
+      return {
+        redirect: {
+          destination: '/onboarding',
+          permanent: false,
+        },
+      };
+    }
+
+    return { props: userData };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 }
 export default Page;
