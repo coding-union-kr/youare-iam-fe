@@ -1,8 +1,22 @@
 import type { NextPageWithLayout } from '@/types/page';
 import SubpageLayout from '@/components/layout/SubpageLayout';
+import Button from '@/components/ui/Button';
+import TextArea from '@/components/ui/TextArea';
+import useInput from '@/hooks/common/useInput';
 
 const Page: NextPageWithLayout = () => {
-  return <section>questionList</section>;
+  const [question, onChange, error] = useInput('', (value) =>
+    value.trim() ? '' : '질문을 입력해주세요'
+  );
+  return (
+    <section>
+      <TextArea
+        value={question}
+        onChange={onChange}
+        className="min-h-[15rem]"
+      />
+    </section>
+  );
 };
 
 Page.getLayout = function getLayout(page) {
@@ -10,3 +24,5 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
+
+// 질문 예시, form, button , 등록 훅(201응답 -> /chatroom)
