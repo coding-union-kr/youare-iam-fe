@@ -22,10 +22,11 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <section className="flex flex-col justify-center h-full">
-      <h2 className="mb-4 text-lg font-bold  w-[90%] mx-auto">
-        질문을 입력해주세요
-      </h2>
-      {/* 질문 예시  */}
+      <div className="w-[90%] mx-auto mb-8 text-sm">
+        <p className="text-accent ">질문 예시 :</p>
+        <p>우리 00일에 뭐할까?</p>
+        <p>같이 제주도여행 갔을 때 가장 좋았던 장소는 어디였어?</p>
+      </div>
       <Form
         inputValue={question}
         onChange={onChange}

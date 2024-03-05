@@ -97,3 +97,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default Page;
+
+// 질문 직접 등록 버튼 설명
+// 질문 추가 규칙 설명
