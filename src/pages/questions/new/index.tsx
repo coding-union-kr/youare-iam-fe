@@ -6,11 +6,22 @@ import Form from '@/components/ui/Form';
 const Page: NextPageWithLayout = () => {
   const [question, onChange, error] = useInput(
     '',
-    // 질문 입력 유효성 검사 - 공백, 글자수 제한
+    // todo: 질문 입력 유효성 검사 - 공백, 글자수 제한
     (value) => (value.trim() ? '' : '질문을 입력해주세요')
   );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!!error) {
+      return;
+    }
+
+    //todo: api 연결
+    console.log(question);
+  };
+
   return (
-    <section className="flex flex-col justify-between h-full">
+    <section className="flex flex-col justify-center h-full">
       <h2 className="mb-4 text-lg font-bold  w-[90%] mx-auto">
         질문을 입력해주세요
       </h2>
@@ -19,12 +30,10 @@ const Page: NextPageWithLayout = () => {
         inputValue={question}
         onChange={onChange}
         errorMessage={error}
-        handleSubmit={(e) => {
-          e.preventDefault();
-          console.log('질문 등록하기');
-        }}
+        handleSubmit={handleSubmit}
         textAreaSize="min-h-[12rem]"
         label="등록하기"
+        formSize="h-[50%]"
       />
     </section>
   );
@@ -35,6 +44,3 @@ Page.getLayout = function getLayout(page) {
 };
 
 export default Page;
-
-// 질문 예시, form, button , 등록 훅(201응답 -> /chatroom)
-//answerform textarea 크기만 다름

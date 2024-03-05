@@ -1,3 +1,4 @@
+import { cn } from '@/util/cn';
 import Button from './Button';
 import TextArea from './TextArea';
 
@@ -9,6 +10,7 @@ type FormProps = {
   isLoading?: boolean;
   textAreaSize?: string;
   label?: string;
+  formSize?: string;
 };
 
 export default function Form({
@@ -19,11 +21,12 @@ export default function Form({
   isLoading,
   textAreaSize,
   label = '답변 등록하기',
+  formSize = 'h-[70%]',
 }: FormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col justify-between w-full h-[70%]"
+      className={cn('flex flex-col justify-between', formSize)}
     >
       <div className="relative">
         <TextArea
