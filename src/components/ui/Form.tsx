@@ -26,7 +26,7 @@ export default function Form({
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn('flex flex-col justify-between', formSize)}
+      className={cn('flex flex-col justify-between w-full', formSize)}
     >
       <div className="relative">
         <TextArea
@@ -45,6 +45,7 @@ export default function Form({
         size="wide"
         disabled={!inputValue.trim() || !!errorMessage}
         isLoading={isLoading}
+        className="mt-5"
       >
         {label}
       </Button>
