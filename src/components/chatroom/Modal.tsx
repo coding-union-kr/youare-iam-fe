@@ -1,4 +1,4 @@
-import { ComponentProps, useRef, useEffect } from 'react';
+import Dialog from '../ui/Dialog';
 
 type ModalProps = {
   modalInfo: {
@@ -16,8 +16,6 @@ export default function Modal({
   isModalOpen,
   setIsModalOpen,
 }: ModalProps) {
-  const modalRef = useRef<HTMLDialogElement>(null);
-
   const handleClose = () => {
     setIsModalOpen(false);
   };
@@ -27,34 +25,20 @@ export default function Modal({
     handleClose();
   };
 
-  useEffect(() => {
-    isModalOpen ? modalRef.current?.showModal() : modalRef.current?.close();
-  });
-
   return (
-    <>
-      <dialog ref={modalRef} className="modal">
-        <div className="modal-box w-80">
-          <p
-            className="py-4 text-center"
-            dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
-          ></p>
-          <div className="flex flex-row justify-between">
-            <button className="btn w-28 btn-secondary" onClick={handleClose}>
-              {modalInfo.cancelText}
-            </button>
-            <button
-              className="btn w-28 btn-primary"
-              onClick={handleActionClick}
-            >
-              {modalInfo.actionText}
-            </button>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={handleClose}>close</button>
-        </form>
-      </dialog>
-    </>
+    <Dialog isOpen={isModalOpen} closeDialog={handleClose}>
+      <p
+        className="py-4 text-center"
+        dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
+      ></p>
+      <div className="flex flex-row justify-between">
+        <button className="btn w-28 btn-secondary" onClick={handleClose}>
+          {modalInfo.cancelText}
+        </button>
+        <button className="btn w-28 btn-primary" onClick={handleActionClick}>
+          {modalInfo.actionText}
+        </button>
+      </div>
+    </Dialog>
   );
 }
