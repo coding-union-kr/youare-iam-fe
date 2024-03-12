@@ -13,7 +13,7 @@ type ReturnType = [
   Dispatch<SetStateAction<string>>,
 ];
 
-type Validator = (value: string) => string;
+export type Validator = (value: string) => string;
 
 export const validateAnswer: Validator = (answer: string) => {
   if (!answer.trim()) {
