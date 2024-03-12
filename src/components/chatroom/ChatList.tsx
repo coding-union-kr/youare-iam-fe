@@ -8,21 +8,10 @@ import type { Letter } from '@/types/api';
 import LockedQuestionBar from './LockedQuestionBar';
 import UnlockedQuestionBar from './UnlockedQuestionBar';
 
-type ChatList = {
-  setModalInfo: (modalInfo: {
-    actionText: string;
-    cancelText: string;
-    bodyText: string;
-    handleAction: () => void;
-  }) => void;
-  setIsModalOpen: (isModalOpen: boolean) => void;
-};
-
 const ChatList = () => {
   const setMyId = useSetRecoilState(myIdState);
 
   const getLetters = async ({ pageParam }: { pageParam: number }) => {
-    console.log('getLetters');
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const path = '/api/v1/letters';
     const apiEndpoint = `${baseURL}${path}`;
