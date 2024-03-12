@@ -7,7 +7,7 @@ type letterProps = {
   onClick: () => void;
 };
 
-const QuestionBar = ({ onClick, letter }: letterProps) => {
+const LockedQuestionBar = ({ onClick, letter }: letterProps) => {
   const date = applyDateFormatting(letter.createdAt);
   if (letter.answerCount === 0) {
     return (
@@ -67,4 +67,4 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
   }
 };
 
-export default QuestionBar;
+export default LockedQuestionBar;
