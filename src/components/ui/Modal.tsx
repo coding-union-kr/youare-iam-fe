@@ -1,4 +1,4 @@
-import Dialog from '../ui/Dialog';
+import Dialog from './Dialog';
 
 export type ModalInfo = {
   actionText: string;
