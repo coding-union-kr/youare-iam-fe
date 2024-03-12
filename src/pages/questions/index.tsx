@@ -12,6 +12,7 @@ import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
+import CreateQuestionButton from '@/components/questions/CreateQuestionButton';
 
 type Questions = {
   questions: Question[];
@@ -47,7 +48,8 @@ const Page: NextPageWithLayout<Questions> = () => {
         title="질문 선택"
         description="서로에 대해 더 알아가고 싶은 질문들을 탐색하세요. 질문을 통해 깊은 대화를 시작해 보세요."
       />
-      <div className="pt-8">
+      <div className="pt-3">
+        <CreateQuestionButton />
         {questionList.map((question) => (
           <div
             key={question.questionId}
@@ -97,6 +99,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default Page;
-
-// 질문 직접 등록 버튼 설명
-// 질문 추가 규칙 설명
