@@ -10,31 +10,27 @@ export type ModalInfo = {
 type ModalProps = {
   modalInfo: ModalInfo;
   isModalOpen: boolean;
-  setIsModalOpen: (isModalOpen: boolean) => void;
+  closeModal: () => void;
 };
 
 export default function Modal({
   modalInfo,
   isModalOpen,
-  setIsModalOpen,
+  closeModal,
 }: ModalProps) {
-  const handleClose = () => {
-    setIsModalOpen(false);
-  };
-
   const handleActionClick = () => {
     modalInfo.handleAction();
-    handleClose();
+    closeModal();
   };
 
   return (
-    <Dialog isOpen={isModalOpen} closeDialog={handleClose}>
+    <Dialog isOpen={isModalOpen} closeDialog={closeModal}>
       <p
         className="py-4 text-center"
         dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
       ></p>
       <div className="flex flex-row justify-between">
-        <button className="btn w-28 btn-secondary" onClick={handleClose}>
+        <button className="btn w-28 btn-secondary" onClick={closeModal}>
           {modalInfo.cancelText}
         </button>
         <button className="btn w-28 btn-primary" onClick={handleActionClick}>
