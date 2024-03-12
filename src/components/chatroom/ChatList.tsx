@@ -7,6 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/constants/queryKeys';
 import type { Letter } from '@/types/api';
+import UnlockedQuestionBar from './UnlockedQuetionbar';
 
 type ChatList = {
   setModalInfo: (modalInfo: {
@@ -78,8 +79,6 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
         },
       });
       setIsModalOpen(true);
-    } else if (letter.answerCount === 2) {
-      setIsModalOpen(false);
     } else if (letter.answerCount === 1) {
       if (letter.myAnswer === true) {
         setModalInfo({
@@ -113,6 +112,9 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
       onScroll={handleScroll}
     >
       {data?.map((letter: Letter, index: number) => {
+        if (letter.answerCount === 2) {
+          return <UnlockedQuestionBar key={index} letter={letter} />;
+        }
         return (
           <QuestionBar
             key={index}
