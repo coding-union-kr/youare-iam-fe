@@ -1,5 +1,4 @@
 import QuestionBar from '@/components/chatroom/QuestionBar';
-import { kakaoShare } from '@/util/kakaoShare';
 import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
 import { useRouter } from 'next/router';
 import { get } from '@/libs/clientSideApi';
@@ -7,22 +6,7 @@ import { myIdState } from '@/store/myIdState';
 import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/constants/queryKeys';
-
-type Letter = {
-  selectQuestionId: number;
-  question: string;
-  createdAt: string;
-  answerCount: number;
-  myAnswer?: boolean;
-  answer:
-    | {
-        memberId: string;
-        memberName: string;
-        answer: string;
-        createdAt: string;
-      }[]
-    | null;
-};
+import type { Letter } from '@/types/api';
 
 type ChatList = {
   setModalInfo: (modalInfo: {

@@ -2,25 +2,10 @@ import ChatBubble from './ChatBubble';
 import OpenIcon from '../icons/OpenIcon';
 import LockIcon from '../icons/LockIcon';
 import { applyDateFormatting } from '@/util/applyDateFormatting';
-
-type LetterType = {
-  selectQuestionId: number;
-  question: string;
-  createdAt: string;
-  answerCount: number;
-  myAnswer?: boolean;
-  answer:
-    | {
-        memberId: string;
-        memberName: string;
-        answer: string;
-        createdAt: string;
-      }[]
-    | null;
-};
+import type { Letter } from '@/types/api';
 
 type letterProps = {
-  letter: LetterType;
+  letter: Letter;
   onClick: () => void;
 };
 
@@ -33,7 +18,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
         onClick={onClick}
         className=" m-2 p-2 font-neo  h-full rounded-md border-solid border-2 border-[#4F4F4F] bg-[#E7E7E7] flex items-center"
       >
-        <div className="pl-1  pr-2">
+        <div className="pl-1 pr-2">
           <LockIcon />
         </div>
         <div>{letter.question}</div>
@@ -63,7 +48,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
             </div>
             <div className="chat chat-end bg-blend-multiply">
               <div className="chat-bubble bg-[#FEB2B2] px-24"></div>
-              <div className="chat-footer opacity-50">{date}</div>
+              <div className="opacity-50 chat-footer">{date}</div>
             </div>
           </>
         ) : (
@@ -74,7 +59,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
               </div>
               <div className="chat chat-start">
                 <div className="chat-bubble bg-[#ffffff] px-24"></div>
-                <div className="chat-footer opacity-50">{date}</div>
+                <div className="opacity-50 chat-footer">{date}</div>
               </div>
             </div>
           </>
@@ -91,7 +76,7 @@ const QuestionBar = ({ onClick, letter }: letterProps) => {
         id={letter.selectQuestionId.toString()}
       >
         <div className="p-2 font-neo h-full  rounded-md border-solid border-2 border-[#FF6666]  bg-[#FFE8E8] flex items-center">
-          <div className="pl-1  pr-2">
+          <div className="pl-1 pr-2">
             <OpenIcon />
           </div>
           <div>{letter.question}</div>
