@@ -1,60 +1,42 @@
-import { ComponentProps, useRef, useEffect } from 'react';
+import Dialog from '../ui/Dialog';
+
+export type ModalInfo = {
+  actionText: string;
+  cancelText: string;
+  bodyText: string;
+  handleAction: () => void;
+};
 
 type ModalProps = {
-  modalInfo: {
-    actionText: string;
-    cancelText: string;
-    bodyText: string;
-    handleAction: () => void;
-  };
+  modalInfo: ModalInfo;
   isModalOpen: boolean;
-  setIsModalOpen: (isModalOpen: boolean) => void;
+  closeModal: () => void;
 };
 
 export default function Modal({
   modalInfo,
   isModalOpen,
-  setIsModalOpen,
+  closeModal,
 }: ModalProps) {
-  const modalRef = useRef<HTMLDialogElement>(null);
-
-  const handleClose = () => {
-    setIsModalOpen(false);
-  };
-
   const handleActionClick = () => {
     modalInfo.handleAction();
-    handleClose();
+    closeModal();
   };
 
-  useEffect(() => {
-    isModalOpen ? modalRef.current?.showModal() : modalRef.current?.close();
-  });
-
   return (
-    <>
-      <dialog ref={modalRef} className="modal">
-        <div className="modal-box w-80">
-          <p
-            className="py-4 text-center"
-            dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
-          ></p>
-          <div className="flex flex-row justify-between">
-            <button className="btn w-28 btn-secondary" onClick={handleClose}>
-              {modalInfo.cancelText}
-            </button>
-            <button
-              className="btn w-28 btn-primary"
-              onClick={handleActionClick}
-            >
-              {modalInfo.actionText}
-            </button>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={handleClose}>close</button>
-        </form>
-      </dialog>
-    </>
+    <Dialog isOpen={isModalOpen} closeDialog={closeModal}>
+      <p
+        className="py-4 text-center"
+        dangerouslySetInnerHTML={{ __html: modalInfo.bodyText }}
+      ></p>
+      <div className="flex flex-row justify-between">
+        <button className="btn w-28 btn-secondary" onClick={closeModal}>
+          {modalInfo.cancelText}
+        </button>
+        <button className="btn w-28 btn-primary" onClick={handleActionClick}>
+          {modalInfo.actionText}
+        </button>
+      </div>
+    </Dialog>
   );
 }
