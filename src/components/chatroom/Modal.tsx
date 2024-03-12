@@ -1,12 +1,14 @@
 import Dialog from '../ui/Dialog';
 
+export type ModalInfo = {
+  actionText: string;
+  cancelText: string;
+  bodyText: string;
+  handleAction: () => void;
+};
+
 type ModalProps = {
-  modalInfo: {
-    actionText: string;
-    cancelText: string;
-    bodyText: string;
-    handleAction: () => void;
-  };
+  modalInfo: ModalInfo;
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
 };
