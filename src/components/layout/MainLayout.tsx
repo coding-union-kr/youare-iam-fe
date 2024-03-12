@@ -7,7 +7,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
-    <main className="px-3 pt-3">
+    <main className="px-3 pt-3 pb-[5rem]">
       {children}
       <BottomNavigation />
     </main>

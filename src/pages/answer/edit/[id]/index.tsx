@@ -9,7 +9,7 @@ import { createServerSideInstance } from '@/libs/serversideApi';
 import { queryKeys } from '@/constants/queryKeys';
 import useInput from '@/hooks/common/useInput';
 import QuestionTitle from '@/components/answer/QuestionTitle';
-import AnswerForm from '@/components/answer/AnswerForm';
+import Form from '@/components/ui/Form';
 import SEO from '@/components/SEO/SEO';
 import useEditAnswer from '@/hooks/queries/useEditAnswer';
 import { getExistingAnswer } from '@/hooks/queries/useAnswer';
@@ -52,8 +52,8 @@ const Page: NextPageWithLayout<{
       <SEO title="답변 수정하기" />
       <section className="flex flex-col justify-between h-full pt-3">
         <QuestionTitle question={question} />
-        <AnswerForm
-          answer={answer}
+        <Form
+          inputValue={answer}
           onChange={onChange}
           errorMessage={errorMessage}
           handleSubmit={handleSubmit}
