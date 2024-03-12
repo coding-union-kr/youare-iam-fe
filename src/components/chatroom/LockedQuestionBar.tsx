@@ -4,7 +4,7 @@ import LockIcon from '../icons/LockIcon';
 import { applyDateFormatting } from '@/util/applyDateFormatting';
 import type { Letter } from '@/types/api';
 import useDialog from '@/hooks/common/useDialog';
-import Modal, { type ModalInfo } from './Modal';
+import Modal, { type ModalInfo } from '../ui/Modal';
 
 type Props = {
   letter: Letter;
