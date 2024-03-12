@@ -5,7 +5,7 @@ import {
 } from '@/store/onboardingState';
 import type { OnboardingStepProps } from './Intro';
 
-import AnswerForm from '@/components/answer/AnswerForm';
+import Form from '@/components/ui/Form';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import { useRecoilStateSSR } from '@/hooks/common/useRecoilStateSSR';
 import { validateAnswer } from '@/hooks/common/useInput';
@@ -46,8 +46,8 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
     <>
       <QuestionTitle question={onboardingData.selectedQuestion.question} />
       <p className="text-lg font-semibold">내가 먼저 답변을 작성해볼까요?</p>
-      <AnswerForm
-        answer={onboardingData.answer}
+      <Form
+        inputValue={onboardingData.answer}
         onChange={onChange}
         errorMessage={errorMessage}
         handleSubmit={handleSubmit}

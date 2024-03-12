@@ -6,8 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import BasicLayout from '@/components/layout/BasicLayout';
 import type { NextPageWithLayout } from '@/types/page';
 import ListItem from '@/components/ui/ListItem';
-import TextArea from '@/components/ui/TextArea';
-import Button from '@/components/ui/Button';
 import { KAKAO_AUTH_URL } from '@/constants/kakaoAuth';
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKeys';
 import usePostInviteAnswer from '@/hooks/queries/usePostInviteAnswer';
@@ -16,7 +14,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { invitePageAccess } from '@/util/invitePageAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
-import AnswerForm from '@/components/answer/AnswerForm';
+import Form from '@/components/ui/Form';
 import useInput from '@/hooks/common/useInput';
 
 type InviteData = {
@@ -95,12 +93,13 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
       <div className="mb-5">
         <div>답변을 작성해 볼까요?</div>
       </div>
-      <AnswerForm
-        answer={text}
+      <Form
+        inputValue={text}
         onChange={onChange}
         errorMessage={error}
         handleSubmit={handleSubmitAnswer}
         isLoading={false}
+        textAreaSize="min-h-[15rem]"
       />
     </>
   );

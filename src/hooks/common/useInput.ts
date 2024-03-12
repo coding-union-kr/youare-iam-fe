@@ -13,7 +13,9 @@ type ReturnType = [
   Dispatch<SetStateAction<string>>,
 ];
 
-export const validateAnswer = (answer: string) => {
+export type Validator = (value: string) => string;
+
+export const validateAnswer: Validator = (answer: string) => {
   if (!answer.trim()) {
     return '답변을 입력해주세요';
   } else if (answer.length > 1000) {

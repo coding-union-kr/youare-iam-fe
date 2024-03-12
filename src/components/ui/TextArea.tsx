@@ -1,4 +1,5 @@
 import { type ComponentProps, useEffect, useRef } from 'react';
+import { cn } from '@/util/cn';
 
 type TextAreaProps = ComponentProps<'textarea'> & {
   value: string;
@@ -21,7 +22,9 @@ export default function TextArea({
   return (
     <textarea
       ref={textAreaRef}
-      className={`block w-[90%] mx-auto min-h-[20rem] textarea rounded-xl border-1 border-gray-dark text-base ${className}`}
+      className={cn(
+        `block w-[90%] mx-auto min-h-[20rem] textarea rounded-xl border-1 border-gray-dark text-base ${className}`
+      )}
       value={value}
       onChange={onChange}
       {...props}

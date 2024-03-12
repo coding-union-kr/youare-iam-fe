@@ -17,7 +17,6 @@ const Page: NextPageWithLayout<UserData> = (userData) => {
       <SEO title="대화 상세" />
       <div>
         {userStatus === 'COUPLE_USER' && <ChatList />}
-
         {userStatus === 'COUPLE_WAITING_USER' && (
           <ShareInviteLink linkKey={linkKey} />
         )}

@@ -9,7 +9,7 @@ type PageLayoutProps = {
 
 export default function SubpageLayout({ title, children }: PageLayoutProps) {
   return (
-    <main className="px-3 pt-24">
+    <main className="h-screen px-3 pt-24 pb-[6rem]">
       <PageTitle title={title} />
       {children}
       <BottomNavigation />
