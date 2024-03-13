@@ -1,7 +1,11 @@
+import { useRouter } from 'next/router';
+import { useQueryClient } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import SubpageLayout from '@/components/layout/SubpageLayout';
 import useInput, { Validator } from '@/hooks/common/useInput';
 import Form from '@/components/ui/Form';
+import { usePostCustomQuestion } from '@/hooks/queries/usePostCustomQuestion';
+import { queryKeys } from '@/constants/queryKeys';
 
 export const validateQuestion: Validator = (answer: string) => {
   if (!answer.trim()) {
@@ -14,7 +18,11 @@ export const validateQuestion: Validator = (answer: string) => {
 };
 
 const Page: NextPageWithLayout = () => {
+  const router = useRouter();
   const [question, onChange, error] = useInput('', validateQuestion);
+
+  const { mutate: postQuestion, isPending, isError } = usePostCustomQuestion();
+  const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +30,19 @@ const Page: NextPageWithLayout = () => {
       return;
     }
 
-    //todo: api 연결
-    console.log(question);
+    postQuestion(
+      { question },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
+          router.push('/chatroom');
+        },
+        onError: (error) => {
+          // showToastErrorMessage(error);
+          router.push('/chatroom');
+        },
+      }
+    );
   };
 
   return (
@@ -38,8 +57,9 @@ const Page: NextPageWithLayout = () => {
         onChange={onChange}
         errorMessage={error}
         handleSubmit={handleSubmit}
-        textAreaSize="min-h-[12rem]"
+        isLoading={isPending}
         label="등록하기"
+        textAreaSize="min-h-[12rem]"
         formSize="h-[50%]"
       />
     </section>
