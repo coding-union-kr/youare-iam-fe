@@ -1,45 +1,17 @@
-import QuestionBar from '@/components/chatroom/QuestionBar';
-import { kakaoShare } from '@/util/kakaoShare';
-import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
-import { useRouter } from 'next/router';
-import { get } from '@/libs/clientSideApi';
-import { myIdState } from '@/store/myIdState';
 import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import useReversedInfiniteScroll from '@/hooks/queries/useReversedInfiniteScroll';
+import { get } from '@/libs/clientSideApi';
+import { myIdState } from '@/store/myIdState';
 import { queryKeys } from '@/constants/queryKeys';
+import type { Letter } from '@/types/api';
+import LockedQuestionBar from './LockedQuestionBar';
+import UnlockedQuestionBar from './UnlockedQuestionBar';
 
-type Letter = {
-  selectQuestionId: number;
-  question: string;
-  createdAt: string;
-  answerCount: number;
-  myAnswer?: boolean;
-  answer:
-    | {
-        memberId: string;
-        memberName: string;
-        answer: string;
-        createdAt: string;
-      }[]
-    | null;
-};
-
-type ChatList = {
-  setModalInfo: (modalInfo: {
-    actionText: string;
-    cancelText: string;
-    bodyText: string;
-    handleAction: () => void;
-  }) => void;
-  setIsModalOpen: (isModalOpen: boolean) => void;
-};
-
-const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
-  const router = useRouter();
+const ChatList = () => {
   const setMyId = useSetRecoilState(myIdState);
 
   const getLetters = async ({ pageParam }: { pageParam: number }) => {
-    console.log('getLetters');
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const path = '/api/v1/letters';
     const apiEndpoint = `${baseURL}${path}`;
@@ -83,44 +55,6 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
     data?.length ?? 0 // 훅에서 dataLength가 됨
   );
 
-  const handleQuestionBarClick = ({ letter }: { letter: Letter }) => {
-    if (letter.answerCount === 0) {
-      setModalInfo({
-        actionText: '답변 작성하러 가기',
-        cancelText: '되돌아가기',
-        bodyText: '둘의 답변을 기다리고 있어요.<br>먼저 답변을 작성해볼까요?',
-        handleAction: () => {
-          router.push(`/answer/${letter.selectQuestionId}`);
-        },
-      });
-      setIsModalOpen(true);
-    } else if (letter.answerCount === 2) {
-      setIsModalOpen(false);
-    } else if (letter.answerCount === 1) {
-      if (letter.myAnswer === true) {
-        setModalInfo({
-          actionText: '답변 수정하기',
-          cancelText: '되돌아가기',
-          bodyText:
-            '상대가 답변을 등록하지 않았어요.<br>기존 답변을 수정하시겠어요?',
-          handleAction: () => {
-            router.push(`/answer/edit/${letter.selectQuestionId}`);
-          },
-        });
-      } else {
-        setModalInfo({
-          actionText: '답변 작성하러 가기',
-          cancelText: '되돌아가기',
-          bodyText:
-            '내가 아직 답변을 등록하지 않았어요.<br>답변을 등록하러 가볼까요?',
-          handleAction: () => {
-            router.push(`/answer/${letter.selectQuestionId}`);
-          },
-        });
-      }
-      setIsModalOpen(true);
-    }
-  };
   return (
     <div
       // 5rem은 BottomNavigation 높이, 0.5rem은 QuestionBar의 패딩 높이, 0.5rem은 여백
@@ -128,15 +62,13 @@ const ChatList = ({ setModalInfo, setIsModalOpen }: ChatList) => {
       ref={containerRef}
       onScroll={handleScroll}
     >
-      {data?.map((letter: Letter, index: number) => {
-        return (
-          <QuestionBar
-            key={index}
-            letter={letter}
-            onClick={() => handleQuestionBarClick({ letter })}
-          />
-        );
-      })}
+      {data?.map((letter: Letter, index: number) =>
+        letter.answerCount === 2 ? (
+          <UnlockedQuestionBar key={index} letter={letter} />
+        ) : (
+          <LockedQuestionBar key={index} letter={letter} />
+        )
+      )}
     </div>
   );
 };

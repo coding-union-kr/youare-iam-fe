@@ -23,3 +23,19 @@ export type Answer = {
   selectQuestionId: number;
   answer: string;
 };
+
+export type Letter = {
+  selectQuestionId: number;
+  question: string;
+  createdAt: string;
+  answerCount: number;
+  myAnswer: boolean;
+  answer:
+    | {
+        memberId: string;
+        memberName: string;
+        answer: string;
+        createdAt: string;
+      }[]
+    | null;
+};

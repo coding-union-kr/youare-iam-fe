@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
-import AnswerForm from '@/components/answer/AnswerForm';
+import Form from '@/components/ui/Form';
 import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
@@ -53,8 +53,8 @@ const Page: NextPageWithLayout<Prop> = ({ id: selectQuestionId, question }) => {
       <SEO title="답변 등록하기" />
       <section className="flex flex-col justify-between h-full pt-3">
         <QuestionTitle question={question} />
-        <AnswerForm
-          answer={answer}
+        <Form
+          inputValue={answer}
           onChange={onChange}
           errorMessage={errorMessage}
           handleSubmit={handleSubmit}
