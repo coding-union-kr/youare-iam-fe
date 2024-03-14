@@ -12,8 +12,9 @@ import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { Question } from '@/types/api';
 import { disallowAccess } from '@/util/disallowAccess';
 import SEO from '@/components/SEO/SEO';
+import OnboardingStepNavigator from '@/components/onboarding/OnboardingStepNavigator';
 
-const onboardingSteps = ['questions', 'answer', 'invite'] as const;
+export const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -46,6 +47,12 @@ const Page: NextPageWithLayout = () => {
         title="서비스 시작하기"
         description="'너는, 나는' 서비스의 단계별 가이드를 통해 서로를 더 깊이 알아가는 여정을 시작해보세요."
       />
+      {step && (
+        <OnboardingStepNavigator
+          currentStepIndex={currentStepIndex}
+          onPrev={handlePrev}
+        />
+      )}
       {currentStepIndex === -1 && <Intro onNext={handleNext} />}
       {step === 'questions' && (
         <QuestionSelectStep onNext={handleNext} questionList={questionList} />
