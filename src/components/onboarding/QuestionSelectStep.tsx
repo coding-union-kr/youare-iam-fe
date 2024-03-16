@@ -47,11 +47,11 @@ export default function QuestionSelectStep({
 
   return (
     <>
-      <h1 className="text-lg font-semibold">
+      <h1 className="mt-6 text-lg font-bold">
         함께 이야기해보고 싶은 질문을 선택해볼까요?
       </h1>
 
-      <ul className="w-[90%] overflow-y-scroll h-80rem my-7">
+      <ul className="w-[90%] overflow-y-scroll h-[80%] my-6">
         {questionList.map((question) => (
           <li
             key={question.questionId}

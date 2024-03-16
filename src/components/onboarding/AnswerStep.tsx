@@ -44,8 +44,8 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
 
   return (
     <>
+      <p className="text-lg font-bold">내가 먼저 답변을 작성해볼까요?</p>
       <QuestionTitle question={onboardingData.selectedQuestion.question} />
-      <p className="text-lg font-semibold">내가 먼저 답변을 작성해볼까요?</p>
       <Form
         inputValue={onboardingData.answer}
         onChange={onChange}
@@ -55,7 +55,3 @@ export default function AnswerStep({ onNext }: OnboardingStepProps) {
     </>
   );
 }
-
-// 답변 유효성 추가하기 - 글자 수 제한
-
-//초대링크 생성,초대수락, 답변등록, 답변 수정
