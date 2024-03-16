@@ -32,7 +32,8 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = (e: React.FormEvent) => {
+    e.preventDefault();
     window.localStorage.setItem(LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT, text);
 
     if (!!error) {
@@ -66,7 +67,8 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
     if (storedText) {
       setText(storedText);
     }
-  }, [setText]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
