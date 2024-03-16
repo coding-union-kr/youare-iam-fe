@@ -93,7 +93,7 @@ async function refreshTokenAndRetryRequest(
   try {
     const res = await refreshInstance.post('/api/v1/members/auth/token');
 
-    if (res.status === 201) {
+    if (res.status === 200) {
       const accessToken = res.headers['authorization'].split(' ')[1];
 
       setServersideAccessToken(context, accessToken);
