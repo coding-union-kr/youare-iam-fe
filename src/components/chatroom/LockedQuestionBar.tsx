@@ -13,11 +13,8 @@ type Props = {
 const LockedQuestionBar = ({ letter }: Props) => {
   const router = useRouter();
 
-  const {
-    isOpen,
-    openDialog: openModal,
-    closeDialog: closeModal,
-  } = useDialog();
+  const [isOpen, toggle] = useDialog();
+
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     actionText: '',
     cancelText: '',
@@ -62,7 +59,7 @@ const LockedQuestionBar = ({ letter }: Props) => {
 
   const handleQuestionBarClick = () => {
     changeModalInfo({ letter });
-    openModal();
+    toggle();
   };
 
   return (
@@ -80,11 +77,7 @@ const LockedQuestionBar = ({ letter }: Props) => {
         </div>
         {letter.answerCount === 1 && <LockedAnswer letter={letter} />}
       </div>
-      <Modal
-        modalInfo={modalInfo}
-        closeModal={closeModal}
-        isModalOpen={isOpen}
-      />
+      <Modal modalInfo={modalInfo} closeModal={toggle} isModalOpen={isOpen} />
     </>
   );
 };
