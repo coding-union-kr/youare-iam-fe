@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import LockIcon from '../icons/LockIcon';
 import { applyDateFormatting } from '@/util/applyDateFormatting';
 import type { Letter } from '@/types/api';
+import Modal from '../ui/Modal';
 import useDialog from '@/hooks/common/useDialog';
-import Modal, { type ModalInfo } from '../ui/Modal';
+import useModalInfo from '@/hooks/common/useModalInfo';
 
 type Props = {
   letter: Letter;
@@ -13,17 +13,9 @@ type Props = {
 const LockedQuestionBar = ({ letter }: Props) => {
   const router = useRouter();
 
-  const {
-    isOpen,
-    openDialog: openModal,
-    closeDialog: closeModal,
-  } = useDialog();
-  const [modalInfo, setModalInfo] = useState<ModalInfo>({
-    actionText: '',
-    cancelText: '',
-    bodyText: '',
-    handleAction: () => {},
-  });
+  const [isOpen, toggle] = useDialog();
+
+  const [modalInfo, setModalInfo] = useModalInfo();
 
   const changeModalInfo = ({ letter }: { letter: Letter }) => {
     if (letter.answerCount === 0) {
@@ -62,7 +54,7 @@ const LockedQuestionBar = ({ letter }: Props) => {
 
   const handleQuestionBarClick = () => {
     changeModalInfo({ letter });
-    openModal();
+    toggle();
   };
 
   return (
@@ -80,11 +72,7 @@ const LockedQuestionBar = ({ letter }: Props) => {
         </div>
         {letter.answerCount === 1 && <LockedAnswer letter={letter} />}
       </div>
-      <Modal
-        modalInfo={modalInfo}
-        closeModal={closeModal}
-        isModalOpen={isOpen}
-      />
+      <Modal modalInfo={modalInfo} closeModal={toggle} isModalOpen={isOpen} />
     </>
   );
 };

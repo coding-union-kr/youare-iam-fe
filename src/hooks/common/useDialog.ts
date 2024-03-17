@@ -1,24 +1,15 @@
 import { type Dispatch, useState, type SetStateAction } from 'react';
 
-type ReturnType = {
-  isOpen: boolean;
-  closeDialog: () => void;
-  openDialog: () => void;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-};
+type ReturnType = [isOpen: boolean, toggle: () => void];
 
 const useDialog = (): ReturnType => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openDialog = () => {
-    setIsOpen(true);
+  const toggle = () => {
+    setIsOpen((prev) => !prev);
   };
 
-  const closeDialog = () => {
-    setIsOpen(false);
-  };
-
-  return { isOpen, closeDialog, openDialog, setIsOpen };
+  return [isOpen, toggle];
 };
 
 export default useDialog;

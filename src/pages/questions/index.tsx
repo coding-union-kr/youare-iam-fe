@@ -1,46 +1,23 @@
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
-import { QueryClient, dehydrate, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import type { NextPageWithLayout } from '@/types/page';
 import type { Question } from '@/types/api';
 import MainLayout from '@/components/layout/MainLayout';
-import ListItem from '@/components/ui/ListItem';
 import useQuestionList from '@/hooks/queries/useQuestionList';
 import { checkAuth } from '@/util/checkAuth';
-import usePostQuestion from '@/hooks/queries/usePostQuestion';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 import CreateQuestionButton from '@/components/questions/CreateQuestionButton';
+import QuestionItem from '@/components/questions/QuestionItem';
 
 type Questions = {
   questions: Question[];
 };
 
 const Page: NextPageWithLayout<Questions> = () => {
-  const router = useRouter();
-  const queryClient = useQueryClient();
   const { questionList } = useQuestionList();
-  const { mutate: postQuestion, isError } = usePostQuestion();
-  const handleItemClick = async (questionId: Question['questionId']) => {
-    if (isError) {
-      return;
-    }
-
-    postQuestion(
-      { questionId: questionId },
-      {
-        onSettled: () => {
-          queryClient.invalidateQueries({ queryKey: queryKeys.questions });
-          queryClient.invalidateQueries({ queryKey: queryKeys.letters });
-        },
-        onSuccess: () => {
-          router.push('/chatroom');
-        },
-      }
-    );
-  };
 
   return (
     <>
@@ -51,15 +28,7 @@ const Page: NextPageWithLayout<Questions> = () => {
       <div className="pt-3">
         <CreateQuestionButton />
         {questionList.map((question) => (
-          <div
-            key={question.questionId}
-            className="flex flex-col items-center justify-center"
-          >
-            <ListItem
-              question={question.question}
-              onClick={() => handleItemClick(question.questionId)}
-            />
-          </div>
+          <QuestionItem key={question.questionId} question={question} />
         ))}
       </div>
     </>
