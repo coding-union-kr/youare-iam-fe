@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useQueryClient, QueryClient, dehydrate } from '@tanstack/react-query';
 import PageLayoutWithTitle from '@/components/layout/PageLayoutWithTitle';
 import type { NextPageWithLayout } from '@/types/page';
-import { checkAuth } from '@/util/checkAuth';
 import { disallowAccess } from '@/util/disallowAccess';
 import { createServerSideInstance } from '@/libs/serversideApi';
 import { queryKeys } from '@/constants/queryKeys';
@@ -73,11 +72,6 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const authCheck = await checkAuth(context);
-  if (authCheck) {
-    return authCheck;
-  }
-
   const redirection = await disallowAccess(context);
 
   if (redirection) {

@@ -1,7 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
-import { checkAuth } from '@/util/checkAuth';
 import { disallowAccess } from '@/util/disallowAccess';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { UserData } from '@/types/api';
@@ -30,11 +29,6 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const authCheck = await checkAuth(context);
-  if (authCheck) {
-    return authCheck;
-  }
-
   const api = createServerSideInstance(context);
 
   const getUserData = async () => {
