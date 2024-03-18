@@ -37,8 +37,8 @@ Home.getLayout = function getLayout(page) {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { authStatus } = await isAuthenticated(context);
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  const { authStatus } = isAuthenticated(context);
 
   return {
     props: {
