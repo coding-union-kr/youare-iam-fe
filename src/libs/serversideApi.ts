@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN } from '@/constants/auth';
+import { ACCESS_TOKEN } from '@/constants/cookie';
 import { ErrorResponse } from '@/types/api';
 import axios, {
   AxiosError,

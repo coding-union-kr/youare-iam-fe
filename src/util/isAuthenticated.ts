@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN } from '@/constants/auth';
+import { ACCESS_TOKEN } from '@/constants/cookie';
 import { GetServerSidePropsContext } from 'next';
 import { parseCookies } from 'nookies';
 

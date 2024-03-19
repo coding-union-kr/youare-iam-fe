@@ -1,5 +1,5 @@
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
-import { ACCESS_TOKEN } from '@/constants/auth';
+import { ACCESS_TOKEN } from '@/constants/cookie';
 import { parseCookies } from 'nookies';
 import { QueryClient } from '@tanstack/react-query';
 import type { GetServerSidePropsContext } from 'next';
