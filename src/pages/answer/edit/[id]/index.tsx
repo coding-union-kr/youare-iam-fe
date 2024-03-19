@@ -72,11 +72,11 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   const { id } = context.query;
   const queryClient = new QueryClient();

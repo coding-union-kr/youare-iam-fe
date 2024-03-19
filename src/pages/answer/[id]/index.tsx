@@ -93,11 +93,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   return {
     props: { id, question: data, initialState: dehydrate(queryClient) },

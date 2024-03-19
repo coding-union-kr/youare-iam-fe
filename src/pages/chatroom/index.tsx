@@ -36,11 +36,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return data;
   };
 
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   try {
     const userData = await getUserData();

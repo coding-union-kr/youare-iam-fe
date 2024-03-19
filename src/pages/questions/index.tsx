@@ -48,11 +48,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryFn: () => fetchData<Question[]>(api, '/api/v1/questions'),
   });
 
-  const redirection = await disallowAccess(context);
+  // const redirection = await disallowAccess(context);
 
-  if (redirection) {
-    return redirection;
-  }
+  // if (redirection) {
+  //   return redirection;
+  // }
 
   return {
     props: {
