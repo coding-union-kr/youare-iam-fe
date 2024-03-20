@@ -7,6 +7,7 @@ import type { UserData } from '@/types/api';
 import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
 import ChatList from '@/components/chatroom/ChatList';
 import SEO from '@/components/SEO/SEO';
+import { getUserStatus } from '@/hooks/queries/useUserStatus';
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
   const { userStatus, linkKey } = userData;
@@ -31,11 +32,6 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const api = createServerSideInstance(context);
 
-  const getUserData = async () => {
-    const data = await fetchData<UserData>(api, `/api/v1/members/user-status`);
-    return data;
-  };
-
   // const redirection = await disallowAccess(context);
 
   // if (redirection) {
@@ -43,7 +39,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // }
 
   try {
-    const userData = await getUserData();
+    const userData = await getUserStatus(api);
 
     if (userData.userStatus === 'NON_COUPLE_USER') {
       return {
