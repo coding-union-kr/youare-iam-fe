@@ -3,7 +3,7 @@ import type { UserData } from '@/types/api';
 import { get } from '@/libs/clientSideApi';
 import { queryKeys } from '@/constants/queryKeys';
 
-const getUserStatus = async () => {
+const getUserStatusClientSide = async () => {
   const res = await get<UserData>('/api/v1/members/user-status');
   return res.data;
 };
@@ -16,7 +16,7 @@ export default function useUserStatus(isAuthenticated: boolean) {
     isError,
   } = useQuery<UserData>({
     queryKey: queryKeys.userStatus,
-    queryFn: getUserStatus,
+    queryFn: getUserStatusClientSide,
     enabled: isAuthenticated,
   });
 
