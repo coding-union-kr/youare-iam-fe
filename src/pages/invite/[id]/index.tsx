@@ -130,7 +130,6 @@ export const getServerSideProps = async (
     const data = response.data;
     return { props: { data, id } };
   } catch (error) {
-    console.error('Error fetching data:', (error as Error).message);
     return {
       redirect: {
         permanent: false,

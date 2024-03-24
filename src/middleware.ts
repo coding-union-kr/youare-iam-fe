@@ -42,15 +42,11 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     }
   }
 
-  console.log('set이 잘되었나?', req.cookies.get(USER_STATUS)?.value);
-
   if (path.startsWith('/chatroom') && userStatus === NON_COUPLE_USER) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
   }
 
   if (path.startsWith('/onboarding') && userStatus !== NON_COUPLE_USER) {
-    console.log('onboarding에서 userStatus:', userStatus);
-
     return NextResponse.redirect(new URL('/chatroom', req.url));
   }
 
