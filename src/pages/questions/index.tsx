@@ -5,7 +5,6 @@ import type { Question } from '@/types/api';
 import MainLayout from '@/components/layout/MainLayout';
 import useQuestionList from '@/hooks/queries/useQuestionList';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
-import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 import CreateQuestionButton from '@/components/questions/CreateQuestionButton';
@@ -47,12 +46,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: queryKeys.questions,
     queryFn: () => fetchData<Question[]>(api, '/api/v1/questions'),
   });
-
-  // const redirection = await disallowAccess(context);
-
-  // if (redirection) {
-  //   return redirection;
-  // }
 
   return {
     props: {

@@ -1,8 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
-import { disallowAccess } from '@/util/disallowAccess';
-import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { createServerSideInstance } from '@/libs/serversideApi';
 import type { UserData } from '@/types/api';
 import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
 import ChatList from '@/components/chatroom/ChatList';
@@ -31,12 +30,6 @@ Page.getLayout = function getLayout(page) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const api = createServerSideInstance(context);
-
-  // const redirection = await disallowAccess(context);
-
-  // if (redirection) {
-  //   return redirection;
-  // }
 
   try {
     const userData = await getUserStatus(api);

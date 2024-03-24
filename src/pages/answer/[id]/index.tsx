@@ -9,7 +9,7 @@ import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { getQuestion } from '@/hooks/queries/useQuestion';
 import { createServerSideInstance } from '@/libs/serversideApi';
-import { disallowAccess } from '@/util/disallowAccess';
+
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 
@@ -92,12 +92,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       notFound: true,
     };
   }
-
-  // const redirection = await disallowAccess(context);
-
-  // if (redirection) {
-  //   return redirection;
-  // }
 
   return {
     props: { id, question: data, initialState: dehydrate(queryClient) },
