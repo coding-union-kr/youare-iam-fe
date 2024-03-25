@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 
   // disallowAccess
   const path = req.nextUrl.pathname;
-  const userStatus = req.cookies.get(USER_STATUS)?.value;
+  let userStatus = req.cookies.get(USER_STATUS)?.value;
 
   if (!userStatus) {
     try {
@@ -36,8 +36,10 @@ export async function middleware(req: NextRequest, res: NextResponse) {
         path: '/',
       });
 
-      return response;
+      userStatus = data.userStatus;
     } catch (error) {
+      //todo: error handling
+
       return response;
     }
   }
