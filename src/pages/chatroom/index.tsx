@@ -7,6 +7,7 @@ import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
 import ChatList from '@/components/chatroom/ChatList';
 import SEO from '@/components/SEO/SEO';
 import { getUserStatus } from '@/hooks/queries/useUserStatus';
+import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
   const { userStatus, linkKey } = userData;
@@ -33,6 +34,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const userData = await getUserStatus(api);
+
+    // revalidate user status cookie
+    revalidateUserStatusCookie(userData.userStatus, context);
 
     if (userData.userStatus === 'NON_COUPLE_USER') {
       return {

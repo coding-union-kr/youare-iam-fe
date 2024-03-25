@@ -16,6 +16,8 @@ import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 import Form from '@/components/ui/Form';
 import useInput from '@/hooks/common/useInput';
+import { COUPLE_USER } from '@/constants/userStatus';
+import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
 
 type InviteData = {
   data: {
@@ -53,6 +55,7 @@ const Page: NextPageWithLayout<InviteData> = ({ data, id }) => {
             window.localStorage.removeItem(
               LOCAL_STORAGE_KEYS.TEXT_AREA_CONTENT
             );
+            revalidateUserStatusCookie(COUPLE_USER);
             router.push('/chatroom');
           },
         }
