@@ -1,6 +1,6 @@
 import type { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
-import { ACCESS_TOKEN } from '@/constants/cookie';
+import { ACCESS_TOKEN } from '@/constants/auth';
 import { GetServerSidePropsContext } from 'next';
 import { parseCookies } from 'nookies';
 

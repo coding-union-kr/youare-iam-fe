@@ -10,8 +10,6 @@ import { useCreateInviteKey } from '@/hooks/queries/useCreateInviteKey';
 import { showToastSuccessMessage } from '@/util/toast';
 import NotificationCard from './NotificationCard';
 import { queryKeys } from '@/constants/queryKeys';
-import { COUPLE_WAITING_USER } from '@/constants/userStatus';
-import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
 
 export default function InviteStep() {
   const router = useRouter();
@@ -31,7 +29,6 @@ export default function InviteStep() {
       {
         onSuccess: ({ data }) => {
           showToastSuccessMessage('초대링크가 생성되었습니다!');
-          revalidateUserStatusCookie(COUPLE_WAITING_USER);
           router.push('/chatroom');
           queryClient.invalidateQueries({ queryKey: queryKeys.userStatus });
           setOnboardingData(initialOnboardingState);

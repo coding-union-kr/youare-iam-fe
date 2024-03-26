@@ -1,10 +1,9 @@
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
-import { ACCESS_TOKEN } from '@/constants/cookie';
+import { ACCESS_TOKEN } from '@/constants/auth';
 import { parseCookies } from 'nookies';
 import { QueryClient } from '@tanstack/react-query';
 import type { GetServerSidePropsContext } from 'next';
 import { queryKeys } from '@/constants/queryKeys';
-import { getUserStatus } from '@/hooks/queries/useUserStatus';
 
 type UserStatus = {
   userStatus: string;
@@ -22,7 +21,7 @@ export const invitePageAccess = async (context: GetServerSidePropsContext) => {
     try {
       const data: UserStatus = await queryClient.fetchQuery({
         queryKey: queryKeys.userStatus,
-        queryFn: () => getUserStatus(api),
+        queryFn: () => fetchData(api, '/api/v1/members/user-status'),
       });
       if (data.userStatus === 'COUPLE_USER') {
         return {
