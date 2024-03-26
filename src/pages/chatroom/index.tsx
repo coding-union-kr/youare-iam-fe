@@ -8,6 +8,8 @@ import ChatList from '@/components/chatroom/ChatList';
 import SEO from '@/components/SEO/SEO';
 import { getUserStatus } from '@/hooks/queries/useUserStatus';
 import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
+import { parseCookies } from 'nookies';
+import { USER_STATUS } from '@/constants/cookie';
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
   const { userStatus, linkKey } = userData;
@@ -32,11 +34,16 @@ Page.getLayout = function getLayout(page) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const api = createServerSideInstance(context);
 
+  const cookies = parseCookies(context);
+  const cachedUserStatus = cookies[USER_STATUS];
+
   try {
     const userData = await getUserStatus(api);
 
     // revalidate user status cookie
-    revalidateUserStatusCookie(userData.userStatus, context);
+    if (cachedUserStatus !== userData.userStatus) {
+      revalidateUserStatusCookie(userData.userStatus, context);
+    }
 
     if (userData.userStatus === 'NON_COUPLE_USER') {
       return {
