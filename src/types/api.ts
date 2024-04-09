@@ -41,7 +41,7 @@ export type Letter = {
 };
 
 export type WaitingQuestion = {
-  selectedQuestionId: number;
+  selectQuestionId: number;
   question: string;
   createdAt: string;
 };
