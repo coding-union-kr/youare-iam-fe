@@ -13,7 +13,7 @@ export default function CreateQuestionButton() {
         variant="ghost"
         size="xs"
         onClick={toggle}
-        className="w-6 mb-2 mr-8 text-gray"
+        className="w-6 mb-2 mr-8 rounded-full text-gray border-1 border-gray-light"
       >
         ?
       </Button>

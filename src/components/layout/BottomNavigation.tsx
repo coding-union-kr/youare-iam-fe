@@ -18,7 +18,7 @@ export type NavIconProps = ComponentProps<'svg'> & {
 const NAV_ITEMS = [
   { href: '/chatroom', Icon: ChatRoomIcon, label: '대화상세' },
   { href: '/questions', Icon: SelectIcon, label: '질문선택' },
-  // { href: '/status', Icon: BoardIcon, label: '질문현황' },
+  { href: '/my-info', Icon: BoardIcon, label: '내 계정' },
 ];
 
 type NavItemProps = (typeof NAV_ITEMS)[number];
