@@ -29,7 +29,7 @@ export default function UnansweredQuestionsList({ questions }: Props) {
           size="normal"
           className="mx-auto mt-3"
         >
-          질문 선택 하기
+          새로운 질문하기
         </Button>
       </div>
     );

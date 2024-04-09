@@ -31,7 +31,7 @@ export default function StatisticsCard({
   perfectAnswer,
 }: StatisticsCardProps) {
   return (
-    <div className="flex justify-center w-full gap-10 mt-8 text-center">
+    <div className="flex justify-center gap-10 text-center">
       <Card icon="period">
         <p>
           우리가 편지를 <br />
