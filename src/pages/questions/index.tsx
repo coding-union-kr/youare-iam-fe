@@ -4,7 +4,9 @@ import type { NextPageWithLayout } from '@/types/page';
 import type { Question } from '@/types/api';
 import MainLayout from '@/components/layout/MainLayout';
 import useQuestionList from '@/hooks/queries/useQuestionList';
+import { checkAuth } from '@/util/checkAuth';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { disallowAccess } from '@/util/disallowAccess';
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 import CreateQuestionButton from '@/components/questions/CreateQuestionButton';
@@ -38,6 +40,11 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const authCheck = await checkAuth(context);
+  if (authCheck) {
+    return authCheck;
+  }
+
   const api = createServerSideInstance(context);
 
   const queryClient = new QueryClient();
@@ -46,6 +53,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: queryKeys.questions,
     queryFn: () => fetchData<Question[]>(api, '/api/v1/questions'),
   });
+
+  const redirection = await disallowAccess(context);
+
+  if (redirection) {
+    return redirection;
+  }
 
   return {
     props: {
