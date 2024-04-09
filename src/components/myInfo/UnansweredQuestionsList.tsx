@@ -19,7 +19,7 @@ export default function UnansweredQuestionsList({ questions }: Props) {
 
   if (questions.length === 0) {
     return (
-      <div className="p-6 text-sm text-center bg-white rounded-md shadow-sm text-gray-dark">
+      <div className="flex flex-col gap-1 p-6 text-sm text-center bg-white rounded-md shadow-sm text-gray-dark">
         <p>현재 답변을 기다리는 질문이 없어요.</p>
         <p>서로에 대해 더 알고 싶은 것이 있다면,</p>
         <p>지금 질문해보세요.</p>
@@ -27,7 +27,7 @@ export default function UnansweredQuestionsList({ questions }: Props) {
           onClick={handleAddQuestion}
           variant="primary"
           size="normal"
-          className="mx-auto mt-3"
+          className="mx-auto mt-4"
         >
           새로운 질문하기
         </Button>
@@ -40,7 +40,7 @@ export default function UnansweredQuestionsList({ questions }: Props) {
       {questions.map(({ selectQuestionId, question, createdAt }) => (
         <li
           key={selectQuestionId}
-          className="flex items-center justify-between w-full gap-2 p-3 pl-5 bg-white rounded-md shadow-sm"
+          className="flex items-center justify-between w-full gap-2 p-3 pl-5 rounded-md shadow-sm bg-secondary"
         >
           <div className="w-full">
             <p>{question}</p>
