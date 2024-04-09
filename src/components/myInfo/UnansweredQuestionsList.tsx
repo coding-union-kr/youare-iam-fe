@@ -19,7 +19,7 @@ export default function UnansweredQuestionsList({ questions }: Props) {
 
   if (questions.length === 0) {
     return (
-      <div className="p-6 text-center bg-white rounded-md shadow-sm text-gray-dark">
+      <div className="p-6 text-sm text-center bg-white rounded-md shadow-sm text-gray-dark">
         <p>현재 답변을 기다리는 질문이 없어요.</p>
         <p>서로에 대해 더 알고 싶은 것이 있다면,</p>
         <p>지금 질문해보세요.</p>
