@@ -64,8 +64,12 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
   }
 
-  if (path.startsWith('/status') && userStatus === NON_COUPLE_USER) {
+  if (path.startsWith('/my-info') && userStatus === NON_COUPLE_USER) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
+  }
+
+  if (path.startsWith('/my-info') && userStatus === COUPLE_WAITING_USER) {
+    return NextResponse.redirect(new URL('/chatroom', req.url));
   }
 
   return response;
@@ -77,6 +81,6 @@ export const config = {
     '/chatroom/:path*',
     '/questions/:path*',
     '/answer/:path*',
-    '/status/:path*',
+    '/my-info/:path*',
   ],
 };
