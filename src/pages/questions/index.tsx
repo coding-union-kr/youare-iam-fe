@@ -9,6 +9,7 @@ import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
 import CreateQuestionButton from '@/components/questions/CreateQuestionButton';
 import QuestionItem from '@/components/questions/QuestionItem';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 type Questions = {
   questions: Question[];
@@ -38,6 +39,16 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
   const api = createServerSideInstance(context);
 
   const queryClient = new QueryClient();

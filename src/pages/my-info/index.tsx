@@ -11,6 +11,7 @@ import UnansweredQuestionsList from '@/components/myInfo/UnansweredQuestionsList
 import InfoTitle from '@/components/myInfo/InfoTitle';
 import LogoutButton from '@/components/myInfo/LogoutButton';
 import CopyMemberId from '@/components/myInfo/CopyMemberId';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 type Props = {
   myInfo: MyInfo;
@@ -38,6 +39,16 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
   const api = createServerSideInstance(context);
   const queryClient = new QueryClient();
 
@@ -45,6 +56,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: queryKeys.myInfo,
     queryFn: () => getMyInfo(api),
   });
+
+  console.log('my-info', data.memberId);
 
   return {
     props: {

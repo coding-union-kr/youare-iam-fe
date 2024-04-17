@@ -12,6 +12,7 @@ import SEO from '@/components/SEO/SEO';
 import useEditAnswer from '@/hooks/queries/useEditAnswer';
 import { getExistingAnswer } from '@/hooks/queries/useAnswer';
 import { getQuestion } from '@/hooks/queries/useQuestion';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 const Page: NextPageWithLayout<{
   id: string;
@@ -71,6 +72,16 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
   const { id } = context.query;
   const queryClient = new QueryClient();
   const api = createServerSideInstance(context);
