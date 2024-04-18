@@ -11,6 +11,7 @@ import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
 import { parseCookies } from 'nookies';
 import { USER_STATUS } from '@/constants/cookie';
 import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
+import { NON_COUPLE_USER } from '@/constants/userStatus';
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
   const { userStatus, linkKey } = userData;
@@ -51,10 +52,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const userData = await getUserStatus(api);
-
     // revalidate user status cookie
     if (cachedUserStatus !== userData.userStatus) {
       revalidateUserStatusCookie(userData.userStatus, context);
+    }
+
+    if (userData.userStatus === NON_COUPLE_USER) {
+      return {
+        redirect: {
+          destination: '/onboarding',
+          permanent: false,
+        },
+      };
     }
 
     return { props: userData };
