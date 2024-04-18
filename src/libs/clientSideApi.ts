@@ -148,3 +148,7 @@ export const put = <T = any, D = any, R = AxiosResponse<T>>(
 ) => {
   return instance.put<T, R>(url, data);
 };
+
+export const del = <T = any, R = AxiosResponse<T>>(url: string) => {
+  return instance.delete<T, R>(url);
+};

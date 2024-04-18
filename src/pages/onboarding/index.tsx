@@ -13,6 +13,7 @@ import type { Question } from '@/types/api';
 import { disallowAccess } from '@/util/disallowAccess';
 import SEO from '@/components/SEO/SEO';
 import OnboardingStepNavigator from '@/components/onboarding/OnboardingStepNavigator';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 export const onboardingSteps = ['questions', 'answer', 'invite'] as const;
 
@@ -72,6 +73,16 @@ Page.getLayout = function getLayout(page) {
 export default Page;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
   const queryClient = new QueryClient();
 
   const api = createServerSideInstance(context);

@@ -39,3 +39,16 @@ export type Letter = {
       }[]
     | null;
 };
+
+export type WaitingQuestion = {
+  selectQuestionId: number;
+  question: string;
+  createdAt: string;
+};
+
+export type MyInfo = {
+  memberId: number;
+  waitingAnswerList: WaitingQuestion[];
+  periodOfUse: number;
+  perfectAnswer: number;
+};

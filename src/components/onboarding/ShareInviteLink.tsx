@@ -70,7 +70,11 @@ export default function ShareInviteLink({ linkKey }: Props) {
             )
           }
         >
-          <Button variant="ghost" size="wide">
+          <Button
+            variant="ghost"
+            size="wide"
+            className="border-1 border-gray-light"
+          >
             초대링크 복사하기
           </Button>
         </CopyToClipboard>

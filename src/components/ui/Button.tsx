@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+import { cn } from '@/util/cn';
 
 type ButtonProps = ComponentProps<'button'> & {
   variant: 'primary' | 'secondary' | 'accent' | 'ghost';
@@ -19,7 +20,7 @@ export default function Button({
     primary: 'btn-primary',
     secondary: 'btn-secondary',
     accent: 'btn-accent',
-    ghost: 'btn-ghost border-1 border-gray-light',
+    ghost: 'btn-ghost',
   };
 
   const sizeVariants = {
@@ -31,7 +32,9 @@ export default function Button({
 
   return (
     <button
-      className={`btn no-animation flex align-center ${colorVariants[variant]} ${sizeVariants[size]}  ${className}`}
+      className={cn(
+        `btn no-animation flex align-center ${colorVariants[variant]} ${sizeVariants[size]} ${className}`
+      )}
       disabled={isLoading || disabled}
       {...props}
     >

@@ -8,11 +8,11 @@ import QuestionTitle from '@/components/answer/QuestionTitle';
 import useInput from '@/hooks/common/useInput';
 import usePostAnswer from '@/hooks/queries/usePostAnswer';
 import { getQuestion } from '@/hooks/queries/useQuestion';
-import { checkAuth } from '@/util/checkAuth';
 import { createServerSideInstance } from '@/libs/serversideApi';
-import { disallowAccess } from '@/util/disallowAccess';
+
 import { queryKeys } from '@/constants/queryKeys';
 import SEO from '@/components/SEO/SEO';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 type Prop = {
   id: string;
@@ -74,11 +74,16 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const authCheck = await checkAuth(context);
-  if (authCheck) {
-    return authCheck;
-  }
+  const redirectPath = await checkAuthAndRedirect(context);
 
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
   const { id } = context.query;
   const queryClient = new QueryClient();
   const api = createServerSideInstance(context);
@@ -97,12 +102,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       notFound: true,
     };
-  }
-
-  const redirection = await disallowAccess(context);
-
-  if (redirection) {
-    return redirection;
   }
 
   return {

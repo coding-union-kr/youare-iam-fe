@@ -1,13 +1,17 @@
 import { GetServerSidePropsContext } from 'next';
 import type { NextPageWithLayout } from '@/types/page';
 import MainLayout from '@/components/layout/MainLayout';
-import { checkAuth } from '@/util/checkAuth';
-import { disallowAccess } from '@/util/disallowAccess';
-import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
+import { createServerSideInstance } from '@/libs/serversideApi';
 import type { UserData } from '@/types/api';
 import ShareInviteLink from '@/components/onboarding/ShareInviteLink';
 import ChatList from '@/components/chatroom/ChatList';
 import SEO from '@/components/SEO/SEO';
+import { getUserStatus } from '@/hooks/queries/useUserStatus';
+import { revalidateUserStatusCookie } from '@/util/revalidateUserStautCookie';
+import { parseCookies } from 'nookies';
+import { USER_STATUS } from '@/constants/cookie';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
+import { NON_COUPLE_USER } from '@/constants/userStatus';
 
 const Page: NextPageWithLayout<UserData> = (userData) => {
   const { userStatus, linkKey } = userData;
@@ -30,28 +34,30 @@ Page.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const authCheck = await checkAuth(context);
-  if (authCheck) {
-    return authCheck;
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
   }
 
   const api = createServerSideInstance(context);
 
-  const getUserData = async () => {
-    const data = await fetchData<UserData>(api, `/api/v1/members/user-status`);
-    return data;
-  };
-
-  const redirection = await disallowAccess(context);
-
-  if (redirection) {
-    return redirection;
-  }
+  const cookies = parseCookies(context);
+  const cachedUserStatus = cookies[USER_STATUS];
 
   try {
-    const userData = await getUserData();
+    const userData = await getUserStatus(api);
+    // revalidate user status cookie
+    if (cachedUserStatus !== userData.userStatus) {
+      revalidateUserStatusCookie(userData.userStatus, context);
+    }
 
-    if (userData.userStatus === 'NON_COUPLE_USER') {
+    if (userData.userStatus === NON_COUPLE_USER) {
       return {
         redirect: {
           destination: '/onboarding',

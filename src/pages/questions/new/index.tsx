@@ -6,6 +6,8 @@ import useInput, { Validator } from '@/hooks/common/useInput';
 import Form from '@/components/ui/Form';
 import { usePostCustomQuestion } from '@/hooks/queries/usePostCustomQuestion';
 import { queryKeys } from '@/constants/queryKeys';
+import { GetServerSidePropsContext } from 'next';
+import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
 
 export const validateQuestion: Validator = (answer: string) => {
   if (!answer.trim()) {
@@ -69,5 +71,22 @@ const Page: NextPageWithLayout = () => {
 Page.getLayout = function getLayout(page) {
   return <SubpageLayout title="질문 등록하기">{page}</SubpageLayout>;
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const redirectPath = await checkAuthAndRedirect(context);
+
+  if (redirectPath) {
+    return {
+      redirect: {
+        destination: redirectPath,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 export default Page;
