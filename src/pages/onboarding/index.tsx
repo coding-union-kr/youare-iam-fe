@@ -10,7 +10,6 @@ import InviteStep from '@/components/onboarding/InviteStep';
 import useQuestionList from '@/hooks/queries/useQuestionList';
 import { createServerSideInstance, fetchData } from '@/libs/serversideApi';
 import type { Question } from '@/types/api';
-import { disallowAccess } from '@/util/disallowAccess';
 import SEO from '@/components/SEO/SEO';
 import OnboardingStepNavigator from '@/components/onboarding/OnboardingStepNavigator';
 import { checkAuthAndRedirect } from '@/util/checkAuthAndRedirect';
@@ -91,12 +90,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     queryKey: ['question-list'],
     queryFn: () => fetchData<Question[]>(api, '/api/v1/questions'),
   });
-
-  const redirection = await disallowAccess(context);
-
-  if (redirection) {
-    return redirection;
-  }
 
   return {
     props: {
