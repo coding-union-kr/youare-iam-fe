@@ -1,0 +1,3 @@
+export const COUPLE_USER = 'COUPLE_USER';
+export const COUPLE_WAITING_USER = 'COUPLE_WAITING_USER';
+export const NON_COUPLE_USER = 'NON_COUPLE_USER';
